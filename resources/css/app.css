@@ -1,0 +1,269 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
+    --color-lens-red: #e53e3e;
+}
+
+/* ============================================================
+   DOCS PROSE — rendered markdown styles
+   ============================================================ */
+
+.docs-prose {
+    font-family: var(--font-sans);
+    line-height: 1.75;
+    color: rgba(0, 0, 0, 0.8);
+}
+.dark .docs-prose {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Headings */
+.docs-prose h1 {
+    font-family: var(--font-mono);
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #000;
+    margin-bottom: 0.5rem;
+}
+.dark .docs-prose h1 { color: #fff; }
+
+.docs-prose h2 {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #000;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.6rem;
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+    scroll-margin-top: 5rem;
+}
+.dark .docs-prose h2 {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.docs-prose h3 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #e53e3e;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 5rem;
+}
+
+/* Paragraph and list text */
+.docs-prose p {
+    margin-bottom: 1.1rem;
+    font-size: 0.9375rem;
+}
+.docs-prose strong {
+    font-weight: 700;
+    color: #000;
+}
+.dark .docs-prose strong { color: #fff; }
+
+/* Links */
+.docs-prose a {
+    color: #e53e3e;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+.docs-prose a:hover { text-decoration-thickness: 2px; }
+
+/* Inline code */
+.docs-prose :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #e53e3e;
+    background: rgba(229, 62, 62, 0.08);
+    padding: 0.15em 0.45em;
+    border-radius: 0;
+    white-space: nowrap;
+}
+.dark .docs-prose :not(pre) > code {
+    background: rgba(229, 62, 62, 0.12);
+}
+
+/* Code blocks — wrapped by JS into .code-block-wrapper */
+.code-block-wrapper {
+    margin: 1.75rem 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+}
+.code-block-lang {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #e53e3e;
+}
+.code-block-copy {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.15s;
+}
+.code-block-copy:hover { color: #fff; }
+
+.docs-prose pre {
+    background: #0a0a0a;
+    overflow-x: auto;
+    padding: 1.25rem 1.5rem;
+    margin: 0;
+}
+.docs-prose pre code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #e2e8f0;
+    background: none;
+    padding: 0;
+    white-space: pre;
+}
+
+/* Fallback for non-wrapped pre blocks */
+.docs-prose pre:not(.code-block-wrapper pre) {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    margin: 1.75rem 0;
+}
+
+/* Blockquotes (used for notes/warnings) */
+.docs-prose blockquote {
+    border-left: 2px solid #e53e3e;
+    padding: 0.9rem 1.25rem;
+    margin: 1.75rem 0;
+    background: rgba(229, 62, 62, 0.05);
+}
+.dark .docs-prose blockquote { background: rgba(229, 62, 62, 0.08); }
+.docs-prose blockquote p {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
+}
+.dark .docs-prose blockquote p { color: rgba(255, 255, 255, 0.6); }
+
+/* Lists */
+.docs-prose ul,
+.docs-prose ol {
+    margin: 1rem 0 1.25rem;
+    padding: 0;
+    list-style: none;
+}
+.docs-prose li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.9375rem;
+}
+.docs-prose ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #e53e3e;
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    top: 0.15em;
+}
+.docs-prose ol {
+    counter-reset: ol-counter;
+}
+.docs-prose ol li {
+    counter-increment: ol-counter;
+    padding-left: 2rem;
+}
+.docs-prose ol li::before {
+    content: counter(ol-counter) '.';
+    position: absolute;
+    left: 0;
+    color: #e53e3e;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    top: 0.2em;
+}
+
+/* Tables */
+.docs-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.75rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    overflow-x: auto;
+    display: block;
+}
+.docs-prose thead th {
+    background: #000;
+    color: #fff;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+.dark .docs-prose thead th {
+    background: #fff;
+    color: #000;
+}
+.docs-prose td {
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.7);
+    vertical-align: top;
+}
+.dark .docs-prose td {
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+}
+.docs-prose tr:hover td { background: rgba(0, 0, 0, 0.02); }
+.dark .docs-prose tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+/* Horizontal rule */
+.docs-prose hr {
+    border: none;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    margin: 3rem 0;
+}
+.dark .docs-prose hr { border-color: rgba(255, 255, 255, 0.1); }
+
+/* highlight.js overrides inside code blocks */
+.hljs { background: transparent !important; padding: 0 !important; }
