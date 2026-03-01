@@ -121,8 +121,7 @@
     {{-- ====================================================== --}}
     {{-- HERO                                                    --}}
     {{-- ====================================================== --}}
-    <section
-        class="bg-white dark:bg-black min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
+    <section class="bg-white dark:bg-black min-h-screen flex flex-col pt-14 relative overflow-hidden">
 
         {{-- Grid backgrounds (light vs dark) --}}
         <div class="dark:hidden absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -132,9 +131,10 @@
             style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 48px 48px;">
         </div>
 
-        {{-- Corner bracket frame --}}
-        <div
-            class="relative border border-black/10 dark:border-white/10 px-8 py-16 md:px-20 md:py-20 max-w-5xl w-full text-center">
+        <div class="flex-1 flex flex-col items-center justify-center p-6 md:p-12">
+            {{-- Corner bracket frame --}}
+            <div
+                class="relative border border-black/10 dark:border-white/10 px-8 py-16 md:px-20 md:py-20 max-w-5xl w-full text-center">
             <div
                 class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#e53e3e] -translate-x-px -translate-y-px">
             </div>
@@ -198,9 +198,9 @@
                 GITHUB
             </a>
         </div>
+        </div>
 
-    </section>
-
+        </section>
     {{-- ====================================================== --}}
     {{-- STATS — "Lens by Numbers"                              --}}
     {{-- ====================================================== --}}
