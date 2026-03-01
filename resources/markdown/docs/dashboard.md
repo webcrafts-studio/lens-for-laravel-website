@@ -1,16 +1,16 @@
 # Dashboard
 
-The Laravel Lens dashboard provides a full visual interface for running audits, exploring violations, requesting AI fixes, and exporting reports — all without touching the terminal.
+The Lens for Laravel dashboard provides a full visual interface for running audits, exploring violations, requesting AI fixes, and exporting reports — all without touching the terminal.
 
 ## Accessing the Dashboard
 
 Navigate to the dashboard URL in your browser:
 
 ```text
-http://your-app.test/laravel-lens/dashboard
+http://your-app.test/lens-for-laravel/dashboard
 ```
 
-The prefix `laravel-lens` can be changed in the [configuration](/docs/configuration) via `route_prefix`.
+The prefix `lens-for-laravel` can be changed in the [configuration](/docs/configuration) via `route_prefix`.
 
 > **Access control:** The dashboard is restricted to environments listed in `enabled_environments` (default: `local`). Requests from other environments receive a `403 Forbidden` response.
 
@@ -32,7 +32,7 @@ The form offers three scan modes, selectable via the mode tabs:
 2. Enter the target URL(s)
 3. Click **EXECUTE**
 
-The dashboard calls the `/laravel-lens/scan` API endpoint internally. For WHOLE_WEBSITE mode, it first calls `/laravel-lens/crawl` to discover pages, then scans each one.
+The dashboard calls the `/lens-for-laravel/scan` API endpoint internally. For WHOLE_WEBSITE mode, it first calls `/lens-for-laravel/crawl` to discover pages, then scans each one.
 
 ## Diagnostic Report
 
@@ -74,7 +74,7 @@ Each violation in the log is displayed as a card with:
 ## AI Fix Workflow
 
 1. Click **AI FIX** on a violation card
-2. Lens calls the `/laravel-lens/fix/suggest` endpoint
+2. Lens calls the `/lens-for-laravel/fix/suggest` endpoint
 3. Gemini AI analyses the failing node and Blade context (±20 lines)
 4. A side panel shows the **original code** and **proposed fix** side by side with an explanation
 5. Click **APPLY** to write the fix to disk, or **DISMISS** to discard it
@@ -91,7 +91,7 @@ The report includes:
 - Summary counts by WCAG level
 - Full violation list with rule IDs, descriptions, failing nodes, and source locations
 
-The PDF is generated server-side via the `/laravel-lens/report/pdf` endpoint.
+The PDF is generated server-side via the `/lens-for-laravel/report/pdf` endpoint.
 
 ## Dashboard API Routes
 
@@ -99,12 +99,12 @@ The dashboard communicates with these internal API endpoints:
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET` | `/laravel-lens/dashboard` | Renders the dashboard UI |
-| `POST` | `/laravel-lens/crawl` | Discovers site pages (returns URL array) |
-| `POST` | `/laravel-lens/scan` | Scans a single URL, returns violations |
-| `POST` | `/laravel-lens/preview` | Screenshots a page highlighting an element |
-| `POST` | `/laravel-lens/fix/suggest` | Requests a Gemini fix suggestion |
-| `POST` | `/laravel-lens/fix/apply` | Writes the fix to a Blade file |
-| `POST` | `/laravel-lens/report/pdf` | Generates and streams a PDF report |
+| `GET` | `/lens-for-laravel/dashboard` | Renders the dashboard UI |
+| `POST` | `/lens-for-laravel/crawl` | Discovers site pages (returns URL array) |
+| `POST` | `/lens-for-laravel/scan` | Scans a single URL, returns violations |
+| `POST` | `/lens-for-laravel/preview` | Screenshots a page highlighting an element |
+| `POST` | `/lens-for-laravel/fix/suggest` | Requests a Gemini fix suggestion |
+| `POST` | `/lens-for-laravel/fix/apply` | Writes the fix to a Blade file |
+| `POST` | `/lens-for-laravel/report/pdf` | Generates and streams a PDF report |
 
 All routes are protected by the `enabled_environments` gate and the `middleware` config option.

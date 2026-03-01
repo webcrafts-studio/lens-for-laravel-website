@@ -1,6 +1,6 @@
 # CLI Reference
 
-Laravel Lens ships a single Artisan command: `lens:audit`. It is the primary interface for running accessibility scans from the terminal and CI/CD pipelines.
+Lens for Laravel ships a single Artisan command: `lens:audit`. It is the primary interface for running accessibility scans from the terminal and CI/CD pipelines.
 
 ## Command Signature
 

@@ -50,7 +50,7 @@ This reports only WCAG A and AA violations, suppressing AAA and best-practice no
 The dashboard provides a visual interface for running audits and exploring violations:
 
 ```text
-http://your-app.test/laravel-lens/dashboard
+http://your-app.test/lens-for-laravel/dashboard
 ```
 
 From the dashboard you can:

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel Lens — WCAG Accessibility Auditor</title>
+    <title>Lens for Laravel — WCAG Accessibility Auditor</title>
     <meta name="description"
         content="Plug-and-play WCAG compliance scanner for Laravel. Identifies accessibility violations, maps them to Blade files, and auto-fixes with Gemini AI.">
 
@@ -91,8 +91,8 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black border-b-2 border-black/10 dark:border-white/10">
         <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="text-black dark:text-white font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
-                <span class="text-[#e53e3e] font-black text-lg tracking-[0.15em] uppercase">LENS</span>
+                <span class="text-black dark:text-white font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
+                <span class="text-[#e53e3e] font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
                     class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v1.0</span>
             </div>
@@ -110,7 +110,7 @@
                     <span class="hidden dark:inline" aria-label="Switch to light mode">☀</span>
                 </button>
 
-                <a href="https://github.com/webcrafts-studio/laravel-lens"
+                <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                     class="text-black dark:text-white font-mono text-[10px] md:text-xs border-2 border-black/40 dark:border-white/40 hover:border-black dark:hover:border-white px-3 md:px-4 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors uppercase tracking-widest">
                     GitHub →
                 </a>
@@ -173,9 +173,9 @@
                     $</div>
                 <div
                     class="px-4 md:px-6 py-4 text-black dark:text-white font-mono text-xs md:text-sm flex-1 min-w-0 select-all truncate">
-                    composer require webcrafts-studio/laravel-lens --dev
+                    composer require webcrafts-studio/lens-for-laravel --dev
                 </div>
-                <button onclick="copyCmd(this, 'composer require webcrafts-studio/laravel-lens --dev')"
+                <button onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
                     class="border-l-2 border-black/20 dark:border-white/20 px-3 md:px-5 text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-mono text-[10px] uppercase tracking-widest cursor-pointer flex items-center justify-center shrink-0">
                     <span class="copy-label hidden md:inline">COPY</span>
                     <svg class="md:hidden w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -193,7 +193,7 @@
                 class="bg-[#e53e3e] text-white border-2 border-[#e53e3e] px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:bg-transparent hover:text-[#e53e3e] transition-colors">
                 DOCUMENTATION →
             </a>
-            <a href="https://github.com/webcrafts-studio/laravel-lens"
+            <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                 class="bg-transparent text-black dark:text-white border-2 border-black/30 dark:border-white/30 px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:border-black dark:hover:border-white transition-colors">
                 GITHUB
             </a>
@@ -211,7 +211,7 @@
             <div class="p-8 col-span-2 md:col-span-1 flex flex-col justify-center">
                 <div
                     class="text-[10px] font-mono font-bold tracking-[0.25em] text-black/40 dark:text-white/40 uppercase leading-relaxed">
-                    LARAVEL LENS<br>BY NUMBERS
+                    LENS FOR LARAVEL<br>BY NUMBERS
                 </div>
             </div>
 
@@ -482,13 +482,13 @@
             <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-4 uppercase">VISUAL INTERFACE</div>
             <h2 class="font-mono font-black text-white text-5xl mb-3 leading-tight">Dashboard<br>Preview</h2>
             <p class="font-mono text-white/30 text-sm mb-12">
-                Navigate to <span class="text-white">/laravel-lens/dashboard</span> after installation
+                Navigate to <span class="text-white">/lens-for-laravel/dashboard</span> after installation
             </p>
 
             <div class="border-2 border-white/20 bg-[#0d0d0d]">
                 <div class="border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
                     <div class="font-mono font-bold text-white text-sm tracking-wide">
-                        Laravel<span class="text-[#e53e3e]">Lens</span>
+                        Lens<span class="text-[#e53e3e]">ForLaravel</span>
                     </div>
                     <div class="flex items-center gap-4">
                         <span class="font-mono text-white/50 text-[10px] uppercase tracking-widest">REPOSITORY</span>
@@ -622,7 +622,7 @@
                 <span class="block text-[clamp(3rem,8vw,6rem)]">APP ACCESSIBLE</span>
             </h2>
             <p class="font-mono text-white/60 text-sm max-w-lg mx-auto mb-12 leading-relaxed">
-                Install Laravel Lens in seconds. Start catching WCAG violations your users never should have
+                Install Lens for Laravel in seconds. Start catching WCAG violations your users never should have
                 encountered.
             </p>
             <div class="bg-black border-2 border-white/20 flex items-stretch max-w-xl mx-auto mb-8">
@@ -630,9 +630,9 @@
                     class="border-r-2 border-white/20 px-5 flex items-center text-[#e53e3e] font-mono text-sm shrink-0">
                     $</div>
                 <div class="px-6 py-4 text-white font-mono text-sm flex-1 text-left select-all">
-                    composer require webcrafts-studio/laravel-lens --dev
+                    composer require webcrafts-studio/lens-for-laravel --dev
                 </div>
-                <button onclick="copyCmd(this, 'composer require webcrafts-studio/laravel-lens --dev')"
+                <button onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
                     class="border-l-2 border-white/20 px-5 text-white/40 hover:text-white hover:bg-white/5 transition-colors font-mono text-[10px] uppercase tracking-widest cursor-pointer">
                     COPY
                 </button>
@@ -642,7 +642,7 @@
                     class="bg-white text-black border-2 border-white px-10 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:bg-transparent hover:text-white transition-colors">
                     DOCUMENTATION →
                 </a>
-                <a href="https://github.com/webcrafts-studio/laravel-lens"
+                <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                     class="border-2 border-white/40 text-white px-10 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:border-white transition-colors">
                     GITHUB
                 </a>
@@ -668,9 +668,9 @@
                 <nav class="flex items-center gap-8" aria-label="Footer navigation">
                     <a href="{{ route('docs') }}"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Documentation</a>
-                    <a href="https://github.com/webcrafts-studio/laravel-lens"
+                    <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">GitHub</a>
-                    <a href="https://github.com/webcrafts-studio/laravel-lens/issues"
+                    <a href="https://github.com/webcrafts-studio/lens-for-laravel/issues"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Issues</a>
                 </nav>
             </div>

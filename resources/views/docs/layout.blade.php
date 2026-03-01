@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $pageTitle ?? 'Docs' }} — Laravel Lens</title>
-    <meta name="description" content="Laravel Lens documentation — WCAG accessibility auditor for Laravel.">
+    <title>{{ $pageTitle ?? 'Docs' }} — Lens for Laravel</title>
+    <meta name="description" content="Lens for Laravel documentation — WCAG accessibility auditor for Laravel.">
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
     <script>
@@ -54,8 +54,8 @@
 
                 <a href="/" class="flex items-center gap-1.5">
                     <span
-                        class="text-black dark:text-white font-black text-base tracking-[0.15em] uppercase font-mono">LARAVEL</span>
-                    <span class="text-[#e53e3e] font-black text-base tracking-[0.15em] uppercase font-mono">LENS</span>
+                        class="text-black dark:text-white font-black text-base tracking-[0.15em] uppercase font-mono">LENS FOR</span>
+                    <span class="text-[#e53e3e] font-black text-base tracking-[0.15em] uppercase font-mono">LARAVEL</span>
                 </a>
 
                 <span class="hidden md:block text-black/20 dark:text-white/20 font-mono text-xs">/ DOCS</span>
@@ -69,7 +69,7 @@
                     <span class="hidden dark:inline" aria-label="Switch to light">☀</span>
                 </button>
 
-                <a href="https://github.com/webcrafts-studio/laravel-lens"
+                <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                     class="hidden sm:flex text-black dark:text-white font-mono text-[10px] border-2 border-black/30 dark:border-white/30 hover:border-black dark:hover:border-white px-3 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors uppercase tracking-widest items-center gap-2">
                     GitHub →
                 </a>

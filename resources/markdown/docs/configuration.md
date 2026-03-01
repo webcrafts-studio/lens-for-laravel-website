@@ -1,6 +1,6 @@
 # Config File
 
-After publishing with `php artisan vendor:publish --tag="laravel-lens-config"`, you'll find the configuration at `config/laravel-lens.php`.
+After publishing with `php artisan vendor:publish --tag="lens-for-laravel-config"`, you'll find the configuration at `config/lens-for-laravel.php`.
 
 ## Full Config Reference
 
@@ -13,10 +13,10 @@ return [
     |--------------------------------------------------------------------------
     | Route Prefix
     |--------------------------------------------------------------------------
-    | The URL prefix for the Laravel Lens dashboard and API routes.
-    | Default: /laravel-lens/dashboard
+    | The URL prefix for the Lens for Laravel dashboard and API routes.
+    | Default: /lens-for-laravel/dashboard
     */
-    'route_prefix' => 'laravel-lens',
+    'route_prefix' => 'lens-for-laravel',
 
     /*
     |--------------------------------------------------------------------------
@@ -42,18 +42,18 @@ return [
     |--------------------------------------------------------------------------
     | The IDE used to generate "open in editor" links for Blade files.
     | Supported: 'vscode', 'cursor', 'phpstorm', 'sublime', 'none'
-    | Env: LARAVEL_LENS_EDITOR
+    | Env: LENS_FOR_LARAVEL_EDITOR
     */
-    'editor' => env('LARAVEL_LENS_EDITOR', 'vscode'),
+    'editor' => env('LENS_FOR_LARAVEL_EDITOR', 'vscode'),
 
     /*
     |--------------------------------------------------------------------------
     | Crawl Max Pages
     |--------------------------------------------------------------------------
     | Maximum number of pages to discover and scan in WHOLE_WEBSITE mode.
-    | Env: LARAVEL_LENS_CRAWL_MAX_PAGES
+    | Env: LENS_FOR_LARAVEL_CRAWL_MAX_PAGES
     */
-    'crawl_max_pages' => env('LARAVEL_LENS_CRAWL_MAX_PAGES', 50),
+    'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 50),
 
 ];
 ```
@@ -62,9 +62,9 @@ return [
 
 ### `route_prefix`
 
-**Type:** `string` | **Default:** `'laravel-lens'`
+**Type:** `string` | **Default:** `'lens-for-laravel'`
 
-Changes the URL prefix for all Lens routes. With the default value, the dashboard is at `/laravel-lens/dashboard`.
+Changes the URL prefix for all Lens routes. With the default value, the dashboard is at `/lens-for-laravel/dashboard`.
 
 ```php
 'route_prefix' => 'a11y',
@@ -102,7 +102,7 @@ Lens checks `app()->environment()` against this list. Requests from disallowed e
 
 ### `editor`
 
-**Type:** `string` | **Default:** `'vscode'` | **Env:** `LARAVEL_LENS_EDITOR`
+**Type:** `string` | **Default:** `'vscode'` | **Env:** `LENS_FOR_LARAVEL_EDITOR`
 
 Controls the URL scheme used when clicking "open in editor" links in the dashboard.
 
@@ -117,19 +117,19 @@ Controls the URL scheme used when clicking "open in editor" links in the dashboa
 Set via environment variable to avoid committing IDE preferences:
 
 ```text
-LARAVEL_LENS_EDITOR=cursor
+LENS_FOR_LARAVEL_EDITOR=cursor
 ```
 
 ---
 
 ### `crawl_max_pages`
 
-**Type:** `int` | **Default:** `50` | **Env:** `LARAVEL_LENS_CRAWL_MAX_PAGES`
+**Type:** `int` | **Default:** `50` | **Env:** `LENS_FOR_LARAVEL_CRAWL_MAX_PAGES`
 
 Maximum number of pages that will be discovered and scanned in `WHOLE_WEBSITE` mode. Higher values produce more thorough coverage but significantly increase scan time.
 
 ```text
-LARAVEL_LENS_CRAWL_MAX_PAGES=100
+LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100
 ```
 
 > **Performance note:** Each page requires a full headless browser launch (Browsershot + Axe-core). Scanning 50 pages typically takes 2–5 minutes depending on page complexity and server speed.

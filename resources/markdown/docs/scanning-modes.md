@@ -1,6 +1,6 @@
 # Scanning Modes
 
-Laravel Lens supports three distinct scan modes, selectable both from the CLI and the dashboard.
+Lens for Laravel supports three distinct scan modes, selectable both from the CLI and the dashboard.
 
 ## Single URL
 
@@ -106,13 +106,13 @@ The crawler follows only **internal HTML pages**. It automatically skips:
 The max page count is controlled by `crawl_max_pages` (default: 50):
 
 ```bash
-LARAVEL_LENS_CRAWL_MAX_PAGES=100 php artisan lens:audit https://your-app.test --crawl
+LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100 php artisan lens:audit https://your-app.test --crawl
 ```
 
-Or permanently in `config/laravel-lens.php`:
+Or permanently in `config/lens-for-laravel.php`:
 
 ```php
-'crawl_max_pages' => env('LARAVEL_LENS_CRAWL_MAX_PAGES', 100),
+'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 100),
 ```
 
 ## Level Filtering
