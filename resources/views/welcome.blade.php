@@ -154,8 +154,8 @@
             </div>
 
             <h1 class="font-mono font-black leading-none tracking-tight">
-                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-black dark:text-white">LARAVEL</span>
-                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-[#e53e3e] -mt-2 md:-mt-4">LENS</span>
+                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-black dark:text-white">LENS FOR</span>
+                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-[#e53e3e] -mt-2 md:-mt-4">LARAVEL</span>
             </h1>
 
             <p
@@ -658,8 +658,8 @@
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
                 <div>
                     <div class="font-mono font-black leading-none mb-3">
-                        <span class="text-white text-3xl tracking-tight">LARAVEL</span>
-                        <span class="text-[#e53e3e] text-3xl tracking-tight"> LENS</span>
+                        <span class="text-white text-3xl tracking-tight">LENS FOR</span>
+                        <span class="text-[#e53e3e] text-3xl tracking-tight"> LARAVEL</span>
                     </div>
                     <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
                         WCAG Accessibility Auditor · Powered by Axe-core &amp; Gemini AI
