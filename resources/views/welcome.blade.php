@@ -122,7 +122,7 @@
     {{-- HERO                                                    --}}
     {{-- ====================================================== --}}
     <section
-        class="bg-white dark:bg-black min-h-screen flex flex-col items-center justify-center pt-14 px-6 relative overflow-hidden">
+        class="bg-white dark:bg-black min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
 
         {{-- Grid backgrounds (light vs dark) --}}
         <div class="dark:hidden absolute inset-0 opacity-[0.05] pointer-events-none"
