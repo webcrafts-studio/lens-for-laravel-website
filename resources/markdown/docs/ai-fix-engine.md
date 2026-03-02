@@ -1,6 +1,6 @@
 # AI Fix Engine
 
-The AI Fix Engine uses Google Gemini to analyse accessibility violations in context and generate minimal, precise Blade fixes that preserve your existing code structure.
+The AI Fix Engine uses your configured AI provider — Google Gemini, OpenAI, or Anthropic — to analyse accessibility violations in context and generate minimal, precise Blade fixes that preserve your existing code structure.
 
 ## How It Works
 
@@ -12,7 +12,7 @@ Lens enforces that only files within `resources/views/` can be read and modified
 
 ### 2. Context Reading
 
-Rather than sending only the single failing element, Lens reads **±20 lines of surrounding Blade code** around the violation's line number. This gives Gemini full context — adjacent directives, component attributes, loop variables, and indentation patterns.
+Rather than sending only the single failing element, Lens reads **±20 lines of surrounding Blade code** around the violation's line number. This gives the AI full context — adjacent directives, component attributes, loop variables, and indentation patterns.
 
 ```text
 Line 102: <div class="footer__social-links">
@@ -42,7 +42,7 @@ The AI system prompt: *"You are an expert in web accessibility (WCAG) and Larave
 
 ### 4. Structured AI Response
 
-Gemini returns a structured JSON response with two fields:
+The AI returns a structured JSON response with two fields:
 
 ```json
 {
@@ -69,21 +69,33 @@ When you click **APPLY FIX** in the dashboard:
 
 ## Requirements
 
-The AI Fix Engine requires the `laravel/ai` package and a Gemini API key:
+The AI Fix Engine requires the `laravel/ai` package and an API key for your chosen provider:
 
 ```bash
 composer require laravel/ai
 ```
 
+Set the provider in your `.env` file (defaults to `gemini`):
+
 ```text
-GOOGLE_API_KEY=your_gemini_api_key
+LENS_FOR_LARAVEL_AI_PROVIDER=gemini   # or 'openai' or 'anthropic'
 ```
+
+Then add the corresponding API key:
+
+| Provider | Environment variable |
+|----------|---------------------|
+| `gemini` | `GOOGLE_API_KEY` |
+| `openai` | `OPENAI_API_KEY` |
+| `anthropic` | `ANTHROPIC_API_KEY` |
+
+See [Configuration](/docs/configuration) for the full `ai_provider` option reference.
 
 ## Limitations
 
 - **Heuristic accuracy:** FileLocator uses best-effort heuristics to find Blade source locations. The mapped file and line number may occasionally be incorrect, especially for deeply nested components or dynamically generated HTML.
 - **Stale fixes:** If you modify the Blade file between scanning and applying, the original code may not match, and the fix will be rejected.
 - **Context window:** Very large Blade files or those with complex nesting may confuse the AI context reading.
-- **Gemini availability:** The AI Fix Engine requires an active internet connection and a valid Google AI API key.
+- **Provider availability:** The AI Fix Engine requires an active internet connection and a valid API key for your configured provider.
 
 > Automated AI fixes should be **reviewed before committing**. Always verify the generated fix resolves the violation without introducing regressions.

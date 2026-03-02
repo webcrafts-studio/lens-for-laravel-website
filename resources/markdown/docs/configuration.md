@@ -55,6 +55,16 @@ return [
     */
     'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 50),
 
+    /*
+    |--------------------------------------------------------------------------
+    | AI Provider
+    |--------------------------------------------------------------------------
+    | The AI provider used for generating code fixes.
+    | Supported: 'gemini', 'openai', 'anthropic'
+    | Env: LENS_FOR_LARAVEL_AI_PROVIDER
+    */
+    'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
+
 ];
 ```
 
@@ -133,3 +143,24 @@ LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100
 ```
 
 > **Performance note:** Each page requires a full headless browser launch (Browsershot + Axe-core). Scanning 50 pages typically takes 2–5 minutes depending on page complexity and server speed.
+
+---
+
+### `ai_provider`
+
+**Type:** `string` | **Default:** `'gemini'` | **Env:** `LENS_FOR_LARAVEL_AI_PROVIDER`
+
+The AI provider used by the [AI Fix Engine](/docs/ai-fix-engine) to generate Blade code fixes.
+
+| Value | Provider | Required API key |
+|-------|----------|-----------------|
+| `gemini` | Google Gemini | `GOOGLE_API_KEY` |
+| `openai` | OpenAI | `OPENAI_API_KEY` |
+| `anthropic` | Anthropic | `ANTHROPIC_API_KEY` |
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+> The `laravel/ai` package must be installed for AI fixes to work: `composer require laravel/ai`

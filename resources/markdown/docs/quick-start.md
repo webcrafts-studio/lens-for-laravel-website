@@ -59,7 +59,7 @@ From the dashboard you can:
 2. Click **EXECUTE** to run the audit
 3. View the diagnostic report with level-based cards
 4. Filter by WCAG level
-5. Click **AI FIX** on any violation to get a Gemini-generated fix
+5. Click **AI FIX** on any violation to get an AI-generated fix
 6. Export a PDF report
 
 ## Understanding the Output

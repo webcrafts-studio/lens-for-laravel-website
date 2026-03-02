@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lens for Laravel — WCAG Accessibility Auditor</title>
     <meta name="description"
-        content="Plug-and-play WCAG compliance scanner for Laravel. Identifies accessibility violations, maps them to Blade files, and auto-fixes with Gemini AI.">
+        content="Plug-and-play WCAG compliance scanner for Laravel. Identifies accessibility violations, maps them to Blade files, and auto-fixes with AI (Gemini, OpenAI, or Anthropic).">
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
     <script>
@@ -161,7 +161,7 @@
             <p
                 class="mt-10 text-black/50 dark:text-white/40 font-mono text-sm md:text-base max-w-xl mx-auto leading-relaxed">
                 Plug-and-play WCAG compliance scanner. Identifies violations, maps them to Blade files,
-                and auto-fixes with Gemini AI.
+                and auto-fixes with AI.
             </p>
         </div>
 
@@ -237,9 +237,11 @@
             </div>
 
             <div class="p-8">
-                <div class="text-3xl font-black font-mono text-black dark:text-white">GEMINI</div>
+                <div class="font-black font-mono text-black dark:text-white leading-tight text-base">
+                    GEMINI<br>OPENAI<br>ANTHROPIC
+                </div>
                 <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">AI
-                    Powered Fixes</div>
+                    Providers</div>
             </div>
 
         </div>
@@ -291,8 +293,8 @@
                 <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
                 <p class="mt-4 text-white/60 font-mono text-sm leading-relaxed">
-                    Gemini AI reads ±20 lines of context around the failing element and generates a precise, structured
-                    Blade fix. Apply it instantly from the dashboard.
+                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads ±20 lines of context around the failing element
+                    and generates a precise, structured Blade fix. Apply it instantly from the dashboard.
                 </p>
                 <div class="mt-8 border border-white/10">
                     <div class="border-b border-white/10 px-4 py-2 flex items-center justify-between bg-white/5">
@@ -317,7 +319,7 @@
                 </div>
                 <div class="mt-4 text-white/50 font-mono text-[10px] leading-relaxed">
                     → Reads Blade context · Structured AI response<br>
-                    → Apply fix directly from dashboard
+                    → Gemini · OpenAI · Anthropic · Apply fix from dashboard
                 </div>
             </div>
 
@@ -504,7 +506,8 @@
                             DESIGNATION</div>
                         <p class="font-mono text-white/50 text-[10px] mb-4 leading-relaxed">
                             Enter target URL for comprehensive accessibility analysis. This auditor utilizes Axe-core
-                            via Spatie Browsershot to identify WCAG violations.
+                            via Spatie Browsershot to identify WCAG violations.<br>
+                            <span class="text-white/30">Scanning is restricted to your application's own domain.</span>
                         </p>
                         <div class="flex flex-wrap gap-2 mb-3">
                             <div
@@ -662,7 +665,7 @@
                         <span class="text-[#e53e3e] text-3xl tracking-tight"> LARAVEL</span>
                     </div>
                     <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
-                        WCAG Accessibility Auditor · Powered by Axe-core &amp; Gemini AI
+                        WCAG Accessibility Auditor · Powered by Axe-core &amp; AI
                     </div>
                 </div>
                 <nav class="flex items-center gap-8" aria-label="Footer navigation">

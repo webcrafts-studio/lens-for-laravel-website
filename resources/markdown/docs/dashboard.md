@@ -34,6 +34,8 @@ The form offers three scan modes, selectable via the mode tabs:
 
 The dashboard calls the `/lens-for-laravel/scan` API endpoint internally. For WHOLE_WEBSITE mode, it first calls `/lens-for-laravel/crawl` to discover pages, then scans each one.
 
+> **Domain restriction:** For security, Lens only accepts URLs that belong to your application's own domain (derived from `config('app.url')`). Attempting to scan an external URL returns a validation error. This prevents the tool from being used as a proxy to audit third-party sites.
+
 ## Diagnostic Report
 
 After the scan completes, the **Diagnostic Report** panel displays the results.
@@ -64,7 +66,7 @@ Each violation in the log is displayed as a card with:
 - **Badge** — WCAG level tag (`[WCAG A]`, `[WCAG AA]`, etc.)
 - **Rule ID** — The Axe-core rule name (e.g., `link-name`, `button-name`, `image-alt`)
 - **Preview icon** — Highlight the failing element in a live screenshot
-- **AI FIX button** — Request a Gemini-powered fix suggestion
+- **AI FIX button** — Request an AI-powered fix suggestion
 - **VIEW DOCS link** — Opens the Deque/MDN documentation for the rule
 - **Description** — Human-readable explanation of what the rule checks
 - **Failing Node** — The HTML element that failed the test
@@ -75,7 +77,7 @@ Each violation in the log is displayed as a card with:
 
 1. Click **AI FIX** on a violation card
 2. Lens calls the `/lens-for-laravel/fix/suggest` endpoint
-3. Gemini AI analyses the failing node and Blade context (±20 lines)
+3. The AI analyses the failing node and Blade context (±20 lines)
 4. A side panel shows the **original code** and **proposed fix** side by side with an explanation
 5. Click **APPLY** to write the fix to disk, or **DISMISS** to discard it
 
@@ -103,7 +105,7 @@ The dashboard communicates with these internal API endpoints:
 | `POST` | `/lens-for-laravel/crawl` | Discovers site pages (returns URL array) |
 | `POST` | `/lens-for-laravel/scan` | Scans a single URL, returns violations |
 | `POST` | `/lens-for-laravel/preview` | Screenshots a page highlighting an element |
-| `POST` | `/lens-for-laravel/fix/suggest` | Requests a Gemini fix suggestion |
+| `POST` | `/lens-for-laravel/fix/suggest` | Requests an AI fix suggestion |
 | `POST` | `/lens-for-laravel/fix/apply` | Writes the fix to a Blade file |
 | `POST` | `/lens-for-laravel/report/pdf` | Generates and streams a PDF report |
 

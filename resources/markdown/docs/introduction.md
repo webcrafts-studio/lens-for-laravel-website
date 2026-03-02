@@ -1,6 +1,6 @@
 # Introduction
 
-Lens for Laravel is a plug-and-play **WCAG accessibility auditor** for Laravel applications. It dynamically scans your pages for accessibility violations using [Axe-core 4.8.2](https://github.com/dequelabs/axe-core) via Spatie Browsershot, reverse-engineers failing CSS selectors back to their source Blade files, and provides an AI-powered fix engine backed by Google Gemini.
+Lens for Laravel is a plug-and-play **WCAG accessibility auditor** for Laravel applications. It dynamically scans your pages for accessibility violations using [Axe-core 4.8.2](https://github.com/dequelabs/axe-core) via Spatie Browsershot, reverse-engineers failing CSS selectors back to their source Blade files, and provides an AI-powered fix engine backed by your choice of AI provider — Gemini, OpenAI, or Anthropic.
 
 ## What Is Lens for Laravel?
 
@@ -12,7 +12,7 @@ When a violation is detected, Lens doesn't just show you the broken HTML element
 
 - **WCAG A, AA, and AAA compliance scanning** powered by the industry-standard Axe-core engine
 - **Blade file locator** — maps compiled HTML violations to source Blade files using ID, class, name, and tag-based heuristics
-- **AI Fix Engine** — Gemini AI reads your Blade context and proposes a precise, minimal fix
+- **AI Fix Engine** — your chosen AI provider (Gemini, OpenAI, or Anthropic) reads your Blade context and proposes a precise, minimal fix
 - **Three scan modes** — single URL, multiple URLs, or a full site crawl via BFS + sitemap seeding
 - **Artisan CLI** with level filtering, threshold quality gate, and CI/CD integration
 - **Dashboard UI** — visual diagnostic report with per-level filtering and one-click AI fixes
@@ -38,7 +38,7 @@ Your Laravel App
       │
       └─► AiFixer (optional)
                 │
-                └─► Gemini AI → fixedCode + explanation
+                └─► AI provider (Gemini / OpenAI / Anthropic) → fixedCode + explanation
 ```
 
 ## Supported WCAG Levels
