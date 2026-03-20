@@ -5,7 +5,7 @@
 Before installing Lens for Laravel, ensure your environment meets these requirements:
 
 - **PHP** 8.2 or higher
-- **Laravel** 10, 11, or 12
+- **Laravel** 10, 11, 12, or 13
 - **Node.js** 18+ (required by Spatie Browsershot to run Puppeteer)
 - **Puppeteer** (headless Chromium driver)
 

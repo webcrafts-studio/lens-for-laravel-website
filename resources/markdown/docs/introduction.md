@@ -57,7 +57,7 @@ Use the `--a`, `--aa`, or `--all` flags to control which levels are reported.
 | Dependency | Supported Versions |
 |------------|-------------------|
 | PHP | 8.2, 8.3, 8.4 |
-| Laravel | 10, 11, 12 |
+| Laravel | 10, 11, 12, 13 |
 | Node.js | 18+ |
 | Puppeteer | 21+ (global or local) |
 

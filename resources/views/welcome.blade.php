@@ -681,7 +681,7 @@
             <div
                 class="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase text-center md:text-left">
-                    A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 &nbsp;·&nbsp; PHP 8.2+
+                    A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
                 </div>
                 <div class="text-white/35 font-mono text-[10px] text-center md:text-right max-w-md leading-relaxed">
                     Automated tools catch ~20–30% of WCAG issues. Manual testing required for full compliance.
