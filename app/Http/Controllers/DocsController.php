@@ -14,9 +14,11 @@ class DocsController extends Controller
             ['title' => 'Introduction', 'slug' => 'introduction'],
             ['title' => 'Installation', 'slug' => 'installation'],
             ['title' => 'Quick Start', 'slug' => 'quick-start'],
+            ['title' => 'Upgrade to v2.0.0', 'slug' => 'upgrade-v2'],
         ],
         'CONFIGURATION' => [
             ['title' => 'Config File', 'slug' => 'configuration'],
+            ['title' => 'Frontend Support', 'slug' => 'frontend-support'],
         ],
         'SCANNING' => [
             ['title' => 'Scanning Modes', 'slug' => 'scanning-modes'],

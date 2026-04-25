@@ -1,166 +1,164 @@
-# Config File
+# Configuration
 
-After publishing with `php artisan vendor:publish --tag="lens-for-laravel-config"`, you'll find the configuration at `config/lens-for-laravel.php`.
+Publish the config file:
 
-## Full Config Reference
+```bash
+php artisan vendor:publish --tag="lens-for-laravel-config"
+```
+
+This creates:
+
+```text
+config/lens-for-laravel.php
+```
+
+## Full Config
 
 ```php
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Route Prefix
-    |--------------------------------------------------------------------------
-    | The URL prefix for the Lens for Laravel dashboard and API routes.
-    | Default: /lens-for-laravel/dashboard
-    */
     'route_prefix' => 'lens-for-laravel',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Middleware
-    |--------------------------------------------------------------------------
-    | Middleware applied to all Lens routes. Add 'auth' to restrict
-    | dashboard access to authenticated users.
-    */
     'middleware' => ['web'],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Enabled Environments
-    |--------------------------------------------------------------------------
-    | Lens returns a 403 Forbidden response outside these environments.
-    | Keep 'local' only in most cases.
-    */
-    'enabled_environments' => ['local'],
+    'enabled_environments' => [
+        'local',
+    ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Editor
-    |--------------------------------------------------------------------------
-    | The IDE used to generate "open in editor" links for Blade files.
-    | Supported: 'vscode', 'cursor', 'phpstorm', 'sublime', 'none'
-    | Env: LENS_FOR_LARAVEL_EDITOR
-    */
     'editor' => env('LENS_FOR_LARAVEL_EDITOR', 'vscode'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Crawl Max Pages
-    |--------------------------------------------------------------------------
-    | Maximum number of pages to discover and scan in WHOLE_WEBSITE mode.
-    | Env: LENS_FOR_LARAVEL_CRAWL_MAX_PAGES
-    */
     'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 50),
 
-    /*
-    |--------------------------------------------------------------------------
-    | AI Provider
-    |--------------------------------------------------------------------------
-    | The AI provider used for generating code fixes.
-    | Supported: 'gemini', 'openai', 'anthropic'
-    | Env: LENS_FOR_LARAVEL_AI_PROVIDER
-    */
-    'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
+    'crawler_render_javascript' => env('LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT', false),
 
+    'scan_wait_ms' => env('LENS_FOR_LARAVEL_SCAN_WAIT_MS', 0),
+
+    'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
 ];
 ```
 
-## Option Reference
+## Options
 
 ### `route_prefix`
 
-**Type:** `string` | **Default:** `'lens-for-laravel'`
+**Type:** `string` | **Default:** `lens-for-laravel`
 
-Changes the URL prefix for all Lens routes. With the default value, the dashboard is at `/lens-for-laravel/dashboard`.
+Controls the route prefix for the dashboard and API endpoints.
 
 ```php
 'route_prefix' => 'a11y',
-// Dashboard → /a11y/dashboard
 ```
 
----
+Dashboard URL:
+
+```text
+/a11y/dashboard
+```
 
 ### `middleware`
 
 **Type:** `array` | **Default:** `['web']`
 
-Middleware applied to all Lens routes. To restrict the dashboard to logged-in users, add the `auth` middleware:
+Middleware applied to all Lens routes.
 
 ```php
 'middleware' => ['web', 'auth'],
 ```
 
----
+Use authenticated middleware if Lens is enabled outside local development.
 
 ### `enabled_environments`
 
 **Type:** `array` | **Default:** `['local']`
 
-Lens checks `app()->environment()` against this list. Requests from disallowed environments receive a `403 Forbidden` response.
+Lens returns `403 Forbidden` outside these environments.
 
 ```php
-// Allow in CI pipeline too
 'enabled_environments' => ['local', 'testing'],
 ```
 
-> **Warning:** Do not add `'production'` to this list. Lens launches headless browsers on demand and is not designed for production traffic.
-
----
+Do not enable Lens publicly in production.
 
 ### `editor`
 
-**Type:** `string` | **Default:** `'vscode'` | **Env:** `LENS_FOR_LARAVEL_EDITOR`
+**Type:** `string` | **Default:** `vscode` | **Env:** `LENS_FOR_LARAVEL_EDITOR`
 
-Controls the URL scheme used when clicking "open in editor" links in the dashboard.
+Controls "open in editor" links.
 
-| Value | URL Scheme | IDE |
-|-------|-----------|-----|
-| `vscode` | `vscode://file/{path}:{line}` | Visual Studio Code |
-| `cursor` | `cursor://file/{path}:{line}` | Cursor |
-| `phpstorm` | `phpstorm://open?file={path}&line={line}` | PhpStorm / JetBrains |
-| `sublime` | `subl://{path}:{line}` | Sublime Text |
-| `none` | *(disabled)* | No links rendered |
-
-Set via environment variable to avoid committing IDE preferences:
+| Value | IDE |
+|-------|-----|
+| `vscode` | Visual Studio Code |
+| `cursor` | Cursor |
+| `phpstorm` | PhpStorm / JetBrains |
+| `sublime` | Sublime Text |
+| `none` | Disable editor links |
 
 ```text
 LENS_FOR_LARAVEL_EDITOR=cursor
 ```
 
----
-
 ### `crawl_max_pages`
 
 **Type:** `int` | **Default:** `50` | **Env:** `LENS_FOR_LARAVEL_CRAWL_MAX_PAGES`
 
-Maximum number of pages that will be discovered and scanned in `WHOLE_WEBSITE` mode. Higher values produce more thorough coverage but significantly increase scan time.
+Maximum page count for whole-site crawling.
 
 ```text
 LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100
 ```
 
-> **Performance note:** Each page requires a full headless browser launch (Browsershot + Axe-core). Scanning 50 pages typically takes 2–5 minutes depending on page complexity and server speed.
+### `crawler_render_javascript`
 
----
+**Type:** `bool` | **Default:** `false` | **Env:** `LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT`
+
+When enabled, the crawler attempts to render pages in Chromium and collect links from the hydrated DOM. Use this for SPA and Inertia apps where links are created by React or Vue.
+
+```text
+LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=true
+```
+
+If browser crawling fails or finds no links, Lens falls back to the default HTTP crawler.
+
+### `scan_wait_ms`
+
+**Type:** `int` | **Default:** `0` | **Env:** `LENS_FOR_LARAVEL_SCAN_WAIT_MS`
+
+Extra delay after network idle before axe-core runs.
+
+```text
+LENS_FOR_LARAVEL_SCAN_WAIT_MS=500
+```
+
+Useful for:
+
+- Livewire hydration
+- Inertia page transitions
+- React lazy content
+- Vue delayed rendering
 
 ### `ai_provider`
 
-**Type:** `string` | **Default:** `'gemini'` | **Env:** `LENS_FOR_LARAVEL_AI_PROVIDER`
+**Type:** `string` | **Default:** `gemini` | **Env:** `LENS_FOR_LARAVEL_AI_PROVIDER`
 
-The AI provider used by the [AI Fix Engine](/docs/ai-fix-engine) to generate Blade code fixes.
+AI provider used by the AI Fix Engine.
 
-| Value | Provider | Required API key |
-|-------|----------|-----------------|
-| `gemini` | Google Gemini | `GOOGLE_API_KEY` |
+| Value | Provider | API key |
+|-------|----------|---------|
+| `gemini` | Google Gemini | `GEMINI_API_KEY` |
 | `openai` | OpenAI | `OPENAI_API_KEY` |
 | `anthropic` | Anthropic | `ANTHROPIC_API_KEY` |
 
 ```text
-LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
-ANTHROPIC_API_KEY=sk-ant-...
+LENS_FOR_LARAVEL_AI_PROVIDER=openai
+OPENAI_API_KEY=sk-...
 ```
 
-> The `laravel/ai` package must be installed for AI fixes to work: `composer require laravel/ai`
+## v2.0.0 Upgrade
+
+If you published the config before v2.0.0, add these keys manually:
+
+```php
+'crawler_render_javascript' => env('LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT', false),
+'scan_wait_ms' => env('LENS_FOR_LARAVEL_SCAN_WAIT_MS', 0),
+```

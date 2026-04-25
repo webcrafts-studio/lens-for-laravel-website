@@ -2,84 +2,129 @@
 
 ## Requirements
 
-Before installing Lens for Laravel, ensure your environment meets these requirements:
+Before installing Lens for Laravel, make sure the host application has:
 
 - **PHP** 8.2 or higher
 - **Laravel** 10, 11, 12, or 13
-- **Node.js** 18+ (required by Spatie Browsershot to run Puppeteer)
-- **Puppeteer** (headless Chromium driver)
+- **Node.js** recent LTS
+- **Puppeteer** for headless Chromium
+- **Chromium** available through Puppeteer or your deployment environment
 
-### Installing Puppeteer
+Lens uses Spatie Browsershot to render pages and run axe-core against the browser DOM.
 
-Puppeteer must be available on the machine running the scans. Install it as a project dev dependency:
+## Install Puppeteer
+
+Install Puppeteer as a local dev dependency in the Laravel app:
 
 ```bash
 npm install puppeteer --save-dev
 ```
 
-Or globally:
+You can also install it globally if your environment is already configured that way:
 
 ```bash
 npm install -g puppeteer
 ```
 
-> **Note:** On first install, Puppeteer downloads a compatible version of Chromium (~170 MB). This is required for Spatie Browsershot to launch a headless browser.
+> On first install, Puppeteer downloads a compatible Chromium build. This is expected.
 
-## Installing the Package
+## Install the Package
 
 ```bash
 composer require webcrafts-studio/lens-for-laravel --dev
 ```
 
-> Lens for Laravel is a developer tool and should be installed as a dev dependency. It is disabled by default in all non-local environments.
+Lens is a developer tool and should normally be installed as a dev dependency.
 
-## Publishing the Config File
+## Run Migrations
 
-To customize the package behaviour, publish the configuration file:
+v2.0.0 includes scan history and scan comparison. Run migrations:
+
+```bash
+php artisan migrate
+```
+
+## Publish Config
 
 ```bash
 php artisan vendor:publish --tag="lens-for-laravel-config"
 ```
 
-This creates `config/lens-for-laravel.php` in your application.
+This creates:
 
-## Setting Environment Variables
+```text
+config/lens-for-laravel.php
+```
 
-Add the following optional variables to your `.env` file:
+Optionally publish package views:
+
+```bash
+php artisan vendor:publish --tag="lens-for-laravel-views"
+```
+
+## Environment Variables
+
+Add only the options you need:
 
 ```text
 LENS_FOR_LARAVEL_EDITOR=vscode
 LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=50
+LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=false
+LENS_FOR_LARAVEL_SCAN_WAIT_MS=0
+LENS_FOR_LARAVEL_AI_PROVIDER=gemini
 ```
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LENS_FOR_LARAVEL_EDITOR` | `vscode` | IDE used to open files from the dashboard. |
-| `LENS_FOR_LARAVEL_CRAWL_MAX_PAGES` | `50` | Maximum pages scanned in `--crawl` mode. |
+| `LENS_FOR_LARAVEL_EDITOR` | `vscode` | IDE used when opening source files from the dashboard. |
+| `LENS_FOR_LARAVEL_CRAWL_MAX_PAGES` | `50` | Maximum pages discovered in whole-site mode. |
+| `LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT` | `false` | Render JavaScript while crawling SPA/Inertia links. |
+| `LENS_FOR_LARAVEL_SCAN_WAIT_MS` | `0` | Extra delay after network idle before axe-core runs. |
+| `LENS_FOR_LARAVEL_AI_PROVIDER` | `gemini` | AI provider for fix suggestions. |
 
-## Verifying the Installation
+## AI Provider Keys
 
-After installing, verify the package is active by visiting the dashboard:
+AI Fix is optional. Configure a provider only if you want generated fixes:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=gemini
+GEMINI_API_KEY=your-key
+
+# or
+LENS_FOR_LARAVEL_AI_PROVIDER=openai
+OPENAI_API_KEY=your-key
+
+# or
+LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=your-key
+```
+
+## Verify Installation
+
+Open the dashboard:
 
 ```text
 http://your-app.test/lens-for-laravel/dashboard
 ```
 
-Or run a quick audit from the CLI:
+Or run a CLI scan:
 
 ```bash
 php artisan lens:audit http://your-app.test
 ```
 
-If the scan runs and outputs a diagnostic table, installation was successful.
+## CI and Staging
 
-## CI / Production
-
-Lens for Laravel is restricted to local environments by default. In CI pipelines you can extend allowed environments in the config:
+Lens is enabled only in `local` by default. To run it in CI, add the environment explicitly:
 
 ```php
-// config/lens-for-laravel.php
 'enabled_environments' => ['local', 'testing'],
 ```
 
-> **Warning:** Never enable Lens for Laravel in production. It launches a headless browser on demand, which is resource-intensive, and exposes your application's internal structure.
+If you enable Lens on staging, protect the routes:
+
+```php
+'middleware' => ['web', 'auth'],
+```
+
+> Do not expose Lens publicly in production. It launches headless browsers and exposes internal source structure.

@@ -1,99 +1,99 @@
 # Quick Start
 
-Get your first accessibility audit running in under two minutes.
+Get your first accessibility audit running in a few minutes.
 
-## Your First Audit
+## First CLI Audit
 
-Run a single-URL audit against your local app:
+Run a scan against your local app:
 
 ```bash
 php artisan lens:audit http://your-app.test
 ```
 
-The URL argument is optional. If omitted, Lens defaults to your application's `APP_URL`:
+If you omit the URL, Lens defaults to your Laravel `APP_URL`:
 
 ```bash
 php artisan lens:audit
 ```
 
-Lens will launch a headless browser, inject Axe-core into the page, collect all violations, attempt to locate each violation in your Blade files, and render a diagnostic table.
+Lens launches Chromium, renders the page, injects axe-core, collects violations, maps source locations when possible, and prints a diagnostic report.
 
-### Example Output
+## First Dashboard Audit
 
-```text
- DIAGNOSTIC REPORT
- TOTAL_VIOLATIONS: 3
-
- ┌───────────┬──────────────┬───────────────────────────────────────────────┐
- │ Level     │ Count        │                                               │
- ├───────────┼──────────────┤                                               │
- │ A LEVEL   │ 3            │                                               │
- │ AA LEVEL  │ 0            │                                               │
- │ AAA LEVEL │ 17           │                                               │
- │ OTHER     │ 81           │                                               │
- └───────────┴──────────────┴───────────────────────────────────────────────┘
-
- [WCAG A] link-name — CRITICAL
- Ensures links have discernible text
- >>> partials/footer.blade.php:112
- <a href="" class="footer__social">
-   <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
- </a>
-```
-
-## Filtering by WCAG Level
-
-For most projects, focus on Level A and AA violations first — these are the most impactful and legally relevant:
-
-```bash
-php artisan lens:audit http://your-app.test --aa
-```
-
-This reports only WCAG A and AA violations, suppressing AAA and best-practice noise.
-
-## Accessing the Dashboard
-
-The dashboard provides a visual interface for running audits and exploring violations:
+Open:
 
 ```text
 http://your-app.test/lens-for-laravel/dashboard
 ```
 
-From the dashboard you can:
+Then:
 
-1. Enter a target URL and choose a scan mode (Single, Multiple, or Whole Website)
-2. Click **EXECUTE** to run the audit
-3. View the diagnostic report with level-based cards
-4. Filter by WCAG level
-5. Click **AI FIX** on any violation to get an AI-generated fix
-6. Export a PDF report
+1. Enter a URL from the same host as `APP_URL`.
+2. Choose **Single URL**, **Multiple URLs**, or **Whole Website**.
+3. Run the scan.
+4. Inspect WCAG level cards and violation details.
+5. Preview the failing element.
+6. Open the source file from `SRC_LOC`.
+7. Optionally request an AI fix.
 
-## Understanding the Output
+## Example Issue Output
 
-### Violation Cards
+```json
+{
+  "id": "image-alt",
+  "impact": "critical",
+  "description": "Images must have alternate text",
+  "htmlSnippet": "<img class=\"logo\" src=\"/logo.png\">",
+  "selector": ".logo",
+  "tags": ["wcag2a"],
+  "url": "http://your-app.test",
+  "fileName": "js/Components/Logo.vue",
+  "lineNumber": 12,
+  "sourceType": "vue"
+}
+```
 
-The summary cards at the top of the report show the violation count grouped by WCAG level:
+`sourceType` can be:
 
-- **A LEVEL** — Critical blockers (red highlight). Fix these first.
-- **AA LEVEL** — Standard compliance target.
-- **AAA LEVEL** — Best-effort improvements.
-- **OTHER** — Axe-core best-practice rules outside the WCAG framework.
+- `blade`
+- `react`
+- `vue`
+- `null` when no source location is found
 
-### Each Violation Shows
+## Focus on A and AA First
 
-- The **WCAG rule ID** (e.g., `link-name`, `button-name`, `image-alt`)
-- **Impact level**: `critical`, `serious`, `moderate`, or `minor`
-- **Description** of what the rule checks
-- **Failing HTML node** — the exact element that failed
-- **Source location** — the Blade file and line number (when detected)
-- **CSS selector** — the full DOM path to the element
+For most teams, Level A and AA issues are the highest-priority set:
 
-## Setting a Quality Gate
+```bash
+php artisan lens:audit http://your-app.test --aa
+```
 
-In CI/CD pipelines, use `--threshold` to fail the build if violations exceed a limit:
+## Whole-Site Scan
+
+```bash
+php artisan lens:audit http://your-app.test --crawl --aa
+```
+
+If your app is an SPA or Inertia app where links are rendered after hydration, enable JavaScript crawling:
+
+```text
+LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=true
+```
+
+## Hydration Delay
+
+For Livewire, Inertia, React, or Vue screens that finish rendering shortly after network idle, add a scan delay:
+
+```text
+LENS_FOR_LARAVEL_SCAN_WAIT_MS=500
+```
+
+## Quality Gate
+
+Use `--threshold` in CI:
 
 ```bash
 php artisan lens:audit http://your-app.test --aa --threshold=0
 ```
 
-An exit code of `1` is returned when the violation count exceeds the threshold. Exit code `0` means the gate passed.
+Exit code `1` means the violation count exceeded the threshold. Exit code `0` means the gate passed.

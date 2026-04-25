@@ -1,28 +1,26 @@
 # Scanning Modes
 
-Lens for Laravel supports three distinct scan modes, selectable both from the CLI and the dashboard.
+Lens supports three scan modes in both the dashboard and CLI.
 
 ## Single URL
 
-Audit one specific page. This is the default mode when you pass a single URL argument.
+Audit one page:
 
 ```bash
 php artisan lens:audit https://your-app.test
 ```
 
-**When to use:** Quick checks on a specific page, focused debugging, or verifying a fix on a particular route.
+How it works:
 
-**How it works:**
-
-1. Browsershot launches a headless Chromium instance and navigates to the URL
-2. Axe-core 4.8.2 is fetched from CDN and injected into the page
-3. `axe.run()` executes with all WCAG A, AA, AAA, and best-practice rules enabled
-4. Results are mapped through FileLocator to identify Blade source locations
-5. The diagnostic table is rendered to the terminal
+1. Browsershot launches Chromium.
+2. The page is rendered and hydrated.
+3. Optional `scan_wait_ms` delay is applied.
+4. axe-core runs in the browser.
+5. Violations are mapped to Blade, React, or Vue source files when possible.
 
 ## Multiple URLs
 
-Pass multiple URLs as space-separated arguments to scan them all in sequence.
+Pass several URLs:
 
 ```bash
 php artisan lens:audit \
@@ -31,35 +29,19 @@ php artisan lens:audit \
   https://your-app.test/contact
 ```
 
-**How it works:**
+Lens scans each URL in sequence, skips failed pages, aggregates issues, and includes the source URL on every issue.
 
-- A progress bar tracks scan progress across all URLs
-- Failed pages (network errors, timeouts) are skipped gracefully — the scan continues
-- Issues from all pages are aggregated into a single diagnostic report
-- Each violation includes its source URL
-- Returns a tuple of `[Collection<Issue>, array $failedUrls]`
+## Whole Website Crawl
 
-**Identifying which page a violation came from:**
-
-In the dashboard, multi-URL results include the source URL in each violation card. From the CLI, violations are grouped by page.
-
-## Whole Website (Crawl)
-
-Discover and scan your entire site automatically using BFS link traversal and sitemap seeding.
+Discover and scan internal pages:
 
 ```bash
 php artisan lens:audit https://your-app.test --crawl
 ```
 
-**When to use:** Full compliance audits, pre-release checks, or initial onboarding assessments.
-
 ### Crawl Strategy
 
-The crawler uses a two-phase discovery strategy:
-
-**Phase 1 — Sitemap seeding (fast):**
-
-Lens attempts to read your sitemap at these paths in order:
+Lens seeds URLs from:
 
 ```text
 /sitemap.xml
@@ -67,92 +49,69 @@ Lens attempts to read your sitemap at these paths in order:
 /sitemaps/sitemap.xml
 ```
 
-If a sitemap is found, all URLs within it are added to the crawl queue immediately. Nested `<sitemapindex>` elements are parsed recursively.
+Then it follows internal `<a href>` links until the queue is empty or `crawl_max_pages` is reached.
 
-**Phase 2 — BFS link traversal:**
+By default, link discovery uses Laravel's HTTP client and parses the initial HTML. This is fast and works well for server-rendered pages.
 
-Starting from the base URL, Lens performs breadth-first search:
+## SPA and Inertia Crawling
+
+For React, Vue, or Inertia apps where links appear only after JavaScript renders, enable browser-based link discovery:
 
 ```text
-queue = [baseUrl]
-visited = []
-
-while queue not empty and visited.count < max_pages:
-    url = queue.shift()
-    skip if already visited
-    visited.add(url)
-
-    html = http_get(url)          // plain HTTP, NOT Browsershot
-    links = extract_a_href(html)
-
-    for each link:
-        if internal_page(link) and not visited and not in queue:
-            queue.push(link)
+LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=true
 ```
 
-> **Note:** Link discovery uses plain HTTP (not headless Chromium) because it is orders of magnitude faster. Browsershot is only used during the Axe-core scan phase.
+With this enabled, Lens tries to render each crawled page in Chromium and read links from the hydrated DOM. If browser crawling fails or finds no links, Lens falls back to the HTTP crawler.
 
-### What Gets Crawled
+## What Gets Crawled
 
-The crawler follows only **internal HTML pages**. It automatically skips:
+Lens follows only internal HTML pages. It skips:
 
-- External domains
-- Static assets: `.jpg`, `.png`, `.gif`, `.svg`, `.css`, `.js`, `.woff`, `.ttf`, `.pdf`, `.zip`
-- Non-navigable hrefs: `javascript:`, `mailto:`, `tel:`, `#fragment`
-- XML, JSON, and API endpoints
+- external domains
+- static assets: images, CSS, JS, fonts, PDFs, archives
+- `javascript:`, `mailto:`, `tel:`, and fragment-only links
+- XML, JSON, text, and CSV endpoints
 
-### Limiting Crawl Depth
+## Crawl Limit
 
-The max page count is controlled by `crawl_max_pages` (default: 50):
-
-```bash
-LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100 php artisan lens:audit https://your-app.test --crawl
+```text
+LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100
 ```
 
-Or permanently in `config/lens-for-laravel.php`:
+Or in config:
 
 ```php
 'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 100),
 ```
 
-## Level Filtering
-
-All three scan modes support WCAG level filtering. Without a filter, all levels (A, AA, AAA, and best practice) are scanned and reported.
+## WCAG Level Filtering
 
 | Flag | Levels Reported |
 |------|----------------|
-| `--a` | WCAG 2.x Level A only |
-| `--aa` | WCAG 2.x Level A + AA |
-| `--all` | A + AA + AAA + Best Practice *(default)* |
+| `--a` | WCAG Level A only |
+| `--aa` | WCAG Level A + AA |
+| `--all` | A + AA + AAA + best-practice rules |
 
 ```bash
-# Report only the most critical violations
-php artisan lens:audit https://your-app.test --a
-
-# Standard compliance target
 php artisan lens:audit https://your-app.test --aa --crawl
 ```
 
-## CI/CD Quality Gate
-
-Use `--threshold=N` to control the exit code:
+## CI Quality Gate
 
 ```bash
 php artisan lens:audit https://staging.app.test --aa --threshold=0
-echo $?   # 1 if violations > 0, else 0
 ```
 
-| Scenario | Exit Code |
-|----------|-----------|
-| 0 violations, threshold=0 | `0` |
-| 3 violations, threshold=0 | `1` |
-| 3 violations, threshold=5 | `0` |
-| 6 violations, threshold=5 | `1` |
+| Violations | Threshold | Exit Code |
+|-----------|-----------|-----------|
+| 0 | 0 | `0` |
+| 3 | 0 | `1` |
+| 3 | 5 | `0` |
+| 6 | 5 | `1` |
 
-### GitHub Actions Example
+## GitHub Actions Example
 
 ```yaml
 - name: Run accessibility audit
-  run: |
-    php artisan lens:audit ${{ env.APP_URL }} --aa --threshold=0
+  run: php artisan lens:audit ${{ env.APP_URL }} --aa --threshold=0
 ```

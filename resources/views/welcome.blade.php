@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lens for Laravel — WCAG Accessibility Auditor</title>
     <meta name="description"
-        content="Plug-and-play WCAG compliance scanner for Laravel. Identifies accessibility violations, maps them to Blade files, and auto-fixes with AI (Gemini, OpenAI, or Anthropic).">
+        content="Local-first WCAG accessibility auditor for Laravel. Maps violations to Blade, React, and Vue source files and generates AI-assisted fixes.">
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
     <script>
@@ -94,7 +94,7 @@
                 <span class="text-black dark:text-white font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="text-[#e53e3e] font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v1.0</span>
+                    class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v2.0</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -160,8 +160,8 @@
 
             <p
                 class="mt-10 text-black/50 dark:text-white/40 font-mono text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-                Plug-and-play WCAG compliance scanner. Identifies violations, maps them to Blade files,
-                and auto-fixes with AI.
+                Local-first WCAG auditor for Blade, Livewire, React, Vue, and Inertia. Maps violations to source files
+                and generates AI-assisted fixes.
             </p>
         </div>
 
@@ -216,7 +216,7 @@
             </div>
 
             <div class="p-8">
-                <div class="text-5xl font-black font-mono text-black dark:text-white">71</div>
+                <div class="text-5xl font-black font-mono text-black dark:text-white">108</div>
                 <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">Tests
                     Passing</div>
             </div>
@@ -229,11 +229,11 @@
 
             <div class="p-8">
                 <div class="font-black font-mono leading-none">
-                    <span class="text-3xl text-black dark:text-white">WCAG</span>
-                    <span class="text-3xl text-[#e53e3e]"> 2.2</span>
+                    <span class="text-3xl text-black dark:text-white">BLADE</span>
+                    <span class="text-3xl text-[#e53e3e]"> JS</span>
                 </div>
                 <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">
-                    Compliant</div>
+                    Source Types</div>
             </div>
 
             <div class="p-8">
@@ -261,7 +261,7 @@
                     Multi-mode<br>Scanning</h3>
                 <p class="mt-4 text-black/50 dark:text-white/50 font-mono text-sm leading-relaxed">
                     Target a single page, a list of URLs, or let Lens crawl your entire site via sitemap.xml and BFS
-                    link discovery. Up to 50 pages by default.
+                    link discovery. Enable JavaScript crawling for SPA and Inertia apps.
                 </p>
                 <div class="mt-8 flex flex-col gap-2">
                     <div
@@ -293,13 +293,13 @@
                 <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
                 <p class="mt-4 text-white/60 font-mono text-sm leading-relaxed">
-                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads ±20 lines of context around the failing element
-                    and generates a precise, structured Blade fix. Apply it instantly from the dashboard.
+                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads framework-aware context and generates precise
+                    Blade, React, or Vue fixes. Review the diff before applying.
                 </p>
                 <div class="mt-8 border border-white/10">
                     <div class="border-b border-white/10 px-4 py-2 flex items-center justify-between bg-white/5">
                         <span class="text-red-400 text-[10px] font-mono uppercase tracking-wider">BEFORE</span>
-                        <span class="text-white/50 text-[10px] font-mono">partials/footer.blade.php:112</span>
+                        <span class="text-white/50 text-[10px] font-mono">js/Components/Footer.vue:112</span>
                     </div>
                     <div class="px-4 py-3 text-[11px] font-mono text-red-400 leading-relaxed">
                         &lt;a href=""&gt;<br>
@@ -318,8 +318,8 @@
                     </div>
                 </div>
                 <div class="mt-4 text-white/50 font-mono text-[10px] leading-relaxed">
-                    → Reads Blade context · Structured AI response<br>
-                    → Gemini · OpenAI · Anthropic · Apply fix from dashboard
+                    - Reads Blade, React, and Vue context · Structured AI response<br>
+                    - Gemini · OpenAI · Anthropic · Review diff then apply
                 </div>
             </div>
 
@@ -328,8 +328,8 @@
                 <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">03 / CLI FIRST</div>
                 <h3 class="font-mono font-black text-3xl text-black dark:text-white leading-tight">CLI<br>First</h3>
                 <p class="mt-4 text-black/50 dark:text-white/50 font-mono text-sm leading-relaxed">
-                    A first-class Artisan command with granular WCAG level filtering and a CI/CD quality gate via the
-                    threshold flag.
+                    A first-class Artisan command with WCAG filters, crawl mode, source mapping, SPA-friendly options,
+                    and CI quality gates.
                 </p>
                 {{-- Always-dark code block (terminal) --}}
                 <div class="mt-8 bg-black text-white p-5 font-mono text-xs leading-relaxed">
@@ -438,7 +438,7 @@
                         <div
                             class="px-4 pb-2 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-[9px] text-white/50">
                             <span>SRC_LOC: <span
-                                    class="text-white/70 border border-white/20 px-2 py-0.5 ml-1">partials/footer.blade.php:112</span></span>
+                                    class="text-white/70 border border-white/20 px-2 py-0.5 ml-1">vue js/Components/Footer.vue:112</span></span>
                             <span>CSS_SELECTOR: <span
                                     class="text-white/70">.footer__social[href=""]:nth-child(1)</span></span>
                         </div>
@@ -580,7 +580,7 @@
                             <span class="font-mono text-[#e53e3e] text-[10px]">SHOWING: 3</span>
                         </div>
                         <div class="divide-y divide-white/5">
-                            @foreach ([['rule' => 'link-name', 'desc' => 'Ensures links have discernible text', 'file' => 'partials/footer.blade.php:112'], ['rule' => 'button-name', 'desc' => 'Ensures buttons have discernible text', 'file' => 'partials/nav.blade.php:45'], ['rule' => 'image-alt', 'desc' => 'Ensures img elements have alternate text', 'file' => 'components/hero.blade.php:8']] as $violation)
+                            @foreach ([['rule' => 'link-name', 'desc' => 'Ensures links have discernible text', 'file' => 'blade partials/footer.blade.php:112'], ['rule' => 'button-name', 'desc' => 'Ensures buttons have discernible text', 'file' => 'react js/Pages/Dashboard.tsx:45'], ['rule' => 'image-alt', 'desc' => 'Ensures img elements have alternate text', 'file' => 'vue js/Components/Hero.vue:8']] as $violation)
                                 <div class="px-4 py-3">
                                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                                         <div class="flex items-center gap-2 shrink-0">
@@ -665,7 +665,7 @@
                         <span class="text-[#e53e3e] text-3xl tracking-tight"> LARAVEL</span>
                     </div>
                     <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
-                        WCAG Accessibility Auditor · Powered by Axe-core &amp; AI
+                        WCAG Accessibility Auditor · Blade · React · Vue · AI
                     </div>
                 </div>
                 <nav class="flex items-center gap-8" aria-label="Footer navigation">
@@ -684,7 +684,7 @@
                     A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
                 </div>
                 <div class="text-white/35 font-mono text-[10px] text-center md:text-right max-w-md leading-relaxed">
-                    Automated tools catch ~20–30% of WCAG issues. Manual testing required for full compliance.
+                    Automated tools catch ~20-30% of WCAG issues. Manual testing required for full compliance.
                 </div>
             </div>
         </div>

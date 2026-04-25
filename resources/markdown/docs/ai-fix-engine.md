@@ -1,103 +1,95 @@
 # AI Fix Engine
 
-The AI Fix Engine uses your configured AI provider — Google Gemini, OpenAI, or Anthropic — to analyse accessibility violations in context and generate minimal, precise Blade fixes that preserve your existing code structure.
+The AI Fix Engine uses Gemini, OpenAI, or Anthropic to generate minimal accessibility fixes for located Blade, React, and Vue source files.
+
+## Supported Files
+
+AI Fix can read and modify:
+
+```text
+resources/views/**/*.blade.php
+resources/js/**/*.js
+resources/js/**/*.jsx
+resources/js/**/*.ts
+resources/js/**/*.tsx
+resources/js/**/*.vue
+```
+
+It will not write outside those paths.
 
 ## How It Works
 
-When you click **AI FIX** on a violation in the dashboard, Lens's `AiFixer` service performs the following steps:
+When you click **AI FIX**, Lens:
 
-### 1. Path Validation
+1. validates the located file path
+2. reads source context around the line number
+3. expands the context to include a matching closing tag when needed
+4. builds a prompt with the axe rule, WCAG tags, failing DOM snippet, and source code
+5. sends the prompt to the configured provider
+6. receives `fixedCode` and `explanation`
+7. shows a diff preview in the dashboard
+8. applies the change only after you accept it
 
-Lens enforces that only files within `resources/views/` can be read and modified. Any attempt to access files outside this directory is rejected immediately.
+## Source Context
 
-### 2. Context Reading
+Lens reads approximately 20 lines above and below the detected line. For larger elements, it expands downward until the matching closing tag is included.
 
-Rather than sending only the single failing element, Lens reads **±20 lines of surrounding Blade code** around the violation's line number. This gives the AI full context — adjacent directives, component attributes, loop variables, and indentation patterns.
+This helps prevent fixes such as changing `<div>` to `<header>` without also changing `</div>` to `</header>`.
+
+## Framework-Aware Prompts
+
+The prompt identifies the source type:
+
+- Laravel Blade
+- React
+- Vue
+
+The AI is instructed to preserve framework-specific syntax, whitespace, indentation, and unrelated code.
+
+## Configure Provider
 
 ```text
-Line 102: <div class="footer__social-links">
-Line 103:   <ul>
-Line 104:     @foreach($socialLinks as $link)
-Line 105:       <li>
-...
-Line 112:         <a href="{{ $link->url }}" class="footer__social">   ← failing line
-Line 113:           <i class="fa-brands fa-{{ $link->icon }}"
-Line 114:              aria-hidden="true">
-Line 115:           </i>
-Line 116:         </a>
-...
+LENS_FOR_LARAVEL_AI_PROVIDER=gemini
+GEMINI_API_KEY=your-key
 ```
 
-**Automatic closing-tag expansion:** if the failing element's closing tag falls outside the initial ±20 line window (e.g., a large `<section>` or `<div>` block), Lens automatically expands the context downward using depth-counting until the matching closing tag is included. This ensures that when the AI renames an element (e.g., `<div>` → `<header>`), it can see and update the closing tag too — preventing mismatched markup such as `<header>…</div>`.
+Or:
 
-### 3. Prompt Construction
-
-The AI prompt contains:
-
-- The **accessibility rule description** (e.g., "Ensures links have discernible text")
-- The **WCAG standards** the rule belongs to (e.g., `wcag2a`, `wcag21a`)
-- The **failing HTML snippet** captured by Axe-core
-- The **full 40-line Blade code block** for context
-- An instruction to preserve Blade directives and indentation
-
-The AI system prompt: *"You are an expert in web accessibility (WCAG) and Laravel Blade templates. You produce minimal, precise fixes that resolve accessibility violations without touching unrelated code."*
-
-### 4. Structured AI Response
-
-The AI returns a structured JSON response with two fields:
-
-```json
-{
-  "fixedCode": "<a href=\"{{ $link->url }}\" class=\"footer__social\" aria-label=\"{{ $link->label }}\">\n  ...\n</a>",
-  "explanation": "Added aria-label attribute using the link's label property to provide discernible text for screen readers."
-}
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=openai
+OPENAI_API_KEY=your-key
 ```
 
-### 5. Fix Preview
+Or:
 
-The dashboard shows the original code and the proposed fix side by side before you apply it.
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=your-key
+```
 
 ## Applying a Fix
 
-When you click **APPLY FIX** in the dashboard:
+When you apply a fix:
 
-1. Lens validates the file path is within `resources/views/`
-2. It reads the current file content
-3. It performs a string-replace of the `originalCode` block with `fixedCode`
-4. If the original code is no longer present (stale fix), the application is aborted — you must re-run the scan to get a fresh fix
-5. The file is written back to disk
+1. Lens validates the target file path again.
+2. It reads the current file content.
+3. It verifies the original code block still exists.
+4. It rejects stale fixes when the original block changed.
+5. It writes the replacement with an exclusive lock.
 
-> **Note:** Lens writes directly to your Blade files on disk. Commit the result to version control after reviewing.
+## Security Controls
 
-## Requirements
+AI Fix includes several safeguards:
 
-The AI Fix Engine requires the `laravel/ai` package and an API key for your chosen provider:
-
-```bash
-composer require laravel/ai
-```
-
-Set the provider in your `.env` file (defaults to `gemini`):
-
-```text
-LENS_FOR_LARAVEL_AI_PROVIDER=gemini   # or 'openai' or 'anthropic'
-```
-
-Then add the corresponding API key:
-
-| Provider | Environment variable |
-|----------|---------------------|
-| `gemini` | `GEMINI_API_KEY` |
-| `openai` | `OPENAI_API_KEY` |
-| `anthropic` | `ANTHROPIC_API_KEY` |
-
-See [Configuration](/docs/configuration) for the full `ai_provider` option reference.
+- path traversal rejection
+- writes restricted to supported source directories
+- rejection of generated server-side execution calls such as `shell_exec`, `system`, `exec`, `passthru`, `proc_open`, `popen`, and `eval`
+- rejection of newly introduced raw PHP tags unless they already existed in the original block
+- prompt-injection mitigation by treating scanned page content as untrusted data
 
 ## Limitations
 
-- **Heuristic accuracy:** FileLocator uses best-effort heuristics to find Blade source locations. The mapped file and line number may occasionally be incorrect, especially for deeply nested components or dynamically generated HTML.
-- **Stale fixes:** If you modify the Blade file between scanning and applying, the original code may not match, and the fix will be rejected.
-- **Context window:** Lens automatically expands the context to include the matching closing tag for large elements. However, if the expanded block exceeds 8 000 characters, the fix will be rejected and you will be asked to apply it manually.
-- **Provider availability:** The AI Fix Engine requires an active internet connection and a valid API key for your configured provider.
-
-> Automated AI fixes should be **reviewed before committing**. Always verify the generated fix resolves the violation without introducing regressions.
+- AI output must be reviewed before committing.
+- The fix can be rejected if the file changed after scanning.
+- Very large context blocks are rejected and must be fixed manually.
+- Dynamic abstractions can require manual edits when the located source is only the outer component.
