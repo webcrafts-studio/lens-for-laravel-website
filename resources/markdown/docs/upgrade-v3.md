@@ -12,6 +12,7 @@ Lens v3.0.0 is the current development line. This page documents v3 changes as t
 - selected WCAG version stored in history, comparisons, baseline metadata, and PDF reports
 - URL-aware history comparisons that keep the same rule and selector on different pages separate
 - reusable interactive-state scripts in the CLI through `--states=path`
+- consistent `ignore_https_errors` behavior across scans, HTTP/browser crawling, and previews
 - core compatibility across PHP 8.2+ and Laravel 10–13
 - AI Fix restricted to PHP 8.3+, Laravel 12+, and the optional `laravel/ai` SDK
 - clear dashboard messaging when only AI Fix is unavailable

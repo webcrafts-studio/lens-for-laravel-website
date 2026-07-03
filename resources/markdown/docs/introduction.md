@@ -26,6 +26,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **WCAG version metadata** in scan history, comparisons, baselines, and PDF reports
 - **URL-aware history comparisons** that distinguish identical selectors on different pages
 - **Interactive-state scripts in the CLI** through `--states=path`
+- **Consistent local HTTPS handling** for scans, crawler requests, browser-rendered discovery, and previews
 - **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
 - **Reliable minimal AI replacements** using semantic source context, bounded Gemini thinking, and one controlled structured-output retry

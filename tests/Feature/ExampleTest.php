@@ -42,3 +42,12 @@ test('the v3 documentation describes the reliable AI Fix contract', function () 
         ->assertSee('does not expose or force a model')
         ->assertSee('Only the first reviewed occurrence is replaced');
 });
+
+test('the configuration documents consistent local HTTPS handling', function () {
+    $this->get(route('docs.show', ['page' => 'configuration']))
+        ->assertOk()
+        ->assertSee('sitemap and page requests made by the HTTP crawler')
+        ->assertSee('JavaScript-rendered crawling in Chromium')
+        ->assertSee('element preview screenshots')
+        ->assertSee('production-like certificate validation');
+});

@@ -229,13 +229,18 @@ Relative paths are resolved from the Laravel application base path. Absolute pat
 
 **Type:** `bool` | **Default:** `false` | **Env:** `LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS`
 
-When enabled, Browsershot ignores HTTPS certificate errors during scans.
+When enabled, Lens ignores HTTPS certificate errors consistently for:
+
+- axe scans, including interactive states
+- sitemap and page requests made by the HTTP crawler
+- optional JavaScript-rendered crawling in Chromium
+- element preview screenshots
 
 ```text
 LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=true
 ```
 
-Use this for local development environments with self-signed certificates, such as DDEV or Laravel Valet. Keep the default `false` when you want production-like certificate validation.
+Use this only for trusted local development environments with self-signed certificates, such as DDEV, Herd, or Laravel Valet. Keep the default `false` for production-like certificate validation. One setting controls both Laravel's HTTP client and every Chromium path used by Lens.
 
 ### `ai_enabled`
 
