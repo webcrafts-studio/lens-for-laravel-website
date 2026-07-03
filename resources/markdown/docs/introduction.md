@@ -24,6 +24,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **Selectable WCAG 2.0, 2.1, and 2.2 standards** in the dashboard and CLI
 - **WCAG 2.0 as the backward-compatible default** for existing commands and CI workflows
 - **WCAG version metadata** in scan history, comparisons, baselines, and PDF reports
+- **URL-aware history comparisons** that distinguish identical selectors on different pages
 - **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
 

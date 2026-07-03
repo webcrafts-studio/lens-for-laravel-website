@@ -19,5 +19,6 @@ test('the website identifies v3 as the current development line', function () {
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('Upgrade to v3.0.0')
-        ->assertSee('current development line');
+        ->assertSee('current development line')
+        ->assertSee('URL-aware history comparisons');
 });

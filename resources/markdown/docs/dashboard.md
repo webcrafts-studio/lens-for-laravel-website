@@ -159,7 +159,7 @@ Compare two scans to see:
 - **New** issues that appeared in the later scan
 - **Remaining** issues that exist in both scans
 
-For interactive state scans, comparison includes the state label in the issue identity. The same selector in two different states can therefore be tracked separately.
+Comparison identifies an issue by its axe rule, normalized URL path and query, interactive state label, and selector. The same `.btn` selector on `/account` and `/checkout` is therefore tracked as two separate issues. Scheme and host are ignored, so equivalent local and CI addresses can still be compared.
 
 ## Language Switcher
 
