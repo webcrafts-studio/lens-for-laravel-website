@@ -17,20 +17,22 @@ When axe-core detects a violation, Lens shows the failing DOM element and attemp
 
 Located issues include a file path, line number, and `sourceType`: `blade`, `react`, or `vue`.
 
-## What's New in v2.1.0
+## What's New in v3.0.0
 
-- **Interactive state scans** for menus, modals, validation states, tabs, dropdowns, and other UI that appears after interaction
-- **Visual state recorder** for generating reusable interaction scripts in the dashboard
-- **`stateLabel` metadata** on issues found during interactive state scans
-- **State-aware history, PDF reports, and scan comparisons**
-- **Baseline quality gate** for failing CI only when new violations appear
-- **Dashboard localization** with English, Polish, Spanish, French, and German translations
-- **Local HTTPS support** for self-signed development certificates through `LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS`
-- **Publishable translations** through the `lens-for-laravel-translations` tag
+v3.0.0 is the current development line. Completed v3 work currently includes:
+
+- **Selectable WCAG 2.0, 2.1, and 2.2 standards** in the dashboard and CLI
+- **WCAG 2.0 as the backward-compatible default** for existing commands and CI workflows
+- **WCAG version metadata** in scan history, comparisons, baselines, and PDF reports
+- **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
+- **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
+
+The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
 ## Core Capabilities
 
 - **WCAG A, AA, AAA, and best-practice scanning** powered by axe-core
+- **Selectable WCAG 2.0, 2.1, and 2.2 rule sets** in the dashboard and CLI, with 2.0 as the backward-compatible default
 - **JavaScript rendering** through Browsershot and Chromium
 - **Blade, React, Vue, Livewire, and Inertia support**
 - **Source locator** for Blade templates and frontend files under `resources/js`
@@ -75,6 +77,8 @@ Your Laravel App
 | Best Practice | Axe extras | Non-WCAG rules that improve accessibility quality. |
 
 Use `--a`, `--aa`, or `--all` in the CLI, or filter results in the dashboard.
+
+The standard version is a separate choice from the conformance level. WCAG 2.1 adds its axe-core rules to the 2.0 set, and WCAG 2.2 adds its rules to the cumulative 2.0 + 2.1 set. Select the version in the dashboard or use `--wcag=2.0`, `--wcag=2.1`, or `--wcag=2.2` in the CLI.
 
 ## Version Compatibility
 

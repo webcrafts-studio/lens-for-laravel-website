@@ -186,6 +186,8 @@ Or in config:
 
 ## WCAG Level Filtering
 
+Choose the standard version separately with `--wcag=2.0`, `--wcag=2.1`, or `--wcag=2.2`. WCAG 2.0 is the backward-compatible default. Later versions run cumulative axe-core tags for the earlier standard plus the newer success criteria.
+
 | Flag | Levels Reported |
 |------|----------------|
 | `--a` | WCAG Level A only |
@@ -193,7 +195,7 @@ Or in config:
 | `--all` | A + AA + AAA + best-practice rules |
 
 ```bash
-php artisan lens:audit https://your-app.test --aa --crawl
+php artisan lens:audit https://your-app.test --wcag=2.2 --aa --crawl
 ```
 
 ## CI Quality Gate

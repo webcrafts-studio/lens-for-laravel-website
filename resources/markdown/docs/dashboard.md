@@ -19,6 +19,8 @@ The scanner tab supports:
 - **Whole Website** crawl scans
 - **Interactive States** scans
 
+Before scanning, choose **WCAG 2.0**, **WCAG 2.1**, or **WCAG 2.2**. WCAG 2.0 is selected by default to preserve the behavior of existing workflows. The newer choices are cumulative: a 2.2 scan also runs the applicable axe-core rules for 2.0 and 2.1.
+
 For whole-site scans, the dashboard first calls the crawl endpoint, then scans each discovered URL.
 
 For interactive state scans, the dashboard runs a plain-text interaction script before axe-core scans each named state.
@@ -77,6 +79,7 @@ The script remains editable, so you can clean up selectors, rename states, or ad
 The report includes:
 
 - total violation count
+- selected WCAG standard version
 - WCAG A, AA, AAA, and other counts
 - issue impact and rule ID
 - failing DOM node
@@ -127,6 +130,7 @@ AI Fix supports:
 Click **EXPORT PDF** to generate a report containing:
 
 - scan URL
+- selected WCAG standard version
 - generation timestamp
 - issue counts
 - full violation list
@@ -143,6 +147,7 @@ It includes:
 - paginated scan list
 - trend chart for recent scans
 - per-scan issue details
+- WCAG standard used by each scan
 - delete action
 - compare action
 

@@ -94,7 +94,7 @@
                 <span class="text-black dark:text-white font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="text-[#e53e3e] font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v2.1</span>
+                    class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v3.0</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -336,7 +336,7 @@
                 <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">03 / CLI FIRST</div>
                 <h3 class="font-mono font-black text-3xl text-black dark:text-white leading-tight">CLI<br>First</h3>
                 <p class="mt-4 text-black/50 dark:text-white/50 font-mono text-sm leading-relaxed">
-                    A first-class Artisan command with WCAG filters, crawl mode, source mapping, SPA-friendly options,
+                    A first-class Artisan command with selectable WCAG 2.0/2.1/2.2 standards, level filters, crawl mode, source mapping, SPA-friendly options,
                     thresholds, and baseline quality gates.
                 </p>
                 {{-- Always-dark code block (terminal) --}}
@@ -353,7 +353,7 @@
                             class="text-white/30"># Fail on regressions</span></div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    @foreach (['--a', '--aa', '--all', '--crawl', '--threshold=N', '--baseline', '--fail-on-new'] as $flag)
+                    @foreach (['--wcag=2.2', '--a', '--aa', '--all', '--crawl', '--threshold=N', '--baseline', '--fail-on-new'] as $flag)
                         <span
                             class="border border-black/20 dark:border-white/20 px-2 py-1 font-mono text-[10px] text-black/40 dark:text-white/40">{{ $flag }}</span>
                     @endforeach

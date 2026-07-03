@@ -56,7 +56,7 @@ Laravel 10/11 and PHP 8.2 applications continue to receive all non-AI Lens featu
 
 ## Run Migrations
 
-Run migrations to install scan history tables and v2.1 interactive state metadata:
+Run migrations to install scan history tables, v2.1 interactive state metadata, and the v3.0 WCAG version metadata:
 
 ```bash
 php artisan migrate
@@ -97,6 +97,7 @@ LENS_FOR_LARAVEL_FALLBACK_LOCALE=en
 LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=50
 LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=false
 LENS_FOR_LARAVEL_SCAN_WAIT_MS=0
+LENS_FOR_LARAVEL_WCAG_VERSION=2.0
 LENS_FOR_LARAVEL_BASELINE_PATH=storage/app/lens-for-laravel/baseline.json
 LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=false
 LENS_FOR_LARAVEL_AI_ENABLED=true
@@ -111,6 +112,7 @@ LENS_FOR_LARAVEL_AI_PROVIDER=gemini
 | `LENS_FOR_LARAVEL_CRAWL_MAX_PAGES` | `50` | Maximum pages discovered in whole-site mode. |
 | `LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT` | `false` | Render JavaScript while crawling SPA/Inertia links. |
 | `LENS_FOR_LARAVEL_SCAN_WAIT_MS` | `0` | Extra delay after network idle before axe-core runs. |
+| `LENS_FOR_LARAVEL_WCAG_VERSION` | `2.0` | Default WCAG standard for dashboard and CLI scans (`2.0`, `2.1`, or `2.2`). |
 | `LENS_FOR_LARAVEL_BASELINE_PATH` | `storage/app/lens-for-laravel/baseline.json` | Default file used by the baseline quality gate. |
 | `LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS` | `false` | Ignore self-signed HTTPS certificate errors during local scans. |
 | `LENS_FOR_LARAVEL_AI_ENABLED` | `true` | Explicitly enable or disable the optional AI Fix integration. |

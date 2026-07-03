@@ -46,6 +46,18 @@ Report A, AA, AAA, and best-practice rules. This is the default.
 php artisan lens:audit https://your-app.test --all
 ```
 
+### `--wcag=VERSION`
+
+Choose the WCAG standard version used by axe-core. Supported values are `2.0`, `2.1`, and `2.2`.
+
+```bash
+php artisan lens:audit https://your-app.test --wcag=2.2 --aa
+```
+
+WCAG versions are cumulative: 2.1 includes the applicable 2.0 rules, and 2.2 includes the applicable 2.0 and 2.1 rules. WCAG 2.0 is the default so existing commands and CI workflows keep their previous scan scope.
+
+The version option is separate from the level filters. `--wcag=2.2` chooses the standard, while `--a`, `--aa`, or `--all` chooses which conformance levels are reported.
+
 ### `--crawl`
 
 Discover internal pages and scan them.
@@ -122,7 +134,7 @@ Exit behavior:
 php artisan lens:audit
 
 # focus on compliance target
-php artisan lens:audit https://your-app.test --aa
+php artisan lens:audit https://your-app.test --wcag=2.2 --aa
 
 # crawl site and fail on any A/AA issue
 php artisan lens:audit https://your-app.test --crawl --aa --threshold=0
@@ -166,6 +178,8 @@ Use this flow for projects that already have accessibility issues:
 3. Save the reviewed state with `--baseline`.
 4. Commit the baseline file if you want CI to use it.
 5. Run `--fail-on-new` in CI.
+
+Create a new reviewed baseline when switching between WCAG 2.0, 2.1, and 2.2. A newer standard can legitimately introduce additional violations.
 
 Example:
 

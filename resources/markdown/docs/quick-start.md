@@ -10,6 +10,12 @@ Run a scan against your local app:
 php artisan lens:audit http://your-app.test
 ```
 
+This uses WCAG 2.0 by default. To scan the cumulative WCAG 2.2 rule set:
+
+```bash
+php artisan lens:audit http://your-app.test --wcag=2.2
+```
+
 If you omit the URL, Lens defaults to your Laravel `APP_URL`:
 
 ```bash
@@ -30,11 +36,12 @@ Then:
 
 1. Enter a URL from the same host as `APP_URL`.
 2. Choose **Single URL**, **Multiple URLs**, **Whole Website**, or **Interactive States**.
-3. Run the scan.
-4. Inspect WCAG level cards and violation details.
-5. Preview the failing element.
-6. Open the source file from `SRC_LOC`.
-7. Optionally request an AI fix.
+3. Choose WCAG 2.0, 2.1, or 2.2. WCAG 2.0 is the default.
+4. Run the scan.
+5. Inspect WCAG level cards and violation details.
+6. Preview the failing element.
+7. Open the source file from `SRC_LOC`.
+8. Optionally request an AI fix.
 
 ## Example Issue Output
 

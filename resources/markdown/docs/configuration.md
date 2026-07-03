@@ -46,6 +46,8 @@ return [
 
     'scan_wait_ms' => env('LENS_FOR_LARAVEL_SCAN_WAIT_MS', 0),
 
+    'wcag_version' => env('LENS_FOR_LARAVEL_WCAG_VERSION', '2.0'),
+
     'baseline_path' => env('LENS_FOR_LARAVEL_BASELINE_PATH', storage_path('app/lens-for-laravel/baseline.json')),
 
     'ignore_https_errors' => env('LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS', false),
@@ -57,6 +59,18 @@ return [
 ```
 
 ## Options
+
+### `wcag_version`
+
+**Type:** `string` | **Default:** `2.0` | **Env:** `LENS_FOR_LARAVEL_WCAG_VERSION`
+
+Controls the initial WCAG standard in the dashboard and the CLI default when `--wcag` is omitted.
+
+```text
+LENS_FOR_LARAVEL_WCAG_VERSION=2.0
+```
+
+Supported values are `2.0`, `2.1`, and `2.2`. The dashboard can override this per scan, and the CLI can override it with `--wcag=2.2`. WCAG 2.0 remains the default for backward compatibility.
 
 ### `route_prefix`
 
@@ -254,7 +268,18 @@ LENS_FOR_LARAVEL_AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```
 
-## v2.1.0 Upgrade
+## v3.0.0 Upgrade
+
+v3.0.0 is the current development line. If you published the config before v3.0.0, add these keys manually:
+
+```php
+'wcag_version' => env('LENS_FOR_LARAVEL_WCAG_VERSION', '2.0'),
+'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
+```
+
+WCAG 2.0 remains the default so existing dashboard, CLI, baseline, and CI workflows retain their previous scan scope.
+
+## Historical: v2.1.0 Upgrade
 
 If you published the config before v2.1.0, add these keys manually:
 
@@ -276,7 +301,7 @@ If you published the config before v2.1.0, add these keys manually:
 'ignore_https_errors' => env('LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS', false),
 ```
 
-## v2.0.0 Upgrade
+## Historical: v2.0.0 Upgrade
 
 If you published the config before v2.0.0, add these keys manually:
 

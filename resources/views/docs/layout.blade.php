@@ -59,6 +59,7 @@
                 </a>
 
                 <span class="hidden md:block text-black/20 dark:text-white/20 font-mono text-xs">/ DOCS</span>
+                <span class="hidden md:block border border-[#e53e3e]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[#e53e3e]">v3.0</span>
             </div>
 
             {{-- Right: theme toggle + GitHub --}}
