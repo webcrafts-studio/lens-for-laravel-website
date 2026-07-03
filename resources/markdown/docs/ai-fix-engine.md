@@ -57,6 +57,8 @@ When you click **AI FIX**, Lens:
 6. receives a minimal replacement and explanation
 7. shows a diff preview in the dashboard
 8. applies the change only after you accept it
+9. immediately marks the current issue as **AI Fix applied — pending re-scan**
+10. keeps the issue in violation counts until a new axe-core scan verifies the result
 
 ## Source Context
 
@@ -124,6 +126,9 @@ When you apply a fix:
 4. It rejects stale fixes when the original block changed.
 5. It writes the replacement with an exclusive lock.
 6. Only the first reviewed occurrence is replaced when identical source fragments exist more than once.
+7. The corresponding dashboard card is highlighted as pending verification; this does not claim that axe-core has confirmed the fix.
+
+The pending marker survives closing the AI Fix modal during the current dashboard session. A new scan replaces the displayed issues with fresh axe-core results: a confirmed fix disappears, while an unresolved violation returns as an ordinary active issue.
 
 ## Security Controls
 

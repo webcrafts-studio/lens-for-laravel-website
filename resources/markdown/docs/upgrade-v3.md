@@ -19,6 +19,7 @@ Lens v3.0.0 is the current development line. This page documents v3 changes as t
 - dedicated accessibility-fix agent with a 12000-token ceiling, deterministic temperature, and bounded Gemini thinking
 - semantic element/component context and minimal replacements instead of broad line windows
 - one controlled retry for token-limit or malformed structured responses, safe user errors, and provider/model/token diagnostics
+- immediate pending-verification markers for applied AI fixes, without removing them from axe-derived counts before re-scan
 
 ## Upgrade Steps
 

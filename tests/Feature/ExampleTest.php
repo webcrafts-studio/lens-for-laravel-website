@@ -40,7 +40,10 @@ test('the v3 documentation describes the reliable AI Fix contract', function () 
         ->assertSee('1024-token budget')
         ->assertSee('one controlled retry')
         ->assertSee('does not expose or force a model')
-        ->assertSee('Only the first reviewed occurrence is replaced');
+        ->assertSee('Only the first reviewed occurrence is replaced')
+        ->assertSee('AI Fix applied — pending re-scan')
+        ->assertSee('keeps the issue in violation counts')
+        ->assertSee('does not claim that axe-core has confirmed the fix');
 });
 
 test('the configuration documents consistent local HTTPS handling', function () {

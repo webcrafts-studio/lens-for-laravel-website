@@ -116,10 +116,13 @@ AI Fix actions are shown only when the host application uses PHP 8.3+, Laravel 1
 3. The configured AI provider returns a minimal replacement and an explanation.
 4. The dashboard displays a diff preview.
 5. Click **ACCEPT & APPLY** to write the change to disk.
+6. The issue card is immediately marked **AI Fix applied — pending re-scan**.
 
 Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured Gemini, OpenAI, or Anthropic provider. It does not send the entire repository.
 
 In v3.0, Lens uses the provider's default model from `laravel/ai`; there is no model selector. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
+
+The pending marker is intentionally not the same as a verified fix. The issue remains in totals and filters because those numbers describe the last axe-core scan. Closing the modal keeps the marker visible. Running a new scan replaces the old state with fresh results.
 
 AI Fix supports:
 
