@@ -68,6 +68,14 @@ Common examples:
 
 Interactive state scans are available in the dashboard through the **Interactive States** scan mode.
 
+They are also available in the CLI by passing the same script as a file:
+
+```bash
+php artisan lens:audit https://your-app.test --states=tests/accessibility/navigation.states
+```
+
+The CLI state mode accepts one URL, uses the same parser and safety limits as the dashboard, and can participate in threshold and baseline quality gates. It cannot be combined with `--crawl` or multiple URL arguments.
+
 ## State Recorder
 
 The dashboard includes a visual recorder. It opens the target page in a recorder view, lets you interact with it, and generates a reusable interaction script.
@@ -82,6 +90,8 @@ Typical workflow:
 6. Create named states as you move through the flow.
 7. Send the generated script back to Lens.
 8. Run the scan.
+
+To reuse the recorded script in local automation or CI, save it in the repository and pass its path to `--states`.
 
 ## Interaction Script Format
 

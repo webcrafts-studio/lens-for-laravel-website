@@ -24,6 +24,12 @@ php artisan lens:audit
 
 Lens launches Chromium, renders the page, injects axe-core, collects violations, maps source locations when possible, and prints a diagnostic report.
 
+To scan named UI states from a recorded or hand-written script:
+
+```bash
+php artisan lens:audit http://your-app.test --states=tests/accessibility/navigation.states
+```
+
 ## First Dashboard Audit
 
 Open:

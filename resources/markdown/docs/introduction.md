@@ -25,6 +25,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **WCAG 2.0 as the backward-compatible default** for existing commands and CI workflows
 - **WCAG version metadata** in scan history, comparisons, baselines, and PDF reports
 - **URL-aware history comparisons** that distinguish identical selectors on different pages
+- **Interactive-state scripts in the CLI** through `--states=path`
 - **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
 
@@ -41,7 +42,7 @@ The v2.0 and v2.1 upgrade pages remain available as historical documentation for
 - **Four scan modes**: single URL, multiple URLs, whole-site crawl, and interactive states
 - **Optional SPA crawling** for React/Vue/Inertia link discovery
 - **Dashboard UI** with filtering, element preview, PDF export, AI fixes, history, and a state recorder
-- **Artisan CLI** with level filtering, crawl mode, thresholds, baseline files, and CI integration
+- **Artisan CLI** with interactive states, level filtering, crawl mode, thresholds, baseline files, and CI integration
 
 ## How It Works
 

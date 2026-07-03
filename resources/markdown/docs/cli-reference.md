@@ -68,6 +68,32 @@ php artisan lens:audit https://your-app.test --crawl
 
 Use `LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=true` for SPA/Inertia link discovery.
 
+### `--states=PATH`
+
+Execute a reusable interactive-state script before scanning each named state:
+
+```bash
+php artisan lens:audit https://your-app.test --states=tests/accessibility/navigation.states
+```
+
+Paths relative to the Laravel project root and absolute paths are supported. The CLI uses the same script grammar and limits as the dashboard recorder.
+
+State mode requires exactly one URL and cannot be combined with `--crawl`. It can be combined with `--wcag`, `--a`, `--aa`, `--all`, `--threshold`, `--baseline`, and `--fail-on-new`.
+
+Example script:
+
+```text
+state: Navigation open
+click: [data-menu-button]
+
+state: Form validation
+type: input[name="email"] => invalid@example.test
+click: button[type="submit"]
+wait: 300
+```
+
+The diagnostic table includes the state label. Baseline fingerprints preserve it, so the same selector in two different states remains two separate issues.
+
 ### `--threshold=N`
 
 Fail with exit code `1` when the violation count exceeds the threshold.
@@ -135,6 +161,9 @@ php artisan lens:audit
 
 # focus on compliance target
 php artisan lens:audit https://your-app.test --wcag=2.2 --aa
+
+# scan UI exposed by interactions
+php artisan lens:audit https://your-app.test --states=tests/accessibility/navigation.states --wcag=2.2 --aa
 
 # crawl site and fail on any A/AA issue
 php artisan lens:audit https://your-app.test --crawl --aa --threshold=0

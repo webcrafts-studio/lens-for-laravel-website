@@ -22,3 +22,12 @@ test('the website identifies v3 as the current development line', function () {
         ->assertSee('current development line')
         ->assertSee('URL-aware history comparisons');
 });
+
+test('the CLI documentation covers interactive state scripts', function () {
+    $this->get(route('docs.show', ['page' => 'cli-reference']))
+        ->assertOk()
+        ->assertSee('--states=PATH')
+        ->assertSee('requires exactly one URL')
+        ->assertSee('cannot be combined with')
+        ->assertSee('state: Navigation open');
+});
