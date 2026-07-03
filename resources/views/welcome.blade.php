@@ -326,7 +326,8 @@
                 </div>
                 <div class="mt-4 text-white/50 font-mono text-[10px] leading-relaxed">
                     - Reads Blade, React, and Vue context · Structured AI response<br>
-                    - Gemini · OpenAI · Anthropic · Review diff then apply
+                    - Gemini · OpenAI · Anthropic · Review diff then apply<br>
+                    - Optional: PHP 8.3+ · Laravel 12+ · laravel/ai
                 </div>
             </div>
 

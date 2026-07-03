@@ -36,6 +36,24 @@ composer require webcrafts-studio/lens-for-laravel --dev
 
 Lens is a developer tool and should normally be installed as a dev dependency.
 
+The command above installs every core scanning feature on PHP 8.2+ and Laravel 10–13. It intentionally does not install an AI SDK.
+
+## Optional AI Fix Installation
+
+AI Fix has a narrower compatibility range than the core scanner:
+
+- PHP 8.3 or newer
+- Laravel 12 or newer
+- optional `laravel/ai` package
+
+Install it separately on a supported application:
+
+```bash
+composer require laravel/ai:^0.3.2 --dev
+```
+
+Laravel 10/11 and PHP 8.2 applications continue to receive all non-AI Lens features. The dashboard hides AI Fix actions and displays the exact reason they are unavailable.
+
 ## Run Migrations
 
 Run migrations to install scan history tables and v2.1 interactive state metadata:
@@ -81,6 +99,7 @@ LENS_FOR_LARAVEL_CRAWLER_RENDER_JAVASCRIPT=false
 LENS_FOR_LARAVEL_SCAN_WAIT_MS=0
 LENS_FOR_LARAVEL_BASELINE_PATH=storage/app/lens-for-laravel/baseline.json
 LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=false
+LENS_FOR_LARAVEL_AI_ENABLED=true
 LENS_FOR_LARAVEL_AI_PROVIDER=gemini
 ```
 
@@ -94,11 +113,12 @@ LENS_FOR_LARAVEL_AI_PROVIDER=gemini
 | `LENS_FOR_LARAVEL_SCAN_WAIT_MS` | `0` | Extra delay after network idle before axe-core runs. |
 | `LENS_FOR_LARAVEL_BASELINE_PATH` | `storage/app/lens-for-laravel/baseline.json` | Default file used by the baseline quality gate. |
 | `LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS` | `false` | Ignore self-signed HTTPS certificate errors during local scans. |
+| `LENS_FOR_LARAVEL_AI_ENABLED` | `true` | Explicitly enable or disable the optional AI Fix integration. |
 | `LENS_FOR_LARAVEL_AI_PROVIDER` | `gemini` | AI provider for fix suggestions. |
 
 ## AI Provider Keys
 
-AI Fix is optional. Configure a provider only if you want generated fixes:
+AI Fix is optional. After installing `laravel/ai` on a supported runtime, configure a provider only if you want generated fixes:
 
 ```text
 LENS_FOR_LARAVEL_AI_PROVIDER=gemini
@@ -112,6 +132,8 @@ OPENAI_API_KEY=your-key
 LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your-key
 ```
+
+Set `LENS_FOR_LARAVEL_AI_ENABLED=false` to disable AI Fix explicitly while keeping all scanning features enabled.
 
 ## Verify Installation
 

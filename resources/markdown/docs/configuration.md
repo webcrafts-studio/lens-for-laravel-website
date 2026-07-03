@@ -50,6 +50,8 @@ return [
 
     'ignore_https_errors' => env('LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS', false),
 
+    'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
+
     'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
 ];
 ```
@@ -221,11 +223,25 @@ LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=true
 
 Use this for local development environments with self-signed certificates, such as DDEV or Laravel Valet. Keep the default `false` when you want production-like certificate validation.
 
+### `ai_enabled`
+
+**Type:** `bool` | **Default:** `true` | **Env:** `LENS_FOR_LARAVEL_AI_ENABLED`
+
+Explicitly enables or disables AI Fix without affecting any scanning feature.
+
+```text
+LENS_FOR_LARAVEL_AI_ENABLED=false
+```
+
+The setting cannot override runtime compatibility. AI Fix also requires PHP 8.3+, Laravel 12+, and the optional `laravel/ai` package. On unsupported runtimes the dashboard explains that only AI Fix is unavailable.
+
 ### `ai_provider`
 
 **Type:** `string` | **Default:** `gemini` | **Env:** `LENS_FOR_LARAVEL_AI_PROVIDER`
 
 AI provider used by the AI Fix Engine.
+
+The provider is contacted only after a user requests a fix. Lens sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context; it does not send the entire repository.
 
 | Value | Provider | API key |
 |-------|----------|---------|

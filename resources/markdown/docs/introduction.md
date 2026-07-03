@@ -34,7 +34,7 @@ Located issues include a file path, line number, and `sourceType`: `blade`, `rea
 - **JavaScript rendering** through Browsershot and Chromium
 - **Blade, React, Vue, Livewire, and Inertia support**
 - **Source locator** for Blade templates and frontend files under `resources/js`
-- **AI Fix Engine** using Gemini, OpenAI, or Anthropic
+- **Optional AI Fix Engine** using Gemini, OpenAI, or Anthropic on PHP 8.3+ and Laravel 12+
 - **Four scan modes**: single URL, multiple URLs, whole-site crawl, and interactive states
 - **Optional SPA crawling** for React/Vue/Inertia link discovery
 - **Dashboard UI** with filtering, element preview, PDF export, AI fixes, history, and a state recorder
@@ -84,6 +84,16 @@ Use `--a`, `--aa`, or `--all` in the CLI, or filter results in the dashboard.
 | Laravel | 10, 11, 12, 13 |
 | Node.js | Recent LTS |
 | Puppeteer | 21+ recommended |
+
+These versions apply to the core scanner. AI Fix additionally requires:
+
+| AI Fix Dependency | Supported Versions |
+|-------------------|-------------------|
+| PHP | 8.3+ |
+| Laravel | 12, 13 |
+| Laravel AI SDK | `laravel/ai` 0.3+ installed separately |
+
+On PHP 8.2 or Laravel 10/11, Lens keeps scanning, crawling, history, PDF, preview, source mapping, interactive states, and CLI support. Only AI Fix is unavailable, and the dashboard explains the limitation.
 
 ## Disclaimer
 

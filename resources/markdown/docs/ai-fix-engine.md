@@ -2,6 +2,23 @@
 
 The AI Fix Engine uses Gemini, OpenAI, or Anthropic to generate minimal accessibility fixes for located Blade, React, and Vue source files.
 
+## Availability
+
+AI Fix is an optional integration. It requires:
+
+- PHP 8.3 or newer
+- Laravel 12 or newer
+- `laravel/ai:^0.3.2` installed in the host application
+- `LENS_FOR_LARAVEL_AI_ENABLED` not set to `false`
+
+Install the optional SDK with:
+
+```bash
+composer require laravel/ai:^0.3.2 --dev
+```
+
+The core Lens package supports PHP 8.2+ and Laravel 10–13. On older supported runtimes or without the SDK, only AI Fix is unavailable. Scans, crawling, source mapping, history, PDF reports, previews, interactive states, baselines, and CLI audits continue to work.
+
 ## Supported Files
 
 AI Fix can read and modify:
@@ -16,6 +33,17 @@ resources/js/**/*.vue
 ```
 
 It will not write outside those paths.
+
+## Data Sent to the Provider
+
+When you request a fix, Lens sends the following data to the configured Gemini, OpenAI, or Anthropic provider:
+
+- the accessibility issue description
+- axe/WCAG tags
+- the failing rendered DOM snippet
+- a limited source-code context around the located line
+
+Lens does not send the entire repository. The selected context can still contain application data, template content, or secrets, so review the source before requesting a fix and follow the chosen provider's data-handling policy.
 
 ## How It Works
 
@@ -47,6 +75,12 @@ The prompt identifies the source type:
 The AI is instructed to preserve framework-specific syntax, whitespace, indentation, and unrelated code.
 
 ## Configure Provider
+
+AI Fix can be disabled without disabling Lens:
+
+```text
+LENS_FOR_LARAVEL_AI_ENABLED=false
+```
 
 ```text
 LENS_FOR_LARAVEL_AI_PROVIDER=gemini
