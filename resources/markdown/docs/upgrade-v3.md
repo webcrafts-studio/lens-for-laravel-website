@@ -15,6 +15,9 @@ Lens v3.0.0 is the current development line. This page documents v3 changes as t
 - core compatibility across PHP 8.2+ and Laravel 10–13
 - AI Fix restricted to PHP 8.3+, Laravel 12+, and the optional `laravel/ai` SDK
 - clear dashboard messaging when only AI Fix is unavailable
+- dedicated accessibility-fix agent with a 12000-token ceiling, deterministic temperature, and bounded Gemini thinking
+- semantic element/component context and minimal replacements instead of broad line windows
+- one controlled retry for token-limit or malformed structured responses, safe user errors, and provider/model/token diagnostics
 
 ## Upgrade Steps
 
@@ -52,6 +55,8 @@ composer require laravel/ai:^0.3.2 --dev
 ```
 
 Applications on PHP 8.2 or Laravel 10/11 keep scanning, crawling, history, PDF, preview, source mapping, interactive states, baselines, and CLI support. Only AI Fix is unavailable.
+
+Lens continues to select only Gemini, OpenAI, or Anthropic. It does not pin a model; `laravel/ai` uses the configured provider's default model.
 
 ## Baselines
 

@@ -41,7 +41,7 @@ When you request a fix, Lens sends the following data to the configured Gemini, 
 - the accessibility issue description
 - axe/WCAG tags
 - the failing rendered DOM snippet
-- a limited source-code context around the located line
+- the smallest relevant source element or component around the located line
 
 Lens does not send the entire repository. The selected context can still contain application data, template content, or secrets, so review the source before requesting a fix and follow the chosen provider's data-handling policy.
 
@@ -50,19 +50,32 @@ Lens does not send the entire repository. The selected context can still contain
 When you click **AI FIX**, Lens:
 
 1. validates the located file path
-2. reads source context around the line number
-3. expands the context to include a matching closing tag when needed
+2. extracts the relevant element or balanced component around the line number
+3. limits the selected source to 6000 bytes; for a larger component, it sends only its opening element
 4. builds a prompt with the axe rule, WCAG tags, failing DOM snippet, and source code
-5. sends the prompt to the configured provider
-6. receives `fixedCode` and `explanation`
+5. sends the prompt through a dedicated accessibility agent to the configured provider
+6. receives a minimal replacement and explanation
 7. shows a diff preview in the dashboard
 8. applies the change only after you accept it
 
 ## Source Context
 
-Lens reads approximately 20 lines above and below the detected line. For larger elements, it expands downward until the matching closing tag is included.
+Lens does not send an arbitrary fixed number of surrounding lines. It identifies the element reported by axe-core and, where practical, balances its matching closing tag and nested elements with the same name. This keeps unrelated templates, application text, and secrets out of the prompt.
 
-This helps prevent fixes such as changing `<div>` to `<header>` without also changing `</div>` to `</header>`.
+The selected fragment is capped at 6000 bytes. If a complete component exceeds that limit, Lens sends only the opening element and instructs the agent not to invent code outside the selection.
+
+## Generation Reliability in v3.0
+
+The v3.0 agent is deliberately conservative:
+
+- maximum output is 12000 tokens
+- temperature is `0` for more repeatable fixes
+- Gemini thinking is limited to a 1024-token budget so reasoning cannot consume the output allowance
+- the response schema contains only the minimal replacement and a short explanation
+- a token-limit finish reason or malformed structured response triggers one controlled retry
+- after that retry, Lens stops without changing a file and shows a safe, understandable error
+
+Lens selects only the provider. It does not expose or force a model; `laravel/ai` resolves the default model configured for Gemini, OpenAI, or Anthropic. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
 
 ## Framework-Aware Prompts
 
@@ -110,6 +123,7 @@ When you apply a fix:
 3. It verifies the original code block still exists.
 4. It rejects stale fixes when the original block changed.
 5. It writes the replacement with an exclusive lock.
+6. Only the first reviewed occurrence is replaced when identical source fragments exist more than once.
 
 ## Security Controls
 
@@ -125,5 +139,5 @@ AI Fix includes several safeguards:
 
 - AI output must be reviewed before committing.
 - The fix can be rejected if the file changed after scanning.
-- Very large context blocks are rejected and must be fixed manually.
+- Very large components are reduced to their opening element and may still require a manual edit.
 - Dynamic abstractions can require manual edits when the located source is only the outer component.

@@ -300,8 +300,8 @@
                 <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
                 <p class="mt-4 text-white/60 font-mono text-sm leading-relaxed">
-                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads framework-aware context and generates precise
-                    Blade, React, or Vue fixes. Review the diff before applying.
+                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads a focused element or component and generates a
+                    minimal Blade, React, or Vue replacement. Review the diff before applying.
                 </p>
                 <div class="mt-8 border border-white/10">
                     <div class="border-b border-white/10 px-4 py-2 flex items-center justify-between bg-white/5">
@@ -325,8 +325,8 @@
                     </div>
                 </div>
                 <div class="mt-4 text-white/50 font-mono text-[10px] leading-relaxed">
-                    - Reads Blade, React, and Vue context · Structured AI response<br>
-                    - Gemini · OpenAI · Anthropic · Review diff then apply<br>
+                    - Semantic context · Minimal replacement · One safe retry<br>
+                    - Gemini · OpenAI · Anthropic · Provider-default model<br>
                     - Optional: PHP 8.3+ · Laravel 12+ · laravel/ai
                 </div>
             </div>

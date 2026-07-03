@@ -31,3 +31,14 @@ test('the CLI documentation covers interactive state scripts', function () {
         ->assertSee('cannot be combined with')
         ->assertSee('state: Navigation open');
 });
+
+test('the v3 documentation describes the reliable AI Fix contract', function () {
+    $this->get(route('docs.show', ['page' => 'ai-fix-engine']))
+        ->assertOk()
+        ->assertSee('Generation Reliability in v3.0')
+        ->assertSee('12000 tokens')
+        ->assertSee('1024-token budget')
+        ->assertSee('one controlled retry')
+        ->assertSee('does not expose or force a model')
+        ->assertSee('Only the first reviewed occurrence is replaced');
+});

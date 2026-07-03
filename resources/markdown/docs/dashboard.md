@@ -112,12 +112,14 @@ Click the preview icon to capture a screenshot with the failing element highligh
 AI Fix actions are shown only when the host application uses PHP 8.3+, Laravel 12+, has the optional `laravel/ai` package installed, and has not disabled AI Fix in configuration. On older supported applications, the dashboard shows an availability notice while every scanning feature remains usable.
 
 1. Click **AI FIX** on a located issue.
-2. Lens reads source context around the issue.
-3. The configured AI provider returns `fixedCode` and an explanation.
+2. Lens extracts the smallest relevant element or component around the issue.
+3. The configured AI provider returns a minimal replacement and an explanation.
 4. The dashboard displays a diff preview.
 5. Click **ACCEPT & APPLY** to write the change to disk.
 
 Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured Gemini, OpenAI, or Anthropic provider. It does not send the entire repository.
+
+In v3.0, Lens uses the provider's default model from `laravel/ai`; there is no model selector. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
 
 AI Fix supports:
 

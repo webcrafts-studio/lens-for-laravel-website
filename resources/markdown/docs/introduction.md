@@ -28,6 +28,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **Interactive-state scripts in the CLI** through `--states=path`
 - **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
+- **Reliable minimal AI replacements** using semantic source context, bounded Gemini thinking, and one controlled structured-output retry
 
 The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
