@@ -31,6 +31,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
 - **Reliable minimal AI replacements** using semantic source context, bounded Gemini thinking, and one controlled structured-output retry
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
+- **Complete package-owned interface catalogs** in English, Polish, Spanish, French, and German, including history, comparisons, modals, PDF reports, and error feedback
 
 The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 

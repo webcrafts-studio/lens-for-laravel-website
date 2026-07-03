@@ -54,3 +54,15 @@ test('the configuration documents consistent local HTTPS handling', function () 
         ->assertSee('element preview screenshots')
         ->assertSee('production-like certificate validation');
 });
+
+test('the v3 documentation defines complete localization coverage', function () {
+    $this->get(route('docs.show', ['page' => 'dashboard']))
+        ->assertOk()
+        ->assertSee('package-owned label and message')
+        ->assertSee('PDF exports follow the locale selected in the dashboard session')
+        ->assertSee('Descriptions of accessibility rules come from axe-core');
+
+    $this->get(route('docs.show', ['page' => 'upgrade-v3']))
+        ->assertOk()
+        ->assertSee('complete English, Polish, Spanish, French, and German catalogs');
+});

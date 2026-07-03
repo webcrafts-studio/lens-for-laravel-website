@@ -185,6 +185,10 @@ LENS_FOR_LARAVEL_LOCALE=en
 LENS_FOR_LARAVEL_FALLBACK_LOCALE=en
 ```
 
+In v3.0, the bundled catalogs cover every package-owned label and message in the scanner, history, URL-aware comparisons, AI Fix and preview modals, interactive-state recorder, charts, PDF reports, and package-generated browser and route errors. PDF exports follow the locale selected in the dashboard session.
+
+Descriptions of accessibility rules come from axe-core, while some request-validation messages can come from Laravel itself. Those upstream messages are not rewritten by Lens and may use the language configured by the supplying library or host application.
+
 ## Dashboard API Routes
 
 | Method | Path | Purpose |

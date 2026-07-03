@@ -124,6 +124,8 @@ LENS_FOR_LARAVEL_LOCALE=pl
 
 Users can change the language in the dashboard. Their selection is stored in the session.
 
+In v3.0, that locale is shared by the scanner, history, comparisons, modals, recorder, PDF reports, and package-generated errors. A PDF exported from the dashboard therefore uses the same language as the current dashboard session.
+
 ### `fallback_locale`
 
 **Type:** `string` | **Default:** `en` | **Env:** `LENS_FOR_LARAVEL_FALLBACK_LOCALE`
@@ -155,6 +157,8 @@ Publish translations if you want to customize wording:
 ```bash
 php artisan vendor:publish --tag="lens-for-laravel-translations"
 ```
+
+The bundled catalog covers text owned by Lens. axe-core rule descriptions and Laravel validation messages remain upstream content and can follow their own or the host application's locale.
 
 ### `editor`
 
