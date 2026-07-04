@@ -107,4 +107,4 @@ On PHP 8.2 or Laravel 10/11, Lens keeps scanning, crawling, history, PDF, previe
 
 ## Disclaimer
 
-> **Automated tools catch only a portion of total WCAG accessibility issues.** Passing a Lens scan does not mean your application is fully accessible and does not guarantee compliance with the ADA, Section 508, EN 301 549, or the European Accessibility Act. Always complement automated scans with keyboard testing, screen reader testing, interaction-state testing, and manual review.
+> **axe-core automates many high-confidence accessibility checks, but neither axe-core nor Lens can determine full WCAG conformance.** Passing a Lens scan does not mean your application is fully accessible and does not guarantee compliance with the ADA, Section 508, EN 301 549, or the European Accessibility Act. Always complement automated scans with keyboard testing, screen reader testing, interaction-state testing, and manual review.

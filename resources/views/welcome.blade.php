@@ -216,9 +216,9 @@
             </div>
 
             <div class="p-8">
-                <div class="text-5xl font-black font-mono text-black dark:text-white">145</div>
-                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">Tests
-                    Passing</div>
+                <div class="text-5xl font-black font-mono text-black dark:text-white">5</div>
+                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">UI
+                    Languages</div>
             </div>
 
             <div class="p-8">
@@ -695,7 +695,8 @@
                     A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
                 </div>
                 <div class="text-white/35 font-mono text-[10px] text-center md:text-right max-w-md leading-relaxed">
-                    Automated tools catch ~20-30% of WCAG issues. Manual testing required for full compliance.
+                    axe-core automates many high-confidence checks, but neither axe-core nor Lens proves full WCAG
+                    conformance. Manual testing remains required.
                 </div>
             </div>
         </div>

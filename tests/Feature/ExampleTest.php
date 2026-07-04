@@ -1,9 +1,27 @@
 <?php
 
 test('the application returns a successful response', function () {
-    $response = $this->get('/');
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('UI')
+        ->assertSee('Languages')
+        ->assertSee('neither axe-core nor Lens proves full WCAG')
+        ->assertDontSee('20-30%');
+});
 
-    $response->assertStatus(200);
+test('Composer metadata identifies the Lens documentation website', function () {
+    $composer = json_decode(
+        file_get_contents(base_path('composer.json')),
+        true,
+        512,
+        JSON_THROW_ON_ERROR,
+    );
+
+    expect($composer['name'])->toBe('webcrafts-studio/laravel-lens-website')
+        ->and($composer['type'])->toBe('project')
+        ->and($composer['description'])->toContain('Lens for Laravel')
+        ->and($composer['description'])->not->toContain('skeleton')
+        ->and($composer['homepage'])->toBe('https://lens.webcrafts.pl');
 });
 
 test('the website identifies v3 as the current development line', function () {

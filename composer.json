@@ -1,13 +1,20 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "webcrafts-studio/laravel-lens-website",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "The official marketing website and v3 documentation for Lens for Laravel.",
     "keywords": [
+        "accessibility",
+        "axe-core",
         "laravel",
-        "framework"
+        "wcag"
     ],
+    "homepage": "https://lens.webcrafts.pl",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/webcrafts-studio/laravel-lens-website/issues",
+        "source": "https://github.com/webcrafts-studio/laravel-lens-website"
+    },
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
