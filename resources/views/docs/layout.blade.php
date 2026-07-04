@@ -175,6 +175,12 @@
             <div class="max-w-3xl mx-auto flex items-center justify-between flex-wrap gap-4">
                 <span class="font-mono text-[10px] text-black/30 dark:text-white/30 uppercase tracking-widest">Laravel
                     Lens Docs</span>
+                <a href="https://buycoffee.to/jakub-lipinski" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 border border-[#e53e3e]/30 px-3 py-1.5 font-mono text-[10px] text-[#e53e3e]/80 hover:border-[#e53e3e] hover:text-[#e53e3e] transition-colors uppercase tracking-widest">
+                    <span aria-hidden="true">☕</span>
+                    <span>Support my work</span>
+                    <span aria-hidden="true">↗</span>
+                </a>
                 <a href="/"
                     class="font-mono text-[10px] text-black/30 dark:text-white/30 hover:text-[#e53e3e] transition-colors uppercase tracking-widest">←
                     Back to home</a>

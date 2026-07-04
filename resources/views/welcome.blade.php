@@ -679,13 +679,19 @@
                         WCAG Accessibility Auditor · Blade · React · Vue · AI
                     </div>
                 </div>
-                <nav class="flex items-center gap-8" aria-label="Footer navigation">
+                <nav class="flex flex-wrap items-center gap-4 md:gap-8" aria-label="Footer navigation">
                     <a href="{{ route('docs') }}"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Documentation</a>
                     <a href="https://github.com/webcrafts-studio/lens-for-laravel"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">GitHub</a>
                     <a href="https://github.com/webcrafts-studio/lens-for-laravel/issues"
                         class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Issues</a>
+                    <a href="https://buycoffee.to/jakub-lipinski" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 border border-[#e53e3e]/40 px-3 py-1.5 text-[#e53e3e]/80 hover:border-[#e53e3e] hover:text-[#e53e3e] font-mono text-[10px] uppercase tracking-widest transition-colors">
+                        <span aria-hidden="true">☕</span>
+                        <span>Support my work</span>
+                        <span aria-hidden="true">↗</span>
+                    </a>
                 </nav>
             </div>
 

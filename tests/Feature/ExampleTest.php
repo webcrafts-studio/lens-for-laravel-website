@@ -24,6 +24,18 @@ test('Composer metadata identifies the Lens documentation website', function () 
         ->and($composer['homepage'])->toBe('https://lens.webcrafts.pl');
 });
 
+test('support link appears in the website and documentation footers', function () {
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('Support my work')
+        ->assertSee('https://buycoffee.to/jakub-lipinski', false);
+
+    $this->get(route('docs.show', ['page' => 'introduction']))
+        ->assertOk()
+        ->assertSee('Support my work')
+        ->assertSee('https://buycoffee.to/jakub-lipinski', false);
+});
+
 test('the website identifies v3 as the current development line', function () {
     $this->get('/')
         ->assertOk()
