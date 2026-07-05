@@ -697,8 +697,18 @@
 
             <div
                 class="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase text-center md:text-left">
-                    A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
+                <div class="space-y-3 text-center md:text-left">
+                    <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
+                        A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
+                    </div>
+                    <div class="font-mono text-[10px] text-white/30 tracking-wider">
+                        Created by
+                        <a href="https://lipinskijakub.pl/" target="_blank" rel="noopener noreferrer"
+                            class="text-white/50 hover:text-[#e53e3e] transition-colors">Jakub Lipiński</a>
+                        <span aria-hidden="true">—</span>
+                        <a href="https://webcrafts.pl/" target="_blank" rel="noopener noreferrer"
+                            class="text-white/50 hover:text-[#e53e3e] transition-colors">Webcrafts.pl</a>
+                    </div>
                 </div>
                 <div class="text-white/35 font-mono text-[10px] text-center md:text-right max-w-md leading-relaxed">
                     axe-core automates many high-confidence checks, but neither axe-core nor Lens proves full WCAG

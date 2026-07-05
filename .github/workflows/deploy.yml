@@ -4,48 +4,78 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-lens-website
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Preflight SSH check
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          echo "=== GitHub Runner IPv4 ==="
+          curl -4 -s https://api.ipify.org || true
+          echo
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.4"
+          echo "=== Test SSH port ==="
+          timeout 10 bash -c "cat < /dev/null > /dev/tcp/${SSH_HOST}/22" \
+            && echo "Port 22 is reachable" \
+            || (echo "Port 22 is NOT reachable" && exit 1)
 
       - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          protocol: tcp4
+          timeout: 60s
+          command_timeout: 30m
           script: |
-            cd /home/user/web/lens.webcrafts.pl/public_html
+            set -e
 
-            # Turn on maintenance mode
-            php artisan down
+            cd /home/webcrafts/web/lens.webcrafts.pl/public_html
 
-            # New code pull
+            trap 'php artisan up || true' EXIT
+
+            echo "=== Connected ==="
+            whoami
+            hostname
+            pwd
+            date
+
+            echo "=== Enable maintenance mode ==="
+            php artisan down || true
+
+            echo "=== Pull latest code ==="
             git pull origin main
 
-            # Backend
-            composer install --no-dev --optimize-autoloader
+            echo "=== Install PHP dependencies ==="
+            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-            # Frontend build
+            echo "=== Build frontend ==="
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 22
-            npm install
+
+            npm ci || npm install
             npm run build
 
-            # Laravel commands and turn off maintenance mode
+            echo "=== Laravel optimization ==="
             php artisan migrate --force --no-interaction
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            php artisan queue:restart || true
+
+            echo "=== Disable maintenance mode ==="
             php artisan up
+
+            echo "=== Deploy finished successfully ==="

@@ -36,6 +36,16 @@ test('support link appears in the website and documentation footers', function (
         ->assertSee('https://buycoffee.to/jakub-lipinski', false);
 });
 
+test('website footer credits the author and Webcrafts', function () {
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('Created by')
+        ->assertSee('Jakub Lipiński')
+        ->assertSee('https://lipinskijakub.pl/', false)
+        ->assertSee('Webcrafts.pl')
+        ->assertSee('https://webcrafts.pl/', false);
+});
+
 test('the website identifies v3 as the current development line', function () {
     $this->get('/')
         ->assertOk()
