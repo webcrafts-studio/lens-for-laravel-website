@@ -1,8 +1,31 @@
-# Upgrade to v3.0.0
+# Version 3 Upgrades
 
-Lens v3.0.0 is the current development line. This page documents v3 changes as they are completed; it does not mark the release as final.
+Lens v3.1 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1 additions together so the main documentation does not need a duplicated version tree.
 
-## Completed v3 Changes
+## What's New in v3.1
+
+v3.1 adds a review-focused AI workflow and scan reliability improvements:
+
+- editable AI Fix proposals with line numbers, indentation shortcuts, live diff updates, keyboard apply, and reset-to-AI
+- **Fix All A** and **Fix All AA** progressive review queues
+- up to three concurrent generations with per-item queued, loading, ready, failed, applied, and rejected states
+- navigation between fixes before the entire queue is ready
+- independent edits, retry, rejection, and apply controls for every queue item
+- outstanding request cancellation when the modal closes or a newer AI workflow supersedes the current one
+- cache-busted Chromium navigation and no-cache headers on every re-scan while preserving the original issue URL
+- stable dashboard issue identities so actions stay bound to the current scan
+- stronger source matching by rendered filename and numeric `:nth-child(...)` position for repeated Blade, React, and Vue elements
+
+v3.1 requires no new migrations or configuration keys. Update the package and clear any published/compiled views if the dashboard UI was customized:
+
+```bash
+composer update webcrafts-studio/lens-for-laravel
+php artisan optimize:clear
+```
+
+If package views were previously published, compare them with the v3.1 dashboard before expecting the new controls to appear.
+
+## v3.0 Foundation
 
 - selectable WCAG 2.0, 2.1, and 2.2 standards in the dashboard
 - `--wcag=2.0`, `--wcag=2.1`, and `--wcag=2.2` in the CLI
@@ -22,7 +45,7 @@ Lens v3.0.0 is the current development line. This page documents v3 changes as t
 - immediate pending-verification markers for applied AI fixes, without removing them from axe-derived counts before re-scan
 - complete English, Polish, Spanish, French, and German catalogs for package-owned scanner, history, comparison, modal, recorder, PDF, and error text
 
-## Upgrade Steps
+## Upgrading from v2 to v3.0.0
 
 Update the package:
 

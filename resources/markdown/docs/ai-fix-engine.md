@@ -55,10 +55,39 @@ When you click **AI FIX**, Lens:
 4. builds a prompt with the axe rule, WCAG tags, failing DOM snippet, and source code
 5. sends the prompt through a dedicated accessibility agent to the configured provider
 6. receives a minimal replacement and explanation
-7. shows a diff preview in the dashboard
-8. applies the change only after you accept it
+7. shows a diff preview and an optional in-modal editor in the dashboard
+8. applies the generated or edited replacement only after you accept it
 9. immediately marks the current issue as **AI Fix applied — pending re-scan**
 10. keeps the issue in violation counts until a new axe-core scan verifies the result
+
+## Reviewing and Editing in v3.1
+
+The v3.1 modal lets you review the provider response as generated or edit the replacement before applying it. The editor includes:
+
+- line numbers synchronized with editor scrolling
+- Tab and Shift+Tab indentation for a caret or selected lines
+- Ctrl+Enter or Cmd+Enter to apply
+- live line-by-line diff updates
+- line and character counts
+- an edited-state badge
+- reset to the untouched AI suggestion
+
+The same server-side path, source, stale-content, and dangerous-code validation runs for generated and user-edited replacements. Replacement code is limited to 12000 characters and cannot be empty.
+
+## Fix All Queues in v3.1
+
+**Fix All A** and **Fix All AA** collect every current issue at the chosen level that has a supported source location. The dashboard opens the queue before generation completes and runs up to three workers concurrently.
+
+Every queue item owns its issue, request controller, generation status, response, edited code, and review state. This lets the user:
+
+- inspect ready proposals while other positions are queued or generating
+- move with previous/next controls or numbered status buttons
+- preserve independent edits while switching positions
+- apply or reject one fix without blocking the rest
+- retry one failed generation without discarding successful responses
+- close the modal and abort every outstanding request
+
+The request starts are staggered by 250 milliseconds so concurrent provider work remains fast while avoiding simultaneous SQLite-backed rate-limiter writes in common local Laravel setups. The suggestion endpoint allows 60 requests per minute for progressive queues.
 
 ## Source Context
 
@@ -66,9 +95,9 @@ Lens does not send an arbitrary fixed number of surrounding lines. It identifies
 
 The selected fragment is capped at 6000 bytes. If a complete component exceeds that limit, Lens sends only the opening element and instructs the agent not to invent code outside the selection.
 
-## Generation Reliability in v3.0
+## Generation Reliability from v3.0
 
-The v3.0 agent is deliberately conservative:
+The v3 agent remains deliberately conservative:
 
 - maximum output is 12000 tokens
 - temperature is `0` for more repeatable fixes
@@ -130,6 +159,8 @@ When you apply a fix:
 
 The pending marker survives closing the AI Fix modal during the current dashboard session. A new scan replaces the displayed issues with fresh axe-core results: a confirmed fix disappears, while an unresolved violation returns as an ordinary active issue.
 
+v3.1 also protects the review state itself. Starting a newer individual request or Fix All queue aborts superseded requests, and late responses are ignored when their queue session is no longer current.
+
 ## Security Controls
 
 AI Fix includes several safeguards:
@@ -146,3 +177,5 @@ AI Fix includes several safeguards:
 - The fix can be rejected if the file changed after scanning.
 - Very large components are reduced to their opening element and may still require a manual edit.
 - Dynamic abstractions can require manual edits when the located source is only the outer component.
+- Fix All queues include only A or AA issues with a located Blade, React, or Vue source file; unresolved source locations still require manual investigation.
+- Suggestions are reviewed and applied one at a time. Fix All does not automatically write every generated response.

@@ -18,6 +18,12 @@ How it works:
 4. axe-core runs in the browser.
 5. Violations are mapped to Blade, React, or Vue source files when possible.
 
+## Fresh Re-scans in v3.1
+
+Every dashboard and CLI browser navigation adds a unique internal `__lens_scan` query parameter and sends no-cache headers. The reported issue URL remains the original requested URL, so history, baselines, and comparisons keep stable identities.
+
+This prevents Chromium, the development server, or an intermediary cache from returning the markup from a previous scan after an AI fix was applied. The dashboard also replaces issue action identities with each result set, so preview and AI Fix actions remain attached to the issue the user actually clicked.
+
 ## Multiple URLs
 
 Pass several URLs:
@@ -191,7 +197,7 @@ LENS_FOR_LARAVEL_CRAWL_MAX_PAGES=100
 Or in config:
 
 ```php
-'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 100),
+'crawl_max_pages' => env('LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 50),
 ```
 
 ## WCAG Level Filtering

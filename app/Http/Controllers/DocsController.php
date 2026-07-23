@@ -14,7 +14,7 @@ class DocsController extends Controller
             ['title' => 'Introduction', 'slug' => 'introduction'],
             ['title' => 'Installation', 'slug' => 'installation'],
             ['title' => 'Quick Start', 'slug' => 'quick-start'],
-            ['title' => 'Upgrade to v3.0.0', 'slug' => 'upgrade-v3'],
+            ['title' => 'Version 3 Upgrades', 'slug' => 'upgrade-v3'],
             ['title' => 'Upgrade to v2.1.0', 'slug' => 'upgrade-v2-1'],
             ['title' => 'Upgrade to v2.0.0', 'slug' => 'upgrade-v2'],
         ],

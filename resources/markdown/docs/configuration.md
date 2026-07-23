@@ -124,7 +124,7 @@ LENS_FOR_LARAVEL_LOCALE=pl
 
 Users can change the language in the dashboard. Their selection is stored in the session.
 
-In v3.0, that locale is shared by the scanner, history, comparisons, modals, recorder, PDF reports, and package-generated errors. A PDF exported from the dashboard therefore uses the same language as the current dashboard session.
+Since v3.0, that locale is shared by the scanner, history, comparisons, modals, recorder, PDF reports, and package-generated errors. A PDF exported from the dashboard therefore uses the same language as the current dashboard session.
 
 ### `fallback_locale`
 
@@ -277,9 +277,11 @@ LENS_FOR_LARAVEL_AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```
 
-## v3.0.0 Upgrade
+## Version 3 Upgrade
 
-v3.0.0 is the current development line. If you published the config before v3.0.0, add these keys manually:
+v3.1 is the current development line. It adds editable AI proposals, Fix All A/AA queues, fresh re-scans, and more precise repeated-element source mapping without adding configuration keys or migrations.
+
+If you published the config before v3.0.0, add these keys manually:
 
 ```php
 'wcag_version' => env('LENS_FOR_LARAVEL_WCAG_VERSION', '2.0'),

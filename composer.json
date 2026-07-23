@@ -29,7 +29,8 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.4",
-        "pestphp/pest-plugin-laravel": "^4.1"
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "webcrafts-studio/lens-for-laravel": "@dev"
     },
     "autoload": {
         "psr-4": {
@@ -95,5 +96,13 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "lens-for-laravel",
+        "type": "path",
+        "url": "../lens-for-laravel",
+        "options": {
+            "symlink": true
+        }
+    }]
 }

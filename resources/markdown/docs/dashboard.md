@@ -90,6 +90,7 @@ The report includes:
 - documentation link
 - preview button
 - AI Fix button when a supported source file is found
+- Fix All A and Fix All AA actions when the selected level contains located, reviewable issues
 
 ## Source Locations
 
@@ -115,14 +116,34 @@ AI Fix actions are shown only when the host application uses PHP 8.3+, Laravel 1
 2. Lens extracts the smallest relevant element or component around the issue.
 3. The configured AI provider returns a minimal replacement and an explanation.
 4. The dashboard displays a diff preview.
-5. Click **ACCEPT & APPLY** to write the change to disk.
-6. The issue card is immediately marked **AI Fix applied — pending re-scan**.
+5. Accept the suggestion as generated or click **EDIT** to change it in the modal. The editor provides line numbers, Tab and Shift+Tab indentation, a live diff, reset-to-AI, and Ctrl/Cmd+Enter apply.
+6. Click **ACCEPT & APPLY** to write the reviewed replacement to disk, or reject it without changing a file.
+7. The issue card is immediately marked **AI Fix applied — pending re-scan**.
+
+## Fix All A and AA in v3.1
+
+After a scan, **Fix All A** and **Fix All AA** appear when that level contains issues with located, supported source files.
+
+Fix All is a review workflow, not blind bulk writing:
+
+1. The modal opens immediately with every eligible issue in a numbered queue.
+2. Lens generates up to three suggestions concurrently. Their starts are slightly staggered so applications using SQLite-backed cache stores do not contend on the local rate limiter.
+3. Each queue position shows `queued`, `generating`, `ready`, `failed`, `applied`, or `rejected` state.
+4. Ready proposals can be reviewed and edited while later positions continue loading.
+5. Previous/next controls and numbered status buttons preserve the edited code for every item.
+6. A failed item can be retried without restarting successful suggestions.
+7. Accepting or rejecting one item does not close or block the rest of the queue.
+8. Closing the modal aborts outstanding queue requests.
+
+Only WCAG A and AA have Fix All actions. Issues without a supported source location are not added to the queue and remain available for manual investigation.
 
 Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured Gemini, OpenAI, or Anthropic provider. It does not send the entire repository.
 
-In v3.0, Lens uses the provider's default model from `laravel/ai`; there is no model selector. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
+Since v3.0, Lens uses the provider's default model from `laravel/ai`; there is no model selector. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
 
 The pending marker is intentionally not the same as a verified fix. The issue remains in totals and filters because those numbers describe the last axe-core scan. Closing the modal keeps the marker visible. Running a new scan replaces the old state with fresh results.
+
+In v3.1, every browser scan uses a unique cache-busting query parameter and no-cache headers while the issue still retains the originally requested URL. The dashboard assigns stable identities to the new result objects and cancels an older AI request when another issue or queue supersedes it. This prevents stale markup or a late response from keeping the modal bound to a previous issue.
 
 AI Fix supports:
 
@@ -185,7 +206,7 @@ LENS_FOR_LARAVEL_LOCALE=en
 LENS_FOR_LARAVEL_FALLBACK_LOCALE=en
 ```
 
-In v3.0, the bundled catalogs cover every package-owned label and message in the scanner, history, URL-aware comparisons, AI Fix and preview modals, interactive-state recorder, charts, PDF reports, and package-generated browser and route errors. PDF exports follow the locale selected in the dashboard session.
+Since v3.0, the bundled catalogs cover every package-owned label and message in the scanner, history, URL-aware comparisons, AI Fix and preview modals, interactive-state recorder, charts, PDF reports, and package-generated browser and route errors. v3.1 extends the same five-language contract to the editor and Fix All queue. PDF exports follow the locale selected in the dashboard session.
 
 Descriptions of accessibility rules come from axe-core, while some request-validation messages can come from Laravel itself. Those upstream messages are not rewritten by Lens and may use the language configured by the supplying library or host application.
 

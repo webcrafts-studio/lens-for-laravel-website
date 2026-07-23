@@ -47,7 +47,10 @@ Then:
 5. Inspect WCAG level cards and violation details.
 6. Preview the failing element.
 7. Open the source file from `SRC_LOC`.
-8. Optionally request an AI fix.
+8. Optionally request an individual AI fix, then review or edit the proposal before applying it.
+9. On v3.1, use **Fix All A** or **Fix All AA** to open a progressive review queue for every located issue at that level.
+
+Fix All does not write every suggestion automatically. The modal opens immediately, generates up to three suggestions concurrently, and keeps an independent state for each item. You can move to any ready proposal while other items still show loaders, then edit, accept, reject, or retry each fix separately.
 
 ## Example Issue Output
 

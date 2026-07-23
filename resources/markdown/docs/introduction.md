@@ -17,9 +17,19 @@ When axe-core detects a violation, Lens shows the failing DOM element and attemp
 
 Located issues include a file path, line number, and `sourceType`: `blade`, `react`, or `vue`.
 
-## What's New in v3.0.0
+## What's New in v3.1
 
-v3.0.0 is the current development line. Completed v3 work currently includes:
+v3.1 is the current development line. It builds on the v3.0 compatibility, WCAG, reliability, and localization foundation without creating a separate documentation branch.
+
+New in v3.1:
+
+- **Editable AI Fix proposals** directly in the modal, with line numbers, Tab and Shift+Tab indentation, live diff updates, keyboard apply, and reset to the original AI suggestion
+- **Fix All A and Fix All AA review queues** that start immediately and generate up to three suggestions concurrently
+- **Progressive review** so ready fixes can be inspected, edited, accepted, rejected, or retried while later queue items still show loaders
+- **Fresh re-scan navigation** with cache-busted browser URLs, stable issue identities, and cancellation of superseded AI requests
+- **More precise source mapping** for repeated elements by preferring rendered source filenames and using numeric `:nth-child(...)` hints
+
+The v3.0 foundation includes:
 
 - **Selectable WCAG 2.0, 2.1, and 2.2 standards** in the dashboard and CLI
 - **WCAG 2.0 as the backward-compatible default** for existing commands and CI workflows
@@ -33,7 +43,7 @@ v3.0.0 is the current development line. Completed v3 work currently includes:
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
 - **Complete package-owned interface catalogs** in English, Polish, Spanish, French, and German, including history, comparisons, modals, PDF reports, and error feedback
 
-The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
+The Version 3 upgrade page covers both the v3.0 foundation and the incremental v3.1 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
 ## Core Capabilities
 
@@ -45,7 +55,7 @@ The v2.0 and v2.1 upgrade pages remain available as historical documentation for
 - **Optional AI Fix Engine** using Gemini, OpenAI, or Anthropic on PHP 8.3+ and Laravel 12+
 - **Four scan modes**: single URL, multiple URLs, whole-site crawl, and interactive states
 - **Optional SPA crawling** for React/Vue/Inertia link discovery
-- **Dashboard UI** with filtering, element preview, PDF export, AI fixes, history, and a state recorder
+- **Dashboard UI** with filtering, element preview, PDF export, editable AI fixes, progressive Fix All A/AA queues, history, and a state recorder
 - **Artisan CLI** with interactive states, level filtering, crawl mode, thresholds, baseline files, and CI integration
 
 ## How It Works
@@ -90,7 +100,7 @@ The standard version is a separate choice from the conformance level. WCAG 2.1 a
 
 | Dependency | Supported Versions |
 |------------|-------------------|
-| PHP | 8.2, 8.3, 8.4 |
+| PHP | 8.2+ |
 | Laravel | 10, 11, 12, 13 |
 | Node.js | Recent LTS |
 | Puppeteer | 21+ recommended |
@@ -101,7 +111,7 @@ These versions apply to the core scanner. AI Fix additionally requires:
 |-------------------|-------------------|
 | PHP | 8.3+ |
 | Laravel | 12, 13 |
-| Laravel AI SDK | `laravel/ai` 0.3+ installed separately |
+| Laravel AI SDK | `laravel/ai:^0.3.2` installed separately |
 
 On PHP 8.2 or Laravel 10/11, Lens keeps scanning, crawling, history, PDF, preview, source mapping, interactive states, and CLI support. Only AI Fix is unavailable, and the dashboard explains the limitation.
 

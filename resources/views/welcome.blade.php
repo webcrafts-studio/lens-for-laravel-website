@@ -21,6 +21,20 @@
         function toggleTheme() {
             var isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('lens-theme', isDark ? 'dark' : 'light');
+            updateThemeToggle(isDark);
+        }
+
+        function updateThemeToggle(isDark) {
+            var toggle = document.querySelector('[data-theme-toggle]');
+
+            if (!toggle) {
+                return;
+            }
+
+            var label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
+            toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
         }
 
         function copyCmd(btn, text) {
@@ -69,6 +83,10 @@
                 callback();
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateThemeToggle(document.documentElement.classList.contains('dark'));
+        });
     </script>
 
     <!-- Fonts -->
@@ -83,35 +101,39 @@
 
 {{-- Default = light (white bg, black text). Dark mode via .dark class on <html>. --}}
 
-<body class="bg-white dark:bg-black font-mono antialiased">
+<body class="bg-page text-body font-mono antialiased">
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     {{-- ====================================================== --}}
     {{-- NAVIGATION                                              --}}
     {{-- ====================================================== --}}
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black border-b-2 border-black/10 dark:border-white/10">
+    <nav aria-label="Primary navigation"
+        class="fixed top-0 left-0 right-0 z-50 bg-page border-b-2 border-divider">
         <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="text-black dark:text-white font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
-                <span class="text-[#e53e3e] font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
+                <span class="shrink-0 whitespace-nowrap text-content font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
+                <span class="shrink-0 whitespace-nowrap text-accent font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-black/20 dark:text-white/20 text-[10px] font-mono border border-black/20 dark:border-white/20 px-1.5 py-0.5 leading-none">v3.0</span>
+                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.1</span>
             </div>
 
             <div class="flex items-center gap-3">
                 <a href="#features"
-                    class="hidden md:block text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs font-mono tracking-widest transition-colors uppercase">Features</a>
+                    class="hidden md:block text-muted hover:text-content text-xs font-mono tracking-widest transition-colors uppercase">Features</a>
                 <a href="#cli"
-                    class="hidden md:block text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs font-mono tracking-widest transition-colors uppercase">CLI</a>
+                    class="hidden md:block text-muted hover:text-content text-xs font-mono tracking-widest transition-colors uppercase">CLI</a>
 
                 {{-- Theme toggle --}}
-                <button onclick="toggleTheme()" title="Toggle theme"
-                    class="w-9 h-9 flex items-center justify-center border-2 border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors text-base cursor-pointer">
-                    <span class="dark:hidden" aria-label="Switch to dark mode">☾</span>
-                    <span class="hidden dark:inline" aria-label="Switch to light mode">☀</span>
+                <button type="button" data-theme-toggle onclick="toggleTheme()" aria-label="Switch to dark mode"
+                    aria-pressed="false"
+                    class="w-9 h-9 flex items-center justify-center border-2 border-control hover:border-content text-muted hover:text-content transition-colors text-base cursor-pointer">
+                    <span class="dark:hidden" aria-hidden="true">☾</span>
+                    <span class="hidden dark:inline" aria-hidden="true">☀</span>
                 </button>
 
                 <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                    class="text-black dark:text-white font-mono text-[10px] md:text-xs border-2 border-black/40 dark:border-white/40 hover:border-black dark:hover:border-white px-3 md:px-4 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors uppercase tracking-widest">
+                    class="hidden sm:block text-content font-mono text-xs border-2 border-control hover:border-content px-3 md:px-4 py-2 hover:bg-content hover:text-page transition-colors uppercase tracking-widest">
                     GitHub →
                 </a>
             </div>
@@ -121,7 +143,8 @@
     {{-- ====================================================== --}}
     {{-- HERO                                                    --}}
     {{-- ====================================================== --}}
-    <section class="bg-white dark:bg-black min-h-screen flex flex-col pt-14 relative overflow-hidden">
+    <main id="main-content" tabindex="-1">
+    <section class="bg-page min-h-screen flex flex-col pt-14 relative overflow-hidden">
 
         {{-- Grid backgrounds (light vs dark) --}}
         <div class="dark:hidden absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -134,32 +157,32 @@
         <div class="flex-1 flex flex-col items-center justify-center p-6 md:p-12">
             {{-- Corner bracket frame --}}
             <div
-                class="relative border border-black/10 dark:border-white/10 px-8 py-16 md:px-20 md:py-20 max-w-5xl w-full text-center">
+                class="relative border border-divider px-8 py-16 md:px-20 md:py-20 max-w-5xl w-full text-center">
             <div
-                class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#e53e3e] -translate-x-px -translate-y-px">
+                class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-accent -translate-x-px -translate-y-px">
             </div>
             <div
-                class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#e53e3e] translate-x-px -translate-y-px">
+                class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-accent translate-x-px -translate-y-px">
             </div>
             <div
-                class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#e53e3e] -translate-x-px translate-y-px">
+                class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-accent -translate-x-px translate-y-px">
             </div>
             <div
-                class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#e53e3e] translate-x-px translate-y-px">
+                class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-accent translate-x-px translate-y-px">
             </div>
 
             <div
-                class="text-[#e53e3e] text-[10px] font-mono tracking-normal md:tracking-[0.4em] mb-10 uppercase truncate">
+                class="text-accent text-xs font-mono font-bold tracking-normal md:tracking-[0.3em] mb-10 uppercase truncate">
                 >>> WCAG_ACCESSIBILITY_AUDITOR_FOR_LARAVEL
             </div>
 
             <h1 class="font-mono font-black leading-none tracking-tight">
-                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-black dark:text-white">LENS FOR</span>
-                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-[#e53e3e] -mt-2 md:-mt-4">LARAVEL</span>
+                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-content">LENS FOR</span>
+                <span class="block text-[clamp(3.5rem,11vw,9rem)] text-accent -mt-2 md:-mt-4">LARAVEL</span>
             </h1>
 
             <p
-                class="mt-10 text-black/50 dark:text-white/40 font-mono text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                class="mt-10 text-muted font-mono text-base max-w-xl mx-auto leading-relaxed">
                 Local-first WCAG auditor for Blade, Livewire, React, Vue, and Inertia. Maps violations to source files,
                 scans interactive UI states, and supports CI baselines.
             </p>
@@ -167,16 +190,17 @@
 
         {{-- Install command --}}
         <div class="mt-10 max-w-2xl w-full">
-            <div class="bg-white dark:bg-black border-2 border-black/20 dark:border-white/20 flex items-stretch">
+            <div class="bg-page border-2 border-control flex items-stretch">
                 <div
-                    class="border-r-2 border-black/20 dark:border-white/20 px-5 flex items-center text-[#e53e3e] font-mono text-sm shrink-0">
+                    class="border-r-2 border-control px-5 flex items-center text-accent font-mono text-sm font-bold shrink-0">
                     $</div>
                 <div
-                    class="px-4 md:px-6 py-4 text-black dark:text-white font-mono text-xs md:text-sm flex-1 min-w-0 select-all truncate">
+                    class="px-4 md:px-6 py-4 text-content font-mono text-xs md:text-sm flex-1 min-w-0 select-all truncate">
                     composer require webcrafts-studio/lens-for-laravel --dev
                 </div>
-                <button onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
-                    class="border-l-2 border-black/20 dark:border-white/20 px-3 md:px-5 text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-mono text-[10px] uppercase tracking-widest cursor-pointer flex items-center justify-center shrink-0">
+                <button type="button" aria-label="Copy installation command"
+                    onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
+                    class="border-l-2 border-control px-3 md:px-5 text-muted hover:text-content hover:bg-panel transition-colors font-mono text-xs font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center shrink-0">
                     <span class="copy-label hidden md:inline">COPY</span>
                     <svg class="md:hidden w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor" aria-label="Copy">
@@ -190,11 +214,11 @@
         {{-- CTAs --}}
         <div class="mt-6 mb-12 md:mb-0 flex items-center gap-4 flex-wrap justify-center">
             <a href="{{ route('docs') }}"
-                class="bg-[#e53e3e] text-white border-2 border-[#e53e3e] px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:bg-transparent hover:text-[#e53e3e] transition-colors">
+                class="bg-accent-solid text-on-accent border-2 border-accent-solid px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:bg-page hover:text-accent transition-colors">
                 DOCUMENTATION →
             </a>
             <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                class="bg-transparent text-black dark:text-white border-2 border-black/30 dark:border-white/30 px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:border-black dark:hover:border-white transition-colors">
+                class="bg-transparent text-content border-2 border-control px-8 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:border-content hover:bg-content hover:text-page transition-colors">
                 GITHUB
             </a>
         </div>
@@ -204,43 +228,43 @@
     {{-- ====================================================== --}}
     {{-- STATS — "Lens by Numbers"                              --}}
     {{-- ====================================================== --}}
-    <section class="bg-white dark:bg-zinc-950 border-y-2 md:border-y-4 border-black dark:border-white/10">
+    <section class="bg-panel border-y-2 md:border-y-4 border-content">
         <div
-            class="grid grid-cols-2 md:grid-cols-5 divide-x-0 md:divide-x-2 divide-y-2 md:divide-y-0 divide-black dark:divide-white/10">
+            class="grid grid-cols-2 md:grid-cols-5 divide-x-0 md:divide-x-2 divide-y-2 md:divide-y-0 divide-content">
 
             <div class="p-8 col-span-2 md:col-span-1 flex flex-col justify-center">
                 <div
-                    class="text-[10px] font-mono font-bold tracking-[0.25em] text-black/40 dark:text-white/40 uppercase leading-relaxed">
+                    class="text-xs font-mono font-bold tracking-[0.2em] text-muted uppercase leading-relaxed">
                     LENS FOR LARAVEL<br>BY NUMBERS
                 </div>
             </div>
 
             <div class="p-8">
-                <div class="text-5xl font-black font-mono text-black dark:text-white">5</div>
-                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">UI
+                <div class="text-5xl font-black font-mono text-content">5</div>
+                <div class="text-xs font-mono tracking-widest text-muted mt-2 uppercase">UI
                     Languages</div>
             </div>
 
             <div class="p-8">
-                <div class="text-5xl font-black font-mono text-black dark:text-white">3</div>
-                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">WCAG
+                <div class="text-5xl font-black font-mono text-content">3</div>
+                <div class="text-xs font-mono tracking-widest text-muted mt-2 uppercase">WCAG
                     Levels</div>
             </div>
 
             <div class="p-8">
                 <div class="font-black font-mono leading-none">
-                    <span class="text-3xl text-black dark:text-white">BLADE</span>
-                    <span class="text-3xl text-[#e53e3e]"> JS</span>
+                    <span class="text-3xl text-content">BLADE</span>
+                    <span class="text-3xl text-accent"> JS</span>
                 </div>
-                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">
+                <div class="text-xs font-mono tracking-widest text-muted mt-2 uppercase">
                     Source Types</div>
             </div>
 
             <div class="p-8">
-                <div class="font-black font-mono text-black dark:text-white leading-tight text-base">
+                <div class="font-black font-mono text-content leading-tight text-base">
                     GEMINI<br>OPENAI<br>ANTHROPIC
                 </div>
-                <div class="text-[10px] font-mono tracking-widest text-black/40 dark:text-white/40 mt-2 uppercase">AI
+                <div class="text-xs font-mono tracking-widest text-muted mt-2 uppercase">AI
                     Providers</div>
             </div>
 
@@ -250,112 +274,114 @@
     {{-- ====================================================== --}}
     {{-- CORE FEATURES GRID                                      --}}
     {{-- ====================================================== --}}
-    <section id="features" class="bg-white dark:bg-black border-b-4 border-black dark:border-white/10">
+    <section id="features" class="bg-page border-b-4 border-content">
         <div
-            class="grid grid-cols-1 lg:grid-cols-3 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black dark:divide-white/10">
+            class="grid grid-cols-1 lg:grid-cols-3 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-content">
 
             {{-- Feature 01: Multi-mode Scanning --}}
             <div class="p-10">
-                <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">01 / SCAN MODES</div>
-                <h3 class="font-mono font-black text-3xl text-black dark:text-white leading-tight">
+                <div class="text-accent text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">01 / SCAN MODES</div>
+                <h3 class="font-mono font-black text-3xl text-content leading-tight">
                     Multi-mode<br>Scanning</h3>
-                <p class="mt-4 text-black/50 dark:text-white/50 font-mono text-sm leading-relaxed">
+                <p class="mt-4 text-muted font-mono text-base leading-relaxed">
                     Target a single page, a list of URLs, crawl your entire site, or scan states after UI interactions.
                     Enable JavaScript crawling for SPA and Inertia apps.
                 </p>
                 <div class="mt-8 flex flex-col gap-2">
                     <div
-                        class="group border-2 border-black dark:border-white/20 px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors cursor-default">
+                        class="group border-2 border-control px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-content hover:text-page transition-colors cursor-default">
                         <span
-                            class="font-bold text-black dark:text-white group-hover:text-white dark:group-hover:text-black">SINGLE_URL</span>
+                            class="font-bold text-content group-hover:text-page">SINGLE_URL</span>
                         <span
-                            class="text-black/30 dark:text-white/30 group-hover:text-white/50 dark:group-hover:text-black/50 text-[10px]">lens:audit
+                            class="text-muted group-hover:text-page text-xs">lens:audit
                             https://site.test</span>
                     </div>
                     <div
-                        class="group border-2 border-black dark:border-white/20 px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors cursor-default">
+                        class="group border-2 border-control px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-content hover:text-page transition-colors cursor-default">
                         <span
-                            class="font-bold text-black dark:text-white group-hover:text-white dark:group-hover:text-black">MULTIPLE_URLS</span>
+                            class="font-bold text-content group-hover:text-page">MULTIPLE_URLS</span>
                         <span
-                            class="text-black/30 dark:text-white/30 group-hover:text-white/50 dark:group-hover:text-black/50 text-[10px]">lens:audit
+                            class="text-muted group-hover:text-page text-xs">lens:audit
                             url1 url2 url3</span>
                     </div>
                     <div
-                        class="border-2 border-[#e53e3e] bg-[#e53e3e] text-white px-4 py-3 font-mono text-xs flex items-center justify-between cursor-default">
+                        class="border-2 border-accent-solid bg-accent-solid text-on-accent px-4 py-3 font-mono text-xs flex items-center justify-between cursor-default">
                         <span class="font-bold">WHOLE_WEBSITE</span>
-                        <span class="text-white/60 text-[10px]">--crawl flag</span>
+                        <span class="text-on-accent text-xs">--crawl flag</span>
                     </div>
                     <div
-                        class="group border-2 border-black dark:border-white/20 px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors cursor-default">
+                        class="group border-2 border-control px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-content hover:text-page transition-colors cursor-default">
                         <span
-                            class="font-bold text-black dark:text-white group-hover:text-white dark:group-hover:text-black">INTERACTIVE_STATES</span>
+                            class="font-bold text-content group-hover:text-page">INTERACTIVE_STATES</span>
                         <span
-                            class="text-black/30 dark:text-white/30 group-hover:text-white/50 dark:group-hover:text-black/50 text-[10px]">click/type/wait</span>
+                            class="text-muted group-hover:text-page text-xs">click/type/wait</span>
                     </div>
                 </div>
             </div>
 
             {{-- Feature 02: AI Fix Engine — intentionally always dark for contrast --}}
             <div class="p-10 bg-black text-white">
-                <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">02 / AI ENGINE</div>
+                <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
-                <p class="mt-4 text-white/60 font-mono text-sm leading-relaxed">
+                <p class="mt-4 text-terminal-muted font-mono text-base leading-relaxed">
                     Your chosen AI (Gemini, OpenAI, or Anthropic) reads a focused element or component and generates a
-                    minimal Blade, React, or Vue replacement. Review the diff before applying.
+                    minimal Blade, React, or Vue replacement. Review or edit each diff before applying, or prepare all
+                    located Level A or AA fixes in a progressive review queue.
                 </p>
-                <div class="mt-8 border border-white/10">
-                    <div class="border-b border-white/10 px-4 py-2 flex items-center justify-between bg-white/5">
-                        <span class="text-red-400 text-[10px] font-mono uppercase tracking-wider">BEFORE</span>
-                        <span class="text-white/50 text-[10px] font-mono">js/Components/Footer.vue:112</span>
+                <div class="mt-8 border border-terminal-border">
+                    <div class="border-b border-terminal-border px-4 py-2 flex items-center justify-between bg-terminal-panel">
+                        <span class="text-terminal-red text-xs font-bold font-mono uppercase tracking-wider">BEFORE</span>
+                        <span class="text-terminal-muted text-xs font-mono">js/Components/Footer.vue:112</span>
                     </div>
-                    <div class="px-4 py-3 text-[11px] font-mono text-red-400 leading-relaxed">
+                    <div class="px-4 py-3 text-xs font-mono text-terminal-red leading-relaxed">
                         &lt;a href=""&gt;<br>
                         &nbsp;&nbsp;&lt;i class="fa-linkedin"&gt;&lt;/i&gt;<br>
                         &lt;/a&gt;
                     </div>
-                    <div class="border-t border-b border-white/10 px-4 py-2 bg-white/5">
-                        <span class="text-green-400 text-[10px] font-mono uppercase tracking-wider">AFTER — AI
+                    <div class="border-t border-b border-terminal-border px-4 py-2 bg-terminal-panel">
+                        <span class="text-green-300 text-xs font-bold font-mono uppercase tracking-wider">AFTER — AI
                             FIX</span>
                     </div>
-                    <div class="px-4 py-3 text-[11px] font-mono text-green-400 leading-relaxed">
+                    <div class="px-4 py-3 text-xs font-mono text-green-300 leading-relaxed">
                         &lt;a href="" aria-label="LinkedIn"&gt;<br>
                         &nbsp;&nbsp;&lt;i class="fa-linkedin"<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aria-hidden="true"&gt;&lt;/i&gt;<br>
                         &lt;/a&gt;
                     </div>
                 </div>
-                <div class="mt-4 text-white/50 font-mono text-[10px] leading-relaxed">
-                    - Semantic context · Minimal replacement · One safe retry<br>
-                    - Gemini · OpenAI · Anthropic · Provider-default model<br>
+                <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
+                    - v3.1: In-modal editor · Fix All A/AA · Live queue<br>
+                    - Up to 3 suggestions generate concurrently · Per-item retry<br>
+                    - Fresh re-scans · Stable issue actions · Better repeated-node mapping<br>
                     - Optional: PHP 8.3+ · Laravel 12+ · laravel/ai
                 </div>
             </div>
 
             {{-- Feature 03: CLI First --}}
             <div class="p-10">
-                <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-6 uppercase">03 / CLI FIRST</div>
-                <h3 class="font-mono font-black text-3xl text-black dark:text-white leading-tight">CLI<br>First</h3>
-                <p class="mt-4 text-black/50 dark:text-white/50 font-mono text-sm leading-relaxed">
+                <div class="text-accent text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">03 / CLI FIRST</div>
+                <h3 class="font-mono font-black text-3xl text-content leading-tight">CLI<br>First</h3>
+                <p class="mt-4 text-muted font-mono text-base leading-relaxed">
                     A first-class Artisan command with selectable WCAG 2.0/2.1/2.2 standards, reusable interaction-state scripts, level filters, crawl mode, source mapping, SPA-friendly options,
                     thresholds, and baseline quality gates.
                 </p>
                 {{-- Always-dark code block (terminal) --}}
                 <div class="mt-8 bg-black text-white p-5 font-mono text-xs leading-relaxed">
-                    <div class="text-white/30 mb-3"># Regression-only CI quality gate</div>
-                    <div><span class="text-[#e53e3e]">$</span> <span class="text-white">php artisan lens:audit
+                    <div class="text-terminal-muted mb-3"># Regression-only CI quality gate</div>
+                    <div><span class="text-terminal-red">$</span> <span class="text-terminal">php artisan lens:audit
                             \</span></div>
-                    <div class="ml-5 text-white/60">&nbsp;&nbsp;https://your-app.test \</div>
-                    <div class="ml-5"><span class="text-yellow-400">--aa</span> <span class="text-white/30"># Level
+                    <div class="ml-5 text-terminal-muted">&nbsp;&nbsp;https://your-app.test \</div>
+                    <div class="ml-5"><span class="text-yellow-300">--aa</span> <span class="text-terminal-subtle"># Level
                             A + AA</span></div>
-                    <div class="ml-5"><span class="text-yellow-400">--crawl</span> <span class="text-white/30">#
+                    <div class="ml-5"><span class="text-yellow-300">--crawl</span> <span class="text-terminal-subtle">#
                             Scan entire site</span></div>
-                    <div class="ml-5"><span class="text-yellow-400">--fail-on-new</span> <span
-                            class="text-white/30"># Fail on regressions</span></div>
+                    <div class="ml-5"><span class="text-yellow-300">--fail-on-new</span> <span
+                            class="text-terminal-subtle"># Fail on regressions</span></div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
                     @foreach (['--wcag=2.2', '--states=path', '--a', '--aa', '--all', '--crawl', '--threshold=N', '--baseline', '--fail-on-new'] as $flag)
                         <span
-                            class="border border-black/20 dark:border-white/20 px-2 py-1 font-mono text-[10px] text-black/40 dark:text-white/40">{{ $flag }}</span>
+                            class="border border-control px-2 py-1 font-mono text-xs text-muted">{{ $flag }}</span>
                     @endforeach
                 </div>
             </div>
@@ -366,117 +392,117 @@
     {{-- ====================================================== --}}
     {{-- CLI SHOWCASE — always dark (terminal window)           --}}
     {{-- ====================================================== --}}
-    <section id="cli" class="bg-black py-24 border-b border-white/10">
+    <section id="cli" class="bg-terminal-surface py-24 border-b border-terminal-divider">
         <div class="max-w-5xl mx-auto px-6">
-            <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-4 uppercase">TERMINAL PREVIEW</div>
-            <h2 class="font-mono font-black text-white text-5xl mb-3 leading-tight">Diagnostic<br>Report</h2>
-            <p class="font-mono text-white/30 text-sm mb-12">
-                Real output from <span class="text-white">php artisan lens:audit https://webcrafts.test --aa</span>
+            <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-4 uppercase">TERMINAL PREVIEW</div>
+            <h2 class="font-mono font-black text-terminal text-5xl mb-3 leading-tight">Diagnostic<br>Report</h2>
+            <p class="font-mono text-terminal-muted text-base mb-12">
+                Real output from <span class="text-terminal">php artisan lens:audit https://webcrafts.test --aa</span>
             </p>
 
-            <div class="border-2 border-white/20">
-                <div class="border-b-2 border-white/20 px-5 py-3 flex items-center gap-4 bg-white/[0.03]">
+            <div class="border-2 border-terminal-border">
+                <div class="border-b-2 border-terminal-border px-5 py-3 flex items-center gap-4 bg-terminal-panel">
                     <div class="flex gap-1.5">
-                        <div class="w-3 h-3 rounded-full bg-[#e53e3e]/70"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-300"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-300"></div>
                     </div>
-                    <span class="text-white/50 font-mono text-[10px] ml-2 truncate">
+                    <span class="text-terminal-muted font-mono text-xs ml-2 truncate">
                         zsh — php artisan lens:audit https://webcrafts.test --aa
                     </span>
                 </div>
 
                 <div class="p-6 space-y-3 font-mono text-xs overflow-x-auto">
-                    <div class="text-white/30">
-                        Running Lens audit on: <span class="text-white">https://webcrafts.test</span>
+                    <div class="text-terminal-muted">
+                        Running Lens audit on: <span class="text-terminal">https://webcrafts.test</span>
                     </div>
-                    <div class="text-white/30">
-                        Filter: <span class="text-yellow-400">WCAG A + AA</span> &nbsp;|&nbsp; Mode: <span
-                            class="text-yellow-400">SINGLE_URL</span>
+                    <div class="text-terminal-muted">
+                        Filter: <span class="text-yellow-300">WCAG A + AA</span> &nbsp;|&nbsp; Mode: <span
+                            class="text-yellow-300">SINGLE_URL</span>
                     </div>
-                    <div class="text-white/10">──────────────────────────────────────────────────────────────────────
+                    <div class="text-terminal-divider" aria-hidden="true">──────────────────────────────────────────────────────────────────────
                     </div>
 
                     <div class="pt-2">
-                        <div class="text-white font-bold uppercase tracking-wider text-xs">DIAGNOSTIC REPORT</div>
-                        <div class="text-white/30 text-[10px] mt-1">
-                            TOTAL_VIOLATIONS: <span class="text-[#e53e3e] font-bold text-xs">3</span>
+                        <div class="text-terminal font-bold uppercase tracking-wider text-xs">DIAGNOSTIC REPORT</div>
+                        <div class="text-terminal-muted text-xs mt-1">
+                            TOTAL_VIOLATIONS: <span class="text-terminal-red font-bold text-xs">3</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-4 border border-white/20 text-[10px] mt-1">
-                        <div class="p-3 border-r border-white/20 bg-[#e53e3e]/10">
-                            <div class="text-white/40 uppercase tracking-wider">A LEVEL</div>
-                            <div class="text-white font-black text-2xl mt-1">3</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 border border-terminal-border text-xs mt-1">
+                        <div class="p-3 border-r border-terminal-border bg-red-950">
+                            <div class="text-terminal-muted uppercase tracking-wider">A LEVEL</div>
+                            <div class="text-terminal font-black text-2xl mt-1">3</div>
                         </div>
-                        <div class="p-3 sm:border-r border-white/20">
-                            <div class="text-white/40 uppercase tracking-wider">AA LEVEL</div>
-                            <div class="text-white font-black text-2xl mt-1">0</div>
+                        <div class="p-3 sm:border-r border-terminal-border">
+                            <div class="text-terminal-muted uppercase tracking-wider">AA LEVEL</div>
+                            <div class="text-terminal font-black text-2xl mt-1">0</div>
                         </div>
-                        <div class="p-3 border-r border-t sm:border-t-0 border-white/20">
-                            <div class="text-white/40 uppercase tracking-wider">AAA LEVEL</div>
-                            <div class="text-white font-black text-2xl mt-1">17</div>
+                        <div class="p-3 border-r border-t sm:border-t-0 border-terminal-border">
+                            <div class="text-terminal-muted uppercase tracking-wider">AAA LEVEL</div>
+                            <div class="text-terminal font-black text-2xl mt-1">17</div>
                         </div>
-                        <div class="p-3 border-t sm:border-t-0 border-white/20">
-                            <div class="text-white/40 uppercase tracking-wider">OTHER</div>
-                            <div class="text-white font-black text-2xl mt-1">81</div>
+                        <div class="p-3 border-t sm:border-t-0 border-terminal-border">
+                            <div class="text-terminal-muted uppercase tracking-wider">OTHER</div>
+                            <div class="text-terminal font-black text-2xl mt-1">81</div>
                         </div>
                     </div>
 
-                    <div class="text-white/10">──────────────────────────────────────────────────────────────────────
+                    <div class="text-terminal-divider" aria-hidden="true">──────────────────────────────────────────────────────────────────────
                     </div>
 
-                    <div class="border border-white/10">
-                        <div class="px-4 py-2.5 flex items-center gap-3 border-b border-white/10">
+                    <div class="border border-terminal-border">
+                        <div class="px-4 py-2.5 flex items-center gap-3 border-b border-terminal-border">
                             <span
-                                class="bg-[#e53e3e] text-white text-[9px] font-bold px-2 py-0.5 uppercase shrink-0">WCAG
+                                class="bg-accent-solid text-on-accent text-xs font-bold px-2 py-0.5 uppercase shrink-0">WCAG
                                 A</span>
-                            <span class="text-white font-bold">link-name</span>
-                            <span class="text-white/50 text-[9px] uppercase ml-auto">CRITICAL</span>
+                            <span class="text-terminal font-bold">link-name</span>
+                            <span class="text-terminal-muted text-xs uppercase ml-auto">CRITICAL</span>
                         </div>
-                        <div class="px-4 py-2 text-white/60">Ensures links have discernible text</div>
-                        <div class="px-4 pt-1 pb-0 text-white/50 text-[9px] uppercase tracking-wider">&gt;&gt;&gt;
+                        <div class="px-4 py-2 text-terminal-muted">Ensures links have discernible text</div>
+                        <div class="px-4 pt-1 pb-0 text-terminal-muted text-xs uppercase tracking-wider">&gt;&gt;&gt;
                             FAILING_NODE</div>
                         <div
-                            class="mx-4 my-2 px-3 py-2 bg-white/[0.03] text-red-400 border-l-2 border-[#e53e3e] leading-relaxed">
+                            class="mx-4 my-2 px-3 py-2 bg-terminal-panel text-terminal-red border-l-2 border-terminal-red leading-relaxed">
                             &lt;a href="" class="footer__social"&gt;&lt;i
                             class="fa-brands fa-linkedin footer__social-icon"
                             aria-hidden="true"&gt;&lt;/i&gt;&lt;/a&gt;
                         </div>
                         <div
-                            class="px-4 pb-2 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-[9px] text-white/50">
+                            class="px-4 pb-2 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-xs text-terminal-muted">
                             <span>SRC_LOC: <span
-                                    class="text-white/70 border border-white/20 px-2 py-0.5 ml-1">vue js/Components/Footer.vue:112</span></span>
+                                    class="text-terminal border border-terminal-border px-2 py-0.5 ml-1">vue js/Components/Footer.vue:112</span></span>
                             <span>CSS_SELECTOR: <span
-                                    class="text-white/70">.footer__social[href=""]:nth-child(1)</span></span>
+                                    class="text-terminal">.footer__social[href=""]:nth-child(1)</span></span>
                         </div>
                     </div>
 
-                    <div class="border border-white/10">
-                        <div class="px-4 py-2.5 flex items-center gap-3 border-b border-white/10">
+                    <div class="border border-terminal-border">
+                        <div class="px-4 py-2.5 flex items-center gap-3 border-b border-terminal-border">
                             <span
-                                class="bg-[#e53e3e] text-white text-[9px] font-bold px-2 py-0.5 uppercase shrink-0">WCAG
+                                class="bg-accent-solid text-on-accent text-xs font-bold px-2 py-0.5 uppercase shrink-0">WCAG
                                 A</span>
-                            <span class="text-white font-bold">button-name</span>
-                            <span class="text-white/50 text-[9px] uppercase ml-auto">CRITICAL</span>
+                            <span class="text-terminal font-bold">button-name</span>
+                            <span class="text-terminal-muted text-xs uppercase ml-auto">CRITICAL</span>
                         </div>
-                        <div class="px-4 py-2 text-white/60">Ensures buttons have discernible text</div>
-                        <div class="px-4 pt-1 pb-0 text-white/50 text-[9px] uppercase tracking-wider">&gt;&gt;&gt;
+                        <div class="px-4 py-2 text-terminal-muted">Ensures buttons have discernible text</div>
+                        <div class="px-4 pt-1 pb-0 text-terminal-muted text-xs uppercase tracking-wider">&gt;&gt;&gt;
                             FAILING_NODE</div>
-                        <div class="mx-4 my-2 px-3 py-2 bg-white/[0.03] text-red-400 border-l-2 border-[#e53e3e]">
+                        <div class="mx-4 my-2 px-3 py-2 bg-terminal-panel text-terminal-red border-l-2 border-terminal-red">
                             &lt;button class="nav__toggle"&gt;&lt;/button&gt;
                         </div>
                         <div
-                            class="px-4 pb-2 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-[9px] text-white/50">
+                            class="px-4 pb-2 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between text-xs text-terminal-muted">
                             <span>SRC_LOC: <span
-                                    class="text-white/70 border border-white/20 px-2 py-0.5 ml-1">partials/nav.blade.php:45</span></span>
-                            <span>CSS_SELECTOR: <span class="text-white/70">.nav__toggle</span></span>
+                                    class="text-terminal border border-terminal-border px-2 py-0.5 ml-1">partials/nav.blade.php:45</span></span>
+                            <span>CSS_SELECTOR: <span class="text-terminal">.nav__toggle</span></span>
                         </div>
                     </div>
 
-                    <div class="text-white/10">──────────────────────────────────────────────────────────────────────
+                    <div class="text-terminal-divider" aria-hidden="true">──────────────────────────────────────────────────────────────────────
                     </div>
-                    <div class="text-[#e53e3e] text-[10px] pt-1">
+                    <div class="text-terminal-red text-xs pt-1">
                         ✗ Quality gate FAILED — 3 violations exceed threshold of 0 &nbsp;(exit code: 1)
                     </div>
                 </div>
@@ -487,133 +513,133 @@
     {{-- ====================================================== --}}
     {{-- DASHBOARD PREVIEW — always dark (shows dark app UI)    --}}
     {{-- ====================================================== --}}
-    <section class="bg-black py-24 border-b border-white/10">
+    <section class="bg-terminal-surface py-24 border-b border-terminal-divider">
         <div class="max-w-5xl mx-auto px-6">
-            <div class="text-[#e53e3e] text-[10px] font-mono tracking-[0.4em] mb-4 uppercase">VISUAL INTERFACE</div>
-            <h2 class="font-mono font-black text-white text-5xl mb-3 leading-tight">Dashboard<br>Preview</h2>
-            <p class="font-mono text-white/30 text-sm mb-12">
-                Navigate to <span class="text-white">/lens-for-laravel/dashboard</span> after installation
+            <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-4 uppercase">VISUAL INTERFACE</div>
+            <h2 class="font-mono font-black text-terminal text-5xl mb-3 leading-tight">Dashboard<br>Preview</h2>
+            <p class="font-mono text-terminal-muted text-base mb-12">
+                Navigate to <span class="text-terminal">/lens-for-laravel/dashboard</span> after installation
             </p>
 
-            <div class="border-2 border-white/20 bg-[#0d0d0d]">
-                <div class="border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
-                    <div class="font-mono font-bold text-white text-sm tracking-wide">
-                        Lens<span class="text-[#e53e3e]">ForLaravel</span>
+            <div class="border-2 border-terminal-border bg-terminal-surface">
+                <div class="border-b border-terminal-border px-6 py-3.5 flex items-center justify-between">
+                    <div class="font-mono font-bold text-terminal text-sm tracking-wide">
+                        Lens<span class="text-terminal-red">ForLaravel</span>
                     </div>
                     <div class="flex items-center gap-4">
-                        <span class="font-mono text-white/50 text-[10px] uppercase tracking-widest">REPOSITORY</span>
+                        <span class="font-mono text-terminal-muted text-xs uppercase tracking-widest">REPOSITORY</span>
                         <div
-                            class="w-8 h-8 border border-white/10 flex items-center justify-center text-white/50 font-mono text-xs">
+                            class="w-8 h-8 border border-terminal-border flex items-center justify-center text-terminal-muted font-mono text-xs">
                             ◑</div>
                     </div>
                 </div>
 
                 <div class="p-6 space-y-5">
-                    <div class="border border-white/10 p-5">
-                        <div class="font-mono font-black text-white text-[10px] uppercase tracking-widest mb-1">TARGET
+                    <div class="border border-terminal-border p-5">
+                        <div class="font-mono font-black text-terminal text-xs uppercase tracking-widest mb-1">TARGET
                             DESIGNATION</div>
-                        <p class="font-mono text-white/50 text-[10px] mb-4 leading-relaxed">
+                        <p class="font-mono text-terminal-muted text-xs mb-4 leading-relaxed">
                             Enter target URL for comprehensive accessibility analysis. This auditor utilizes Axe-core
                             via Spatie Browsershot to identify WCAG violations.<br>
-                            <span class="text-white/30">Scanning is restricted to your application's own domain.</span>
+                            <span class="text-terminal-muted">Scanning is restricted to your application's own domain.</span>
                         </p>
                         <div class="flex flex-wrap gap-2 mb-3">
                             <div
-                                class="border-2 border-white bg-white text-black px-3 py-1 font-mono text-[10px] uppercase font-bold">
+                                class="border-2 border-terminal bg-terminal text-terminal-surface px-3 py-1 font-mono text-xs uppercase font-bold">
                                 SINGLE_URL</div>
                             <div
-                                class="border border-white/20 text-white/30 px-3 py-1 font-mono text-[10px] uppercase">
+                                class="border border-terminal-border text-terminal-muted px-3 py-1 font-mono text-xs uppercase">
                                 WHOLE_WEBSITE</div>
                             <div
-                                class="border border-white/20 text-white/30 px-3 py-1 font-mono text-[10px] uppercase">
+                                class="border border-terminal-border text-terminal-muted px-3 py-1 font-mono text-xs uppercase">
                                 MULTIPLE_URLS</div>
                             <div
-                                class="border border-white/20 text-white/30 px-3 py-1 font-mono text-[10px] uppercase">
+                                class="border border-terminal-border text-terminal-muted px-3 py-1 font-mono text-xs uppercase">
                                 INTERACTIVE_STATES</div>
                         </div>
                         <div class="flex overflow-hidden">
                             <div
-                                class="flex-1 min-w-0 border border-white/20 border-r-0 flex items-center px-4 py-2.5">
-                                <span class="text-[#e53e3e] font-mono text-xs mr-2 shrink-0">›</span>
-                                <span class="text-white/30 font-mono text-xs truncate">https://webcrafts.test</span>
+                                class="flex-1 min-w-0 border border-terminal-border border-r-0 flex items-center px-4 py-2.5">
+                                <span class="text-terminal-red font-mono text-xs mr-2 shrink-0">›</span>
+                                <span class="text-terminal-muted font-mono text-xs truncate">https://webcrafts.test</span>
                             </div>
                             <div
-                                class="bg-[#e53e3e] text-white font-mono text-[10px] px-4 flex items-center font-bold tracking-widest uppercase shrink-0">
+                                class="bg-accent-solid text-on-accent font-mono text-xs px-4 flex items-center font-bold tracking-widest uppercase shrink-0">
                                 EXECUTE</div>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap items-start justify-between gap-2">
-                        <div class="font-mono font-black text-white text-[10px] uppercase tracking-widest">DIAGNOSTIC
+                        <div class="font-mono font-black text-terminal text-xs uppercase tracking-widest">DIAGNOSTIC
                             REPORT</div>
                         <div class="flex items-center gap-3 flex-wrap">
-                            <span class="font-mono text-white/50 text-[10px]">TOTAL_VIOLATIONS: <span
-                                    class="text-[#e53e3e] font-bold text-xs">101</span></span>
+                            <span class="font-mono text-terminal-muted text-xs">TOTAL_VIOLATIONS: <span
+                                    class="text-terminal-red font-bold text-xs">101</span></span>
                             <div
-                                class="border border-white/20 text-white/30 font-mono text-[10px] px-3 py-1 uppercase tracking-wider shrink-0">
+                                class="border border-terminal-border text-terminal-muted font-mono text-xs px-3 py-1 uppercase tracking-wider shrink-0">
                                 ↓ EXPORT PDF</div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4">
-                        <div class="border-2 border-[#e53e3e] bg-[#e53e3e]/10 p-3 md:p-4">
-                            <div class="font-mono text-white/40 text-[9px] uppercase tracking-wider mb-2">A LEVEL</div>
-                            <div class="font-mono font-black text-white text-3xl md:text-4xl">3</div>
+                        <div class="border-2 border-terminal-red bg-red-950 p-3 md:p-4">
+                            <div class="font-mono text-terminal-muted text-xs uppercase tracking-wider mb-2">A LEVEL</div>
+                            <div class="font-mono font-black text-terminal text-3xl md:text-4xl">3</div>
                         </div>
-                        <div class="border border-white/15 border-l-0 p-3 md:p-4">
-                            <div class="font-mono text-white/40 text-[9px] uppercase tracking-wider mb-2">AA LEVEL
+                        <div class="border border-terminal-border border-l-0 p-3 md:p-4">
+                            <div class="font-mono text-terminal-muted text-xs uppercase tracking-wider mb-2">AA LEVEL
                             </div>
-                            <div class="font-mono font-black text-white text-3xl md:text-4xl">0</div>
+                            <div class="font-mono font-black text-terminal text-3xl md:text-4xl">0</div>
                         </div>
-                        <div class="border border-white/15 md:border-l-0 border-t md:border-t-0 p-3 md:p-4">
-                            <div class="font-mono text-white/40 text-[9px] uppercase tracking-wider mb-2">AAA LEVEL
+                        <div class="border border-terminal-border md:border-l-0 border-t md:border-t-0 p-3 md:p-4">
+                            <div class="font-mono text-terminal-muted text-xs uppercase tracking-wider mb-2">AAA LEVEL
                             </div>
-                            <div class="font-mono font-black text-white text-3xl md:text-4xl">17</div>
+                            <div class="font-mono font-black text-terminal text-3xl md:text-4xl">17</div>
                         </div>
-                        <div class="border border-white/15 border-l-0 border-t md:border-t-0 p-3 md:p-4">
-                            <div class="font-mono text-white/40 text-[9px] uppercase tracking-wider mb-2">OTHER</div>
-                            <div class="font-mono font-black text-white text-3xl md:text-4xl">81</div>
+                        <div class="border border-terminal-border border-l-0 border-t md:border-t-0 p-3 md:p-4">
+                            <div class="font-mono text-terminal-muted text-xs uppercase tracking-wider mb-2">OTHER</div>
+                            <div class="font-mono font-black text-terminal text-3xl md:text-4xl">81</div>
                         </div>
                     </div>
 
-                    <div class="border border-white/10 bg-white/[0.02] px-4 py-3">
-                        <span class="text-[#e53e3e] font-mono text-[10px] font-bold">INFO: </span>
-                        <span class="text-white/60 font-mono text-[10px] uppercase leading-relaxed">
+                    <div class="border border-terminal-border bg-terminal-panel px-4 py-3">
+                        <span class="text-terminal-red font-mono text-xs font-bold">INFO: </span>
+                        <span class="text-terminal-muted font-mono text-xs uppercase leading-relaxed">
                             LEVEL A IS THE MINIMUM LEVEL OF ACCESSIBILITY. THESE ISSUES ARE CRITICAL BLOCKERS FOR USERS
                             WITH DISABILITIES.
                         </span>
                     </div>
 
-                    <div class="border border-white/10">
-                        <div class="border-b border-white/10 px-4 py-2 flex items-center justify-between">
-                            <span class="font-mono text-white/30 text-[10px] uppercase tracking-wider">FILTERED LOGS:
+                    <div class="border border-terminal-border">
+                        <div class="border-b border-terminal-border px-4 py-2 flex items-center justify-between">
+                            <span class="font-mono text-terminal-muted text-xs uppercase tracking-wider">FILTERED LOGS:
                                 WCAG2A</span>
-                            <span class="font-mono text-[#e53e3e] text-[10px]">SHOWING: 3</span>
+                            <span class="font-mono text-terminal-red text-xs">SHOWING: 3</span>
                         </div>
-                        <div class="divide-y divide-white/5">
+                        <div class="divide-y divide-terminal-divider">
                             @foreach ([['rule' => 'link-name', 'desc' => 'Ensures links have discernible text', 'file' => 'blade partials/footer.blade.php:112'], ['rule' => 'button-name', 'desc' => 'Ensures buttons have discernible text', 'file' => 'react js/Pages/Dashboard.tsx:45'], ['rule' => 'image-alt', 'desc' => 'Ensures img elements have alternate text', 'file' => 'vue js/Components/Hero.vue:8']] as $violation)
                                 <div class="px-4 py-3">
                                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                                         <div class="flex items-center gap-2 shrink-0">
                                             <span
-                                                class="bg-[#e53e3e] text-white text-[9px] font-bold px-2 py-0.5 uppercase shrink-0">WCAG
+                                                class="bg-accent-solid text-on-accent text-xs font-bold px-2 py-0.5 uppercase shrink-0">WCAG
                                                 A</span>
                                             <span
-                                                class="text-white font-bold text-[10px] whitespace-nowrap">{{ $violation['rule'] }}</span>
+                                                class="text-terminal font-bold text-xs whitespace-nowrap">{{ $violation['rule'] }}</span>
                                         </div>
                                         <div class="flex items-center gap-2 shrink-0">
                                             <span
-                                                class="border border-white/10 text-white/30 text-[9px] px-2 py-0.5 font-mono uppercase whitespace-nowrap">AI
+                                                class="border border-terminal-border text-terminal-muted text-xs px-2 py-0.5 font-mono uppercase whitespace-nowrap">AI
                                                 FIX</span>
                                             <span
-                                                class="text-white/50 text-[9px] font-mono uppercase whitespace-nowrap">VIEW
+                                                class="text-terminal-muted text-xs font-mono uppercase whitespace-nowrap">VIEW
                                                 DOCS →</span>
                                         </div>
                                     </div>
-                                    <div class="text-white/60 font-mono text-[10px] mt-2">{{ $violation['desc'] }}
+                                    <div class="text-terminal-muted font-mono text-xs mt-2">{{ $violation['desc'] }}
                                     </div>
-                                    <div class="font-mono text-[9px] text-white/50 mt-2">SRC_LOC: <span
-                                            class="text-white/70 border border-white/20 px-1.5 py-0.5 ml-1">{{ $violation['file'] }}</span>
+                                    <div class="font-mono text-xs text-terminal-muted mt-2">SRC_LOC: <span
+                                            class="text-terminal border border-terminal-border px-1.5 py-0.5 ml-1">{{ $violation['file'] }}</span>
                                     </div>
                                 </div>
                             @endforeach
@@ -627,27 +653,28 @@
     {{-- ====================================================== --}}
     {{-- CTA — always red in both themes                        --}}
     {{-- ====================================================== --}}
-    <section class="bg-[#e53e3e] py-28 border-b-4 border-black">
+    <section class="bg-accent-solid py-28 border-b-4 border-black">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <div class="text-white/50 font-mono text-[10px] tracking-[0.4em] mb-10 uppercase">&gt;&gt;&gt; GET_STARTED
+            <div class="text-white font-mono text-xs font-bold tracking-[0.3em] mb-10 uppercase">&gt;&gt;&gt; GET_STARTED
             </div>
             <h2 class="font-mono font-black text-white leading-none mb-8">
                 <span class="block text-[clamp(3rem,8vw,6rem)]">MAKE YOUR</span>
                 <span class="block text-[clamp(3rem,8vw,6rem)]">APP ACCESSIBLE</span>
             </h2>
-            <p class="font-mono text-white/60 text-sm max-w-lg mx-auto mb-12 leading-relaxed">
+            <p class="font-mono text-white text-base max-w-lg mx-auto mb-12 leading-relaxed">
                 Install Lens for Laravel in seconds. Start catching WCAG violations your users never should have
                 encountered.
             </p>
-            <div class="bg-black border-2 border-white/20 flex items-stretch max-w-xl mx-auto mb-8">
+            <div class="bg-terminal-surface border-2 border-white flex items-stretch max-w-xl mx-auto mb-8">
                 <div
-                    class="border-r-2 border-white/20 px-5 flex items-center text-[#e53e3e] font-mono text-sm shrink-0">
+                    class="border-r-2 border-white px-5 flex items-center text-terminal-red font-mono text-sm font-bold shrink-0">
                     $</div>
                 <div class="px-6 py-4 text-white font-mono text-sm flex-1 text-left select-all">
                     composer require webcrafts-studio/lens-for-laravel --dev
                 </div>
-                <button onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
-                    class="border-l-2 border-white/20 px-5 text-white/40 hover:text-white hover:bg-white/5 transition-colors font-mono text-[10px] uppercase tracking-widest cursor-pointer">
+                <button type="button" aria-label="Copy installation command"
+                    onclick="copyCmd(this, 'composer require webcrafts-studio/lens-for-laravel --dev')"
+                    class="border-l-2 border-white px-5 text-white hover:bg-white hover:text-black transition-colors font-mono text-xs font-bold uppercase tracking-widest cursor-pointer">
                     COPY
                 </button>
             </div>
@@ -657,37 +684,39 @@
                     DOCUMENTATION →
                 </a>
                 <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                    class="border-2 border-white/40 text-white px-10 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:border-white transition-colors">
+                    class="border-2 border-white text-white px-10 py-3 font-mono text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-accent-solid transition-colors">
                     GITHUB
                 </a>
             </div>
         </div>
     </section>
 
+    </main>
+
     {{-- ====================================================== --}}
     {{-- FOOTER — always dark in both themes                    --}}
     {{-- ====================================================== --}}
-    <footer class="bg-black border-t border-white/10 py-16">
+    <footer class="bg-terminal-surface border-t border-terminal-divider py-16">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
                 <div>
                     <div class="font-mono font-black leading-none mb-3">
                         <span class="text-white text-3xl tracking-tight">LENS FOR</span>
-                        <span class="text-[#e53e3e] text-3xl tracking-tight"> LARAVEL</span>
+                        <span class="text-terminal-red text-3xl tracking-tight"> LARAVEL</span>
                     </div>
-                    <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
+                    <div class="text-terminal-muted font-mono text-xs tracking-widest uppercase">
                         WCAG Accessibility Auditor · Blade · React · Vue · AI
                     </div>
                 </div>
                 <nav class="flex flex-wrap items-center gap-4 md:gap-8" aria-label="Footer navigation">
                     <a href="{{ route('docs') }}"
-                        class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Documentation</a>
+                        class="text-terminal-muted hover:text-white font-mono text-xs uppercase tracking-widest transition-colors">Documentation</a>
                     <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                        class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">GitHub</a>
+                        class="text-terminal-muted hover:text-white font-mono text-xs uppercase tracking-widest transition-colors">GitHub</a>
                     <a href="https://github.com/webcrafts-studio/lens-for-laravel/issues"
-                        class="text-white/30 hover:text-white font-mono text-[10px] uppercase tracking-widest transition-colors">Issues</a>
+                        class="text-terminal-muted hover:text-white font-mono text-xs uppercase tracking-widest transition-colors">Issues</a>
                     <a href="https://buycoffee.to/jakub-lipinski" target="_blank" rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 border border-[#e53e3e]/40 px-3 py-1.5 text-[#e53e3e]/80 hover:border-[#e53e3e] hover:text-[#e53e3e] font-mono text-[10px] uppercase tracking-widest transition-colors">
+                        class="inline-flex items-center gap-2 border border-terminal-red px-3 py-1.5 text-terminal-red hover:bg-terminal-red hover:text-black font-mono text-xs uppercase tracking-widest transition-colors">
                         <span aria-hidden="true">☕</span>
                         <span>Support my work</span>
                         <span aria-hidden="true">↗</span>
@@ -696,21 +725,21 @@
             </div>
 
             <div
-                class="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                class="border-t border-terminal-divider mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="space-y-3 text-center md:text-left">
-                    <div class="text-white/40 font-mono text-[10px] tracking-widest uppercase">
+                    <div class="text-terminal-muted font-mono text-xs tracking-widest uppercase">
                         A / AA / AAA &nbsp;·&nbsp; Laravel 10 / 11 / 12 / 13 &nbsp;·&nbsp; PHP 8.2+
                     </div>
-                    <div class="font-mono text-[10px] text-white/30 tracking-wider">
+                    <div class="font-mono text-xs text-terminal-muted tracking-wider">
                         Created by
                         <a href="https://lipinskijakub.pl/" target="_blank" rel="noopener noreferrer"
-                            class="text-white/50 hover:text-[#e53e3e] transition-colors">Jakub Lipiński</a>
+                            class="text-terminal hover:text-terminal-red transition-colors">Jakub Lipiński</a>
                         <span aria-hidden="true">—</span>
                         <a href="https://webcrafts.pl/" target="_blank" rel="noopener noreferrer"
-                            class="text-white/50 hover:text-[#e53e3e] transition-colors">Webcrafts.pl</a>
+                            class="text-terminal hover:text-terminal-red transition-colors">Webcrafts.pl</a>
                     </div>
                 </div>
-                <div class="text-white/35 font-mono text-[10px] text-center md:text-right max-w-md leading-relaxed">
+                <div class="text-terminal-muted font-mono text-xs text-center md:text-right max-w-md leading-relaxed">
                     axe-core automates many high-confidence checks, but neither axe-core nor Lens proves full WCAG
                     conformance. Manual testing remains required.
                 </div>

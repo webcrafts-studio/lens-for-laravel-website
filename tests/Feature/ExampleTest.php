@@ -46,20 +46,21 @@ test('website footer credits the author and Webcrafts', function () {
         ->assertSee('https://webcrafts.pl/', false);
 });
 
-test('the website identifies v3 as the current development line', function () {
+test('the website identifies v3.1 as the current development line', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('v3.0');
+        ->assertSee('v3.1');
 
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
-        ->assertSee('What&#039;s New in v3.0.0', false)
-        ->assertSee('Upgrade to v3.0.0');
+        ->assertSee('What&#039;s New in v3.1', false)
+        ->assertSee('Version 3 Upgrades');
 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
-        ->assertSee('Upgrade to v3.0.0')
-        ->assertSee('current development line')
+        ->assertSee('Version 3 Upgrades')
+        ->assertSee('v3.1 is the current development line')
+        ->assertSee('v3.0 Foundation')
         ->assertSee('URL-aware history comparisons');
 });
 
@@ -75,7 +76,7 @@ test('the CLI documentation covers interactive state scripts', function () {
 test('the v3 documentation describes the reliable AI Fix contract', function () {
     $this->get(route('docs.show', ['page' => 'ai-fix-engine']))
         ->assertOk()
-        ->assertSee('Generation Reliability in v3.0')
+        ->assertSee('Generation Reliability from v3.0')
         ->assertSee('12000 tokens')
         ->assertSee('1024-token budget')
         ->assertSee('one controlled retry')
@@ -84,6 +85,49 @@ test('the v3 documentation describes the reliable AI Fix contract', function () 
         ->assertSee('AI Fix applied — pending re-scan')
         ->assertSee('keeps the issue in violation counts')
         ->assertSee('does not claim that axe-core has confirmed the fix');
+});
+
+test('the v3.1 documentation describes editable progressive AI fixes and fresh rescans', function () {
+    $this->get(route('docs.show', ['page' => 'dashboard']))
+        ->assertOk()
+        ->assertSee('Fix All A and AA in v3.1')
+        ->assertSee('generates up to three suggestions concurrently')
+        ->assertSee('Ready proposals can be reviewed and edited while later positions continue loading')
+        ->assertSee('Closing the modal aborts outstanding queue requests')
+        ->assertSee('unique cache-busting query parameter');
+
+    $this->get(route('docs.show', ['page' => 'ai-fix-engine']))
+        ->assertOk()
+        ->assertSee('Reviewing and Editing in v3.1')
+        ->assertSee('Fix All Queues in v3.1')
+        ->assertSee('staggered by 250 milliseconds')
+        ->assertSee('Suggestions are reviewed and applied one at a time');
+
+    $this->get(route('docs.show', ['page' => 'frontend-support']))
+        ->assertOk()
+        ->assertSee('Repeated Element Mapping in v3.1')
+        ->assertSee('rendered source attributes')
+        ->assertSee('numeric :nth-child(...)');
+
+    $this->get(route('docs.show', ['page' => 'scanning-modes']))
+        ->assertOk()
+        ->assertSee('Fresh Re-scans in v3.1')
+        ->assertSee('__lens_scan')
+        ->assertSee('reported issue URL remains the original requested URL');
+});
+
+test('the current documentation keeps compatibility and defaults aligned with the package', function () {
+    $this->get(route('docs.show', ['page' => 'introduction']))
+        ->assertOk()
+        ->assertSee('<td>8.2+</td>', false)
+        ->assertSee('<td>10, 11, 12, 13</td>', false)
+        ->assertSee('laravel/ai:^0.3.2');
+
+    $scanningModes = file_get_contents(resource_path('markdown/docs/scanning-modes.md'));
+
+    expect($scanningModes)
+        ->toContain("LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 50")
+        ->not->toContain("LENS_FOR_LARAVEL_CRAWL_MAX_PAGES', 100");
 });
 
 test('the configuration documents consistent local HTTPS handling', function () {

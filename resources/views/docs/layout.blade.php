@@ -20,6 +20,20 @@
         function toggleTheme() {
             var isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('lens-theme', isDark ? 'dark' : 'light');
+            updateThemeToggle(isDark);
+        }
+
+        function updateThemeToggle(isDark) {
+            var toggle = document.querySelector('[data-theme-toggle]');
+
+            if (!toggle) {
+                return;
+            }
+
+            var label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
+            toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
         }
     </script>
 
@@ -38,46 +52,50 @@
     @endif
 </head>
 
-<body class="bg-white dark:bg-black font-sans antialiased">
+<body class="bg-page text-body font-sans antialiased">
+
+    <a href="#main-content" class="skip-link">Skip to documentation</a>
 
     {{-- ================================================== --}}
     {{-- TOP NAVBAR                                          --}}
     {{-- ================================================== --}}
     <nav
-        class="fixed top-0 inset-x-0 z-50 h-14 bg-white dark:bg-black border-b-2 border-black/10 dark:border-white/10 flex items-center">
+        aria-label="Documentation header"
+        class="fixed top-0 inset-x-0 z-50 h-14 bg-page border-b-2 border-divider flex items-center">
         <div class="flex items-center justify-between w-full px-4 md:px-6">
             {{-- Left: hamburger (mobile) + logo --}}
             <div class="flex items-center gap-3">
                 <button id="sidebar-toggle" onclick="toggleSidebar()"
-                    class="xl:hidden w-9 h-9 flex items-center justify-center border-2 border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white text-black dark:text-white transition-colors font-mono text-base"
-                    aria-label="Toggle sidebar">☰</button>
+                    class="xl:hidden w-9 h-9 flex items-center justify-center border-2 border-control hover:border-content text-content transition-colors font-mono text-base"
+                    aria-label="Open documentation sidebar" aria-controls="sidebar" aria-expanded="false">☰</button>
 
                 <a href="/" class="flex items-center gap-1.5">
                     <span
-                        class="text-black dark:text-white font-black text-base tracking-[0.15em] uppercase font-mono">LENS FOR</span>
-                    <span class="text-[#e53e3e] font-black text-base tracking-[0.15em] uppercase font-mono">LARAVEL</span>
+                        class="whitespace-nowrap text-content font-black text-base tracking-[0.15em] uppercase font-mono">LENS FOR</span>
+                    <span class="whitespace-nowrap text-accent font-black text-base tracking-[0.15em] uppercase font-mono">LARAVEL</span>
                 </a>
 
-                <span class="hidden md:block text-black/20 dark:text-white/20 font-mono text-xs">/ DOCS</span>
-                <span class="hidden md:block border border-[#e53e3e]/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-[#e53e3e]">v3.0</span>
+                <span class="hidden md:block text-subtle font-mono text-xs">/ DOCS</span>
+                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.1</span>
             </div>
 
             {{-- Right: theme toggle + GitHub --}}
             <div class="flex items-center gap-3">
                 <button type="button" onclick="openDocsSearch()" aria-label="Search documentation"
-                    class="hidden md:flex h-9 min-w-48 items-center justify-between gap-3 border-2 border-black/20 dark:border-white/20 px-3 font-mono text-[10px] uppercase tracking-widest text-black/40 dark:text-white/40 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-colors">
+                    class="hidden md:flex h-9 min-w-48 items-center justify-between gap-3 border-2 border-control px-3 font-mono text-xs uppercase tracking-widest text-muted hover:border-content hover:text-content transition-colors">
                     <span>Search docs...</span>
-                    <span class="text-[9px] text-black/30 dark:text-white/30">⌘K</span>
+                    <span class="text-xs text-subtle">⌘K</span>
                 </button>
 
-                <button onclick="toggleTheme()" title="Toggle theme"
-                    class="w-9 h-9 flex items-center justify-center border-2 border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors font-mono text-base">
-                    <span class="dark:hidden" aria-label="Switch to dark">☾</span>
-                    <span class="hidden dark:inline" aria-label="Switch to light">☀</span>
+                <button type="button" data-theme-toggle onclick="toggleTheme()" aria-label="Switch to dark mode"
+                    aria-pressed="false"
+                    class="w-9 h-9 flex items-center justify-center border-2 border-control hover:border-content text-muted hover:text-content transition-colors font-mono text-base">
+                    <span class="dark:hidden" aria-hidden="true">☾</span>
+                    <span class="hidden dark:inline" aria-hidden="true">☀</span>
                 </button>
 
                 <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                    class="hidden sm:flex text-black dark:text-white font-mono text-[10px] border-2 border-black/30 dark:border-white/30 hover:border-black dark:hover:border-white px-3 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors uppercase tracking-widest items-center gap-2">
+                    class="hidden sm:flex text-content font-mono text-xs border-2 border-control hover:border-content px-3 py-2 hover:bg-content hover:text-page transition-colors uppercase tracking-widest items-center gap-2">
                     GitHub →
                 </a>
             </div>
@@ -87,22 +105,23 @@
     {{-- ================================================== --}}
     {{-- SIDEBAR OVERLAY (mobile)                            --}}
     {{-- ================================================== --}}
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 xl:hidden hidden" onclick="closeSidebar()"></div>
+    <button id="sidebar-overlay" type="button" class="fixed inset-0 bg-black/70 z-30 xl:hidden hidden"
+        onclick="closeSidebar()" aria-label="Close documentation sidebar" tabindex="-1"></button>
 
     {{-- ================================================== --}}
     {{-- LEFT SIDEBAR                                        --}}
     {{-- ================================================== --}}
     <aside id="sidebar"
-        class="fixed top-14 left-0 bottom-0 w-60 overflow-y-auto bg-white dark:bg-black border-r-2 border-black/10 dark:border-white/10 z-40 -translate-x-full xl:translate-x-0 transition-transform duration-200">
+        class="fixed top-14 left-0 bottom-0 w-60 overflow-y-auto bg-page border-r-2 border-divider z-40 -translate-x-full xl:translate-x-0 transition-transform duration-200">
         {{-- Search --}}
-        <div class="p-4 border-b border-black/10 dark:border-white/10">
+        <div class="p-4 border-b border-divider">
             <button type="button" onclick="openDocsSearch()"
-                class="w-full flex items-center justify-between border-2 border-black/20 dark:border-white/20 px-3 py-2 font-mono text-xs text-black/45 dark:text-white/45 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-colors">
+                class="w-full flex items-center justify-between border-2 border-control px-3 py-2 font-mono text-xs text-muted hover:border-content hover:text-content transition-colors">
                 <span class="flex items-center gap-2">
-                    <span class="text-black/30 dark:text-white/30">/</span>
+                    <span class="text-accent font-bold">/</span>
                     <span>Search docs...</span>
                 </span>
-                <span class="text-[9px] text-black/30 dark:text-white/30">CTRL K</span>
+                <span class="text-xs text-subtle">CTRL K</span>
             </button>
         </div>
 
@@ -111,12 +130,12 @@
             @foreach ($navigation as $section => $items)
                 <div class="mb-5 nav-section">
                     <div
-                        class="text-[#e53e3e] text-[9px] font-mono font-bold tracking-[0.35em] uppercase mb-2 px-2 nav-section-label">
+                        class="text-accent text-xs font-mono font-bold tracking-[0.22em] uppercase mb-2 px-2 nav-section-label">
                         {{ $section }}
                     </div>
                     @foreach ($items as $item)
                         <a href="{{ route('docs.show', $item['slug']) }}"
-                            class="nav-item block py-1.5 px-2 font-mono text-xs transition-colors border-l-2 {{ $currentSlug === $item['slug'] ? 'text-[#e53e3e] border-[#e53e3e] bg-[#e53e3e]/5' : 'text-black/60 dark:text-white/50 border-transparent hover:text-black dark:hover:text-white hover:border-black/20 dark:hover:border-white/20' }}"
+                            class="nav-item block py-1.5 px-2 font-mono text-[13px] leading-5 transition-colors border-l-2 {{ $currentSlug === $item['slug'] ? 'text-accent border-accent bg-accent-soft font-bold' : 'text-muted border-transparent hover:text-content hover:border-control hover:bg-panel' }}"
                             @if ($currentSlug === $item['slug']) aria-current="page" @endif>
                             {{ $item['title'] }}
                         </a>
@@ -130,7 +149,7 @@
     {{-- MAIN CONTENT WRAPPER                               --}}
     {{-- ================================================== --}}
     <div class="xl:ml-60 xl:mr-52 pt-14 min-h-screen flex flex-col">
-        <main class="flex-1">
+        <main id="main-content" class="flex-1" tabindex="-1">
             <article class="max-w-3xl mx-auto px-5 md:px-8 py-10 md:py-14">
                 <div class="docs-prose">
                     @yield('content')
@@ -140,28 +159,28 @@
             {{-- Prev / Next navigation --}}
             @if ($prev || $next)
                 <div class="max-w-3xl mx-auto px-5 md:px-8 pb-16">
-                    <div class="border-t-2 border-black/10 dark:border-white/10 pt-8 grid grid-cols-2 gap-4">
+                    <div class="border-t-2 border-divider pt-8 grid grid-cols-2 gap-4">
                         <div>
                             @if ($prev)
                                 <a href="{{ route('docs.show', $prev['slug']) }}"
-                                    class="group flex flex-col gap-1 border-2 border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white p-4 transition-colors">
+                                    class="group flex flex-col gap-1 border-2 border-control hover:border-content hover:bg-panel p-4 transition-colors">
                                     <span
-                                        class="text-[9px] font-mono tracking-[0.3em] uppercase text-black/30 dark:text-white/30 group-hover:text-black/60 dark:group-hover:text-white/60">←
+                                        class="text-xs font-mono tracking-[0.2em] uppercase text-muted group-hover:text-content">←
                                         Previous</span>
                                     <span
-                                        class="font-mono text-xs font-bold text-black dark:text-white group-hover:text-[#e53e3e] transition-colors">{{ $prev['title'] }}</span>
+                                        class="font-mono text-sm font-bold text-content group-hover:text-accent transition-colors">{{ $prev['title'] }}</span>
                                 </a>
                             @endif
                         </div>
                         <div>
                             @if ($next)
                                 <a href="{{ route('docs.show', $next['slug']) }}"
-                                    class="group flex flex-col gap-1 items-end text-right border-2 border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white p-4 transition-colors">
+                                    class="group flex flex-col gap-1 items-end text-right border-2 border-control hover:border-content hover:bg-panel p-4 transition-colors">
                                     <span
-                                        class="text-[9px] font-mono tracking-[0.3em] uppercase text-black/30 dark:text-white/30 group-hover:text-black/60 dark:group-hover:text-white/60">Next
+                                        class="text-xs font-mono tracking-[0.2em] uppercase text-muted group-hover:text-content">Next
                                         →</span>
                                     <span
-                                        class="font-mono text-xs font-bold text-black dark:text-white group-hover:text-[#e53e3e] transition-colors">{{ $next['title'] }}</span>
+                                        class="font-mono text-sm font-bold text-content group-hover:text-accent transition-colors">{{ $next['title'] }}</span>
                                 </a>
                             @endif
                         </div>
@@ -171,18 +190,18 @@
         </main>
 
         {{-- Footer --}}
-        <footer class="border-t border-black/10 dark:border-white/10 px-5 md:px-8 py-6">
+        <footer class="border-t border-divider px-5 md:px-8 py-6">
             <div class="max-w-3xl mx-auto flex items-center justify-between flex-wrap gap-4">
-                <span class="font-mono text-[10px] text-black/30 dark:text-white/30 uppercase tracking-widest">Laravel
+                <span class="font-mono text-xs text-muted uppercase tracking-widest">Laravel
                     Lens Docs</span>
                 <a href="https://buycoffee.to/jakub-lipinski" target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 border border-[#e53e3e]/30 px-3 py-1.5 font-mono text-[10px] text-[#e53e3e]/80 hover:border-[#e53e3e] hover:text-[#e53e3e] transition-colors uppercase tracking-widest">
+                    class="inline-flex items-center gap-2 border border-accent px-3 py-1.5 font-mono text-xs text-accent hover:bg-accent hover:text-page transition-colors uppercase tracking-widest">
                     <span aria-hidden="true">☕</span>
                     <span>Support my work</span>
                     <span aria-hidden="true">↗</span>
                 </a>
                 <a href="/"
-                    class="font-mono text-[10px] text-black/30 dark:text-white/30 hover:text-[#e53e3e] transition-colors uppercase tracking-widest">←
+                    class="font-mono text-xs text-muted hover:text-accent transition-colors uppercase tracking-widest">←
                     Back to home</a>
             </div>
         </footer>
@@ -192,16 +211,16 @@
     {{-- RIGHT TOC SIDEBAR                                   --}}
     {{-- ================================================== --}}
     <aside
-        class="hidden xl:block fixed top-14 right-0 bottom-0 w-52 overflow-y-auto border-l-2 border-black/10 dark:border-white/10 py-6 px-5">
+        class="hidden xl:block fixed top-14 right-0 bottom-0 w-52 overflow-y-auto border-l-2 border-divider py-6 px-5">
         @if (count($toc) > 0)
             <div
-                class="text-[9px] font-mono font-bold tracking-[0.35em] uppercase text-black/30 dark:text-white/30 mb-4">
+                class="text-xs font-mono font-bold tracking-[0.22em] uppercase text-muted mb-4">
                 ON THIS PAGE
             </div>
             <nav>
                 @foreach ($toc as $heading)
                     <a href="#{{ $heading['id'] }}"
-                        class="block py-1 font-mono text-[10px] transition-colors toc-link {{ $heading['level'] === 'h3' ? 'pl-3 text-black/40 dark:text-white/30 hover:text-black/70 dark:hover:text-white/60' : 'text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white' }}">
+                        class="block py-1.5 font-mono text-xs leading-relaxed transition-colors toc-link {{ $heading['level'] === 'h3' ? 'pl-3 text-subtle hover:text-content' : 'text-muted hover:text-content' }}">
                         {{ $heading['title'] }}
                     </a>
                 @endforeach
@@ -217,41 +236,41 @@
         <div class="absolute inset-0 bg-black/45 dark:bg-black/70 backdrop-blur-sm" onclick="closeDocsSearch()"></div>
         <div class="relative mx-auto mt-20 w-[calc(100%-2rem)] max-w-2xl">
             <div
-                class="overflow-hidden border-2 border-black dark:border-white bg-white dark:bg-black shadow-[8px_8px_0_0_rgba(0,0,0,0.18)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,0.12)]">
-                <div class="flex items-center gap-3 border-b-2 border-black/10 dark:border-white/10 px-4">
-                    <span class="font-mono text-[#e53e3e] text-sm">/</span>
+                class="overflow-hidden border-2 border-content bg-page shadow-[8px_8px_0_0_var(--lens-control)]">
+                <div class="flex items-center gap-3 border-b-2 border-divider px-4 focus-within:border-focus">
+                    <span class="font-mono text-accent text-sm font-bold">/</span>
                     <label id="docs-search-title" for="docs-search-input" class="sr-only">Search docs</label>
                     <input id="docs-search-input" type="text" autocomplete="off" spellcheck="false"
                         placeholder="Search Blade, React, Vue, scan history..."
-                        class="h-14 flex-1 bg-transparent font-mono text-sm text-black dark:text-white placeholder-black/30 dark:placeholder-white/30 outline-none">
+                        class="h-14 flex-1 bg-transparent font-mono text-base text-content placeholder:text-subtle outline-none">
                     <button type="button" onclick="closeDocsSearch()"
-                        class="hidden sm:block border border-black/10 dark:border-white/10 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white">
+                        class="hidden sm:block border border-control px-2 py-1 font-mono text-xs uppercase tracking-widest text-muted hover:text-content hover:border-content">
                         ESC
                     </button>
                 </div>
 
                 <div class="max-h-[55vh] overflow-y-auto">
-                    <div id="docs-search-results" class="divide-y divide-black/10 dark:divide-white/10"></div>
+                    <div id="docs-search-results" class="divide-y divide-divider"></div>
                     <div id="docs-search-empty" class="hidden px-5 py-10 text-center">
-                        <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-black dark:text-white">
+                        <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-content">
                             No results
                         </p>
-                        <p class="mt-2 text-sm text-black/50 dark:text-white/45">
+                        <p class="mt-2 text-base text-muted">
                             Try a different keyword from the documentation content.
                         </p>
                     </div>
                     <div id="docs-search-idle" class="px-5 py-10 text-center">
-                        <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-black dark:text-white">
+                        <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-content">
                             Search all docs
                         </p>
-                        <p class="mt-2 text-sm text-black/50 dark:text-white/45">
+                        <p class="mt-2 text-base text-muted">
                             Results include page titles, sections, and full markdown content.
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="flex items-center justify-between border-t border-black/10 dark:border-white/10 px-4 py-2 font-mono text-[9px] uppercase tracking-widest text-black/35 dark:text-white/35">
+                    class="flex items-center justify-between border-t border-divider px-4 py-2 font-mono text-xs uppercase tracking-widest text-muted">
                     <span>Enter to open</span>
                     <span>Ctrl/⌘ K to search</span>
                 </div>
@@ -267,24 +286,33 @@
     <script>
         /* ---- Sidebar toggle (mobile) ---- */
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-            document.getElementById('sidebar-overlay').classList.toggle('hidden');
+            var sidebar = document.getElementById('sidebar');
+            var toggle = document.getElementById('sidebar-toggle');
+            var isOpen = sidebar.classList.toggle('-translate-x-full') === false;
+
+            document.getElementById('sidebar-overlay').classList.toggle('hidden', !isOpen);
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            toggle.setAttribute('aria-label', isOpen ? 'Close documentation sidebar' : 'Open documentation sidebar');
         }
 
         function closeSidebar() {
             document.getElementById('sidebar').classList.add('-translate-x-full');
             document.getElementById('sidebar-overlay').classList.add('hidden');
+            document.getElementById('sidebar-toggle').setAttribute('aria-expanded', 'false');
+            document.getElementById('sidebar-toggle').setAttribute('aria-label', 'Open documentation sidebar');
         }
 
         /* ---- Full-content docs search ---- */
         var docsSearchIndex = {{ Illuminate\Support\Js::from($searchIndex) }};
         var docsSearchResults = [];
         var docsSearchSelectedIndex = 0;
+        var docsSearchTrigger = null;
 
         function openDocsSearch() {
             var modal = document.getElementById('docs-search-modal');
             var input = document.getElementById('docs-search-input');
 
+            docsSearchTrigger = document.activeElement;
             modal.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
             closeSidebar();
@@ -305,6 +333,10 @@
             docsSearchResults = [];
             docsSearchSelectedIndex = 0;
             renderDocsSearchResults('');
+
+            if (docsSearchTrigger && typeof docsSearchTrigger.focus === 'function') {
+                docsSearchTrigger.focus();
+            }
         }
 
         function searchDocs(query) {
@@ -390,21 +422,25 @@
                 link.className = [
                     'block px-5 py-4 transition-colors',
                     index === docsSearchSelectedIndex ?
-                    'bg-[#e53e3e]/10 dark:bg-[#e53e3e]/15' :
-                    'hover:bg-black/[0.03] dark:hover:bg-white/[0.04]',
+                    'bg-accent-soft' :
+                    'hover:bg-panel',
                 ].join(' ');
+
+                if (index === docsSearchSelectedIndex) {
+                    link.setAttribute('aria-current', 'true');
+                }
 
                 var meta = document.createElement('div');
                 meta.className =
-                    'mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#e53e3e]';
+                    'mb-1 font-mono text-xs font-bold uppercase tracking-[0.22em] text-accent';
                 meta.textContent = result.item.section;
 
                 var title = document.createElement('div');
-                title.className = 'font-mono text-sm font-bold text-black dark:text-white';
+                title.className = 'font-mono text-sm font-bold text-content';
                 title.textContent = result.item.title;
 
                 var snippet = document.createElement('p');
-                snippet.className = 'mt-1 line-clamp-2 text-sm leading-6 text-black/55 dark:text-white/50';
+                snippet.className = 'mt-1 line-clamp-2 text-base leading-6 text-muted';
                 snippet.textContent = result.snippet;
 
                 link.appendChild(meta);
@@ -446,11 +482,69 @@
 
             if (event.key === 'Escape' && !document.getElementById('docs-search-modal').classList.contains('hidden')) {
                 closeDocsSearch();
+                return;
+            }
+
+            if (event.key === 'Escape' && document.getElementById('sidebar-toggle').getAttribute('aria-expanded') === 'true') {
+                closeSidebar();
+                document.getElementById('sidebar-toggle').focus();
+            }
+
+            if (event.key === 'Tab' && !document.getElementById('docs-search-modal').classList.contains('hidden')) {
+                var modal = document.getElementById('docs-search-modal');
+                var focusable = Array.from(modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])'))
+                    .filter(function(element) {
+                        return element.offsetParent !== null;
+                    });
+
+                if (!focusable.length) {
+                    return;
+                }
+
+                var first = focusable[0];
+                var last = focusable[focusable.length - 1];
+
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
             }
         });
 
         /* ---- Code block enhancement ---- */
         document.addEventListener('DOMContentLoaded', function() {
+            updateThemeToggle(document.documentElement.classList.contains('dark'));
+
+            document.querySelectorAll('.docs-prose table').forEach(function(table) {
+                var wrapper = document.createElement('div');
+                wrapper.className = 'docs-table-wrapper';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+
+                table.querySelectorAll(':not(pre) > code').forEach(function(code) {
+                    var value = code.textContent;
+
+                    if (!/[_./:-]/.test(value)) {
+                        return;
+                    }
+
+                    var fragment = document.createDocumentFragment();
+
+                    value.split(/([_./:-])/).forEach(function(part, index) {
+                        fragment.appendChild(document.createTextNode(part));
+
+                        if (index % 2 === 1) {
+                            fragment.appendChild(document.createElement('wbr'));
+                        }
+                    });
+
+                    code.replaceChildren(fragment);
+                });
+            });
+
             var LANG_LABELS = {
                 'bash': 'BASH',
                 'shell': 'SHELL',
@@ -479,7 +573,7 @@
                 header.className = 'code-block-header';
                 header.innerHTML =
                     '<span class="code-block-lang">' + label + '</span>' +
-                    '<button class="code-block-copy" onclick="copyBlock(this)">COPY</button>';
+                    '<button type="button" class="code-block-copy" aria-label="Copy code block" aria-live="polite" onclick="copyBlock(this)">COPY</button>';
                 wrapper.insertBefore(header, pre);
 
                 /* Syntax highlight */
@@ -517,8 +611,13 @@
                 });
                 tocLinks.forEach(function(link) {
                     var isActive = link.getAttribute('href') === '#' + active;
-                    link.classList.toggle('text-[#e53e3e]', isActive);
-                    link.classList.toggle('font-bold', isActive);
+                    link.classList.toggle('toc-link-active', isActive);
+
+                    if (isActive) {
+                        link.setAttribute('aria-current', 'location');
+                    } else {
+                        link.removeAttribute('aria-current');
+                    }
                 });
             }
             window.addEventListener('scroll', onScroll, {

@@ -19,6 +19,8 @@ Lens matches the rendered DOM back to Blade using:
 - `name`
 - selector classes and IDs
 - Blade component tags such as `<x-...>`
+- rendered `src` or `href` values, including source-file basenames inside Blade helpers
+- numeric `:nth-child(...)` positions when repeated elements otherwise have the same classes or attributes
 
 AI Fix can read and modify located Blade files under `resources/views`.
 
@@ -117,6 +119,19 @@ Possible `sourceType` values:
 - `null` when no source location is found
 
 The dashboard shows the source type next to the source location, and history stores it with each issue.
+
+## Repeated Element Mapping in v3.1
+
+Rendered pages often contain several logos, cards, or links with the same class. Earlier class-first matching could select the first source occurrence even when axe-core reported a later sibling.
+
+In v3.1, Lens ranks stronger identifiers before shared classes:
+
+1. exact `id` or `name`
+2. rendered source attributes, including the filename from an absolute `src` URL
+3. target element classes
+4. selector fragments and tag-only fallbacks
+
+When the axe selector includes a numeric `:nth-child(...)`, Lens uses that position to disambiguate equally strong matches in the same Blade, React, or Vue file. Source mapping remains heuristic, but repeated elements such as `.hero-logo` siblings now resolve to the intended occurrence instead of always returning the first one.
 
 ## Interactive State Labels
 
