@@ -279,7 +279,7 @@ OPENAI_API_KEY=sk-...
 
 ## Version 3 Upgrade
 
-v3.1 is the current development line. It adds editable AI proposals, Fix All A/AA queues, fresh re-scans, and more precise repeated-element source mapping without adding configuration keys or migrations.
+v3.2 is the current development line. It adds structural source mapping for named Blade/Livewire routes and nested Blade, React, and Vue markup without adding configuration keys or migrations. The v3.1 editable AI proposals, Fix All A/AA queues, and fresh re-scans remain available.
 
 If you published the config before v3.0.0, add these keys manually:
 

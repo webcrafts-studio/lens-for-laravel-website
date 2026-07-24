@@ -9,6 +9,33 @@ test('the application returns a successful response', function () {
         ->assertDontSee('20-30%');
 });
 
+test('the website and documentation use the Lens favicon', function () {
+    expect(public_path('favicon.svg'))->toBeFile()
+        ->and(file_get_contents(public_path('favicon.svg')))->toContain('<svg')
+        ->toContain('<path')
+        ->toContain('M22.25 12.5h8v31.375h15.5v7H22.25Z')
+        ->toContain('#c52b21')
+        ->not->toContain('<circle')
+        ->and(public_path('favicon.ico'))->toBeFile()
+        ->and(filesize(public_path('favicon.ico')))->toBeGreaterThan(0)
+        ->and(public_path('favicon-dark.svg'))->toBeFile()
+        ->and(file_get_contents(public_path('favicon-dark.svg')))->toContain('#ff8a8a');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('data-theme-favicon')
+        ->assertSee('favicon-dark.svg')
+        ->assertSee('updateFavicon')
+        ->assertDontSee('favicon.ico');
+
+    $this->get(route('docs.show', ['page' => 'introduction']))
+        ->assertOk()
+        ->assertSee('data-theme-favicon')
+        ->assertSee('favicon-dark.svg')
+        ->assertSee('updateFavicon')
+        ->assertDontSee('favicon.ico');
+});
+
 test('Composer metadata identifies the Lens documentation website', function () {
     $composer = json_decode(
         file_get_contents(base_path('composer.json')),
@@ -46,22 +73,39 @@ test('website footer credits the author and Webcrafts', function () {
         ->assertSee('https://webcrafts.pl/', false);
 });
 
-test('the website identifies v3.1 as the current development line', function () {
+test('the website identifies v3.2 as the current development line', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('v3.1');
+        ->assertSee('v3.2');
 
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
-        ->assertSee('What&#039;s New in v3.1', false)
+        ->assertSee('What&#039;s New in v3.2', false)
         ->assertSee('Version 3 Upgrades');
 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('Version 3 Upgrades')
-        ->assertSee('v3.1 is the current development line')
+        ->assertSee('v3.2 is the current development line')
         ->assertSee('v3.0 Foundation')
         ->assertSee('URL-aware history comparisons');
+});
+
+test('the v3.2 documentation describes structural source mapping across supported frontends', function () {
+    $this->get(route('docs.show', ['page' => 'frontend-support']))
+        ->assertOk()
+        ->assertSee('Structural Source Mapping in v3.2')
+        ->assertSee('same-host rendered links can resolve to a named Laravel route')
+        ->assertSee('dynamic React props and Vue bindings')
+        ->assertSee('React/Vue structural matches are evaluated before weaker Blade route fallbacks');
+
+    $this->get(route('docs.show', ['page' => 'upgrade-v3']))
+        ->assertOk()
+        ->assertSee('What&#039;s New in v3.2', false)
+        ->assertSee('No new migration or configuration key is required');
+
+    expect(file_get_contents(resource_path('markdown/docs/frontend-support.md')))
+        ->toContain("route('home')");
 });
 
 test('the CLI documentation covers interactive state scripts', function () {

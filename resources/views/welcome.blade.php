@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lens for Laravel — WCAG Accessibility Auditor</title>
     <meta name="description"
-        content="Local-first WCAG accessibility auditor for Laravel. Maps violations to Blade, React, and Vue source files, scans interactive states, and supports CI baselines.">
+        content="Local-first WCAG accessibility auditor for Laravel. Maps violations to Blade, Livewire, React, and Vue source files, scans interactive states, and supports CI baselines.">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" data-theme-favicon>
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
     <script>
@@ -16,12 +17,25 @@
             if (saved === 'dark' || (!saved && prefersDark)) {
                 document.documentElement.classList.add('dark');
             }
+
+            updateFavicon(document.documentElement.classList.contains('dark'));
         })();
 
         function toggleTheme() {
             var isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('lens-theme', isDark ? 'dark' : 'light');
             updateThemeToggle(isDark);
+            updateFavicon(isDark);
+        }
+
+        function updateFavicon(isDark) {
+            var favicon = document.querySelector('[data-theme-favicon]');
+
+            if (!favicon) {
+                return;
+            }
+
+            favicon.href = isDark ? @js(asset('favicon-dark.svg')) : @js(asset('favicon.svg'));
         }
 
         function updateThemeToggle(isDark) {
@@ -115,7 +129,7 @@
                 <span class="shrink-0 whitespace-nowrap text-content font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="shrink-0 whitespace-nowrap text-accent font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.1</span>
+                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.2</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -183,8 +197,8 @@
 
             <p
                 class="mt-10 text-muted font-mono text-base max-w-xl mx-auto leading-relaxed">
-                Local-first WCAG auditor for Blade, Livewire, React, Vue, and Inertia. Maps violations to source files,
-                scans interactive UI states, and supports CI baselines.
+                Local-first WCAG auditor for Blade, Livewire, React, Vue, and Inertia. Maps dynamic and nested DOM
+                violations to source files, scans interactive UI states, and supports CI baselines.
             </p>
         </div>
 
@@ -350,6 +364,7 @@
                     </div>
                 </div>
                 <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
+                    - v3.2: Named Blade routes · Nested markup · Selector context<br>
                     - v3.1: In-modal editor · Fix All A/AA · Live queue<br>
                     - Up to 3 suggestions generate concurrently · Per-item retry<br>
                     - Fresh re-scans · Stable issue actions · Better repeated-node mapping<br>
@@ -705,7 +720,7 @@
                         <span class="text-terminal-red text-3xl tracking-tight"> LARAVEL</span>
                     </div>
                     <div class="text-terminal-muted font-mono text-xs tracking-widest uppercase">
-                        WCAG Accessibility Auditor · Blade · React · Vue · AI
+                        WCAG Accessibility Auditor · Blade · Livewire · React · Vue · AI
                     </div>
                 </div>
                 <nav class="flex flex-wrap items-center gap-4 md:gap-8" aria-label="Footer navigation">

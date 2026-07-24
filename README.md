@@ -7,7 +7,7 @@ Official marketing website and documentation for **[Lens for Laravel](https://gi
 This is the official website for the Lens for Laravel package. It includes:
 
 - Landing page with feature overview, CLI showcase, and dashboard preview
-- Full v3.1 documentation covering Laravel 10–13 compatibility, WCAG 2.0/2.1/2.2 selection, interactive-state scripts, history comparisons, localization, local HTTPS, CI baselines, and optional AI Fix with editable proposals and progressive Fix All queues
+- Full v3.2 documentation covering structural source mapping for Blade, Livewire, React, and Vue alongside Laravel 10–13 compatibility, WCAG 2.0/2.1/2.2 selection, interactive-state scripts, history comparisons, localization, local HTTPS, CI baselines, and optional AI Fix workflows
 - Light/dark theme support
 
 The package supports PHP 8.2+ and Laravel 10–13 for core scanning. AI Fix is optional and requires PHP 8.3+, Laravel 12+, and `laravel/ai`.

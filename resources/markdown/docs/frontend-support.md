@@ -19,14 +19,17 @@ Lens matches the rendered DOM back to Blade using:
 - `name`
 - selector classes and IDs
 - Blade component tags such as `<x-...>`
+- same-host named route helpers such as `route('home')`
 - rendered `src` or `href` values, including source-file basenames inside Blade helpers
+- bounded multiline element blocks and recognizable descendant markup
+- nearby ancestor classes and IDs from the axe selector
 - numeric `:nth-child(...)` positions when repeated elements otherwise have the same classes or attributes
 
 AI Fix can read and modify located Blade files under `resources/views`.
 
 ## Livewire
 
-Livewire is supported through the rendered DOM and Blade locator. For delayed rendering or hydration, configure:
+Livewire is supported through the rendered DOM and the same structural Blade locator. Named route helpers, nested markup, and nearby selector context are therefore available to Livewire Blade views as well. For delayed rendering or hydration, configure:
 
 ```text
 LENS_FOR_LARAVEL_SCAN_WAIT_MS=500
@@ -61,6 +64,7 @@ Supported locator patterns include:
 - `href={'/pricing'}`
 - `className="main-logo"`
 - selector variants such as `primary-button`, `primaryButton`, and `PrimaryButton`
+- dynamic props when nested source markup and nearby selector context provide a stable match
 - Inertia page files under `resources/js/Pages/**`
 
 AI Fix can modify React files under `resources/js`.
@@ -78,6 +82,7 @@ Supported locator patterns include:
 - static template attributes: `class="logo"`, `href="/pricing"`
 - bindings: `:href="'/pricing'"`, `v-bind:href="'/pricing'"`
 - class object keys: `:class="{ active: isActive }"`
+- dynamic bindings when nested source markup and nearby selector context provide a stable match
 
 AI Fix can modify Vue files under `resources/js`.
 
@@ -120,6 +125,34 @@ Possible `sourceType` values:
 
 The dashboard shows the source type next to the source location, and history stores it with each issue.
 
+## Structural Source Mapping in v3.2
+
+The browser reports rendered DOM, while source files can contain helpers, variables, bindings, and multiline nested markup. v3.2 narrows that gap with framework-aware structural matching:
+
+1. attributes and classes are read only from the failing opening tag, so a child image is not mistaken for part of its parent link
+2. same-host rendered links can resolve to a named Laravel route and match Blade or Livewire source such as `href="{{ route('home') }}"`
+3. bounded source blocks are compared with recognizable descendant filenames, attributes, and classes
+4. nearby ancestor classes and IDs from the axe selector distinguish otherwise identical dynamic elements
+5. React/Vue structural matches are evaluated before weaker Blade route fallbacks in mixed applications
+
+For example, both of these rendered links can use the same dynamic route and logo:
+
+```blade
+<div class="desktop-navigation">
+    <a href="{{ route('home') }}">
+        <img src="{{ asset('img/logo.png') }}" alt="">
+    </a>
+</div>
+
+<div class="mobile-navigation">
+    <a href="{{ route('home') }}">
+        <img src="{{ asset('img/logo.png') }}" alt="">
+    </a>
+</div>
+```
+
+Selectors containing `.desktop-navigation` or `.mobile-navigation` give Lens the context needed to return the corresponding `<a>` line. The same descendant-and-context strategy supports dynamic React props and Vue bindings when their source retains recognizable nested markup.
+
 ## Repeated Element Mapping in v3.1
 
 Rendered pages often contain several logos, cards, or links with the same class. Earlier class-first matching could select the first source occurrence even when axe-core reported a later sibling.
@@ -157,7 +190,7 @@ Common difficult cases:
 - custom components such as `<LogoImage />` that render HTML internally
 - CSS modules where final class names do not resemble source keys
 - dynamic class builders without literal class names
-- runtime-generated attributes
+- runtime-generated attributes without a named Blade route, recognizable nested markup, or stable selector context
 - UI states that require long or complex workflows beyond the recorder/script model
 
 For those cases, use the DOM selector and screenshot preview to guide manual investigation.

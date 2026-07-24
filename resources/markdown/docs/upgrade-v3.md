@@ -1,6 +1,18 @@
 # Version 3 Upgrades
 
-Lens v3.1 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.2 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2 additions together so the main documentation does not need a duplicated version tree.
+
+## What's New in v3.2
+
+v3.2 improves source mapping without changing the database schema, configuration, or compatibility matrix:
+
+- same-host rendered URLs can resolve to named Laravel routes and match Blade/Livewire helpers such as `route('home')`
+- the failing opening tag is parsed separately so nested child attributes and classes are not assigned to the parent
+- bounded multiline element blocks and descendant signatures map nested Blade, React, and Vue markup
+- nearby ancestor selector context distinguishes similar dynamic elements
+- React/Vue structural matches retain priority over weaker Blade fallbacks in mixed applications
+
+No new migration or configuration key is required.
 
 ## What's New in v3.1
 

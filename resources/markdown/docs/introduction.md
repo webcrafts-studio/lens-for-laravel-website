@@ -17,11 +17,19 @@ When axe-core detects a violation, Lens shows the failing DOM element and attemp
 
 Located issues include a file path, line number, and `sourceType`: `blade`, `react`, or `vue`.
 
-## What's New in v3.1
+## What's New in v3.2
 
-v3.1 is the current development line. It builds on the v3.0 compatibility, WCAG, reliability, and localization foundation without creating a separate documentation branch.
+v3.2 is the current development line. It adds structural source mapping while retaining the v3.0 compatibility foundation and the v3.1 AI Fix review workflows.
 
-New in v3.1:
+New in v3.2:
+
+- **Named Blade route mapping** resolves a rendered same-host URL back to helpers such as `route('home')`
+- **Correct target boundaries** prevent nested child attributes and classes from being mistaken for attributes of the failing element
+- **Nested element matching** compares bounded multiline Blade, React, and Vue source blocks with recognizable descendant markup
+- **Selector context matching** uses nearby ancestor classes and IDs to distinguish similar dynamic elements
+- **Mixed-frontend precedence** preserves stronger React/Vue structural matches ahead of weaker Blade fallbacks
+
+Added in v3.1:
 
 - **Editable AI Fix proposals** directly in the modal, with line numbers, Tab and Shift+Tab indentation, live diff updates, keyboard apply, and reset to the original AI suggestion
 - **Fix All A and Fix All AA review queues** that start immediately and generate up to three suggestions concurrently
@@ -43,7 +51,7 @@ The v3.0 foundation includes:
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
 - **Complete package-owned interface catalogs** in English, Polish, Spanish, French, and German, including history, comparisons, modals, PDF reports, and error feedback
 
-The Version 3 upgrade page covers both the v3.0 foundation and the incremental v3.1 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
+The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
 ## Core Capabilities
 

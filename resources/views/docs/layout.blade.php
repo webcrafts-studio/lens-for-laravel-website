@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle ?? 'Docs' }} — Lens for Laravel</title>
     <meta name="description" content="Lens for Laravel documentation — WCAG accessibility auditor for Laravel.">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" data-theme-favicon>
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
     <script>
@@ -15,12 +16,25 @@
             if (saved === 'dark' || (!saved && prefersDark)) {
                 document.documentElement.classList.add('dark');
             }
+
+            updateFavicon(document.documentElement.classList.contains('dark'));
         })();
 
         function toggleTheme() {
             var isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('lens-theme', isDark ? 'dark' : 'light');
             updateThemeToggle(isDark);
+            updateFavicon(isDark);
+        }
+
+        function updateFavicon(isDark) {
+            var favicon = document.querySelector('[data-theme-favicon]');
+
+            if (!favicon) {
+                return;
+            }
+
+            favicon.href = isDark ? @js(asset('favicon-dark.svg')) : @js(asset('favicon.svg'));
         }
 
         function updateThemeToggle(isDark) {
@@ -76,7 +90,7 @@
                 </a>
 
                 <span class="hidden md:block text-subtle font-mono text-xs">/ DOCS</span>
-                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.1</span>
+                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.2</span>
             </div>
 
             {{-- Right: theme toggle + GitHub --}}
