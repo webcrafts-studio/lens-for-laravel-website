@@ -129,7 +129,7 @@
                 <span class="shrink-0 whitespace-nowrap text-content font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="shrink-0 whitespace-nowrap text-accent font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.2</span>
+                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.3</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -338,7 +338,7 @@
                 <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
                 <p class="mt-4 text-terminal-muted font-mono text-base leading-relaxed">
-                    Your chosen AI (Gemini, OpenAI, or Anthropic) reads a focused element or component and generates a
+                    Your chosen AI (local Ollama, Gemini, OpenAI, or Anthropic) reads a focused element or component and generates a
                     minimal Blade, React, or Vue replacement. Review or edit each diff before applying, or prepare all
                     located Level A or AA fixes in a progressive review queue.
                 </p>
@@ -364,6 +364,7 @@
                     </div>
                 </div>
                 <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
+                    - v3.3: Local AI Fix models through Ollama<br>
                     - v3.2: Named Blade routes · Nested markup · Selector context<br>
                     - v3.1: In-modal editor · Fix All A/AA · Live queue<br>
                     - Up to 3 suggestions generate concurrently · Per-item retry<br>

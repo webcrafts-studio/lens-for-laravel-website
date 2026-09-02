@@ -49,7 +49,7 @@ AI Fix has a narrower compatibility range than the core scanner:
 Install it separately on a supported application:
 
 ```bash
-composer require laravel/ai:^0.3.2 --dev
+composer require laravel/ai --dev
 ```
 
 Laravel 10/11 and PHP 8.2 applications continue to receive all non-AI Lens features. The dashboard hides AI Fix actions and displays the exact reason they are unavailable.
@@ -102,6 +102,8 @@ LENS_FOR_LARAVEL_BASELINE_PATH=storage/app/lens-for-laravel/baseline.json
 LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=false
 LENS_FOR_LARAVEL_AI_ENABLED=true
 LENS_FOR_LARAVEL_AI_PROVIDER=gemini
+LENS_FOR_LARAVEL_AI_OLLAMA_MODEL=
+LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT=120
 ```
 
 | Variable | Default | Description |
@@ -116,7 +118,9 @@ LENS_FOR_LARAVEL_AI_PROVIDER=gemini
 | `LENS_FOR_LARAVEL_BASELINE_PATH` | `storage/app/lens-for-laravel/baseline.json` | Default file used by the baseline quality gate. |
 | `LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS` | `false` | Ignore self-signed HTTPS certificate errors during local scans. |
 | `LENS_FOR_LARAVEL_AI_ENABLED` | `true` | Explicitly enable or disable the optional AI Fix integration. |
-| `LENS_FOR_LARAVEL_AI_PROVIDER` | `gemini` | AI provider for fix suggestions. |
+| `LENS_FOR_LARAVEL_AI_PROVIDER` | `gemini` | AI provider for fix suggestions: `gemini`, `openai`, `anthropic`, or `ollama`. |
+| `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` | SDK default | Exact locally installed Ollama model tag used when the provider is `ollama`. |
+| `LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT` | `120` | Ollama request timeout in seconds for slower local generation. |
 
 ## AI Provider Keys
 
@@ -134,6 +138,21 @@ OPENAI_API_KEY=your-key
 LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your-key
 ```
+
+For local generation, install [Ollama](https://ollama.com/download), pull a code-capable model, and point Lens at it:
+
+```bash
+ollama pull qwen2.5-coder:7b
+```
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=ollama
+LENS_FOR_LARAVEL_AI_OLLAMA_MODEL=qwen2.5-coder:7b
+LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT=120
+OLLAMA_URL=http://127.0.0.1:11434
+```
+
+The URL is optional when Ollama uses its default local address. With `laravel/ai` 0.3.x, use `OLLAMA_BASE_URL` instead of `OLLAMA_URL` when overriding that address. No API key is needed for the default local Ollama server.
 
 Set `LENS_FOR_LARAVEL_AI_ENABLED=false` to disable AI Fix explicitly while keeping all scanning features enabled.
 

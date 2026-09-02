@@ -137,9 +137,9 @@ Fix All is a review workflow, not blind bulk writing:
 
 Only WCAG A and AA have Fix All actions. Issues without a supported source location are not added to the queue and remain available for manual investigation.
 
-Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured Gemini, OpenAI, or Anthropic provider. It does not send the entire repository.
+Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured provider. With Ollama on its default localhost endpoint, that context stays on the application host. Cloud providers and remote Ollama endpoints receive it over the network. Lens does not send the entire repository.
 
-Since v3.0, Lens uses the provider's default model from `laravel/ai`; there is no model selector. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
+Gemini, OpenAI, and Anthropic use their provider-default model from `laravel/ai`. In v3.3, an Ollama model is selected with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`, or falls back to the SDK's Ollama default. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
 
 The pending marker is intentionally not the same as a verified fix. The issue remains in totals and filters because those numbers describe the last axe-core scan. Closing the modal keeps the marker visible. Running a new scan replaces the old state with fresh results.
 

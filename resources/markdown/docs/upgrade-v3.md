@@ -1,6 +1,23 @@
 # Version 3 Upgrades
 
-Lens v3.2 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.3 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3 additions together so the main documentation does not need a duplicated version tree.
+
+## What's New in v3.3
+
+The only new feature in v3.3 is local AI Fix model support through Ollama:
+
+- set `LENS_FOR_LARAVEL_AI_PROVIDER=ollama`
+- select an installed local tag with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`
+- allow slower local inference with a dedicated 120-second default timeout
+- keep cloud providers on their existing SDK-default model behavior
+- retain the same semantic context limit, structured output, one controlled retry, review workflow, apply safeguards, logging, and pending re-scan state
+
+No migration is required. If the Lens config was published before v3.3, add:
+
+```php
+'ai_ollama_model' => env('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL'),
+'ai_ollama_timeout' => env('LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT', 120),
+```
 
 ## What's New in v3.2
 
@@ -89,12 +106,12 @@ The dashboard can override the configured WCAG version per scan. The CLI can ove
 The core package no longer requires an AI SDK. On PHP 8.3+ and Laravel 12+, install AI Fix separately when needed:
 
 ```bash
-composer require laravel/ai:^0.3.2 --dev
+composer require laravel/ai --dev
 ```
 
 Applications on PHP 8.2 or Laravel 10/11 keep scanning, crawling, history, PDF, preview, source mapping, interactive states, baselines, and CLI support. Only AI Fix is unavailable.
 
-Lens continues to select only Gemini, OpenAI, or Anthropic. It does not pin a model; `laravel/ai` uses the configured provider's default model.
+Lens now selects Ollama in addition to Gemini, OpenAI, and Anthropic. The cloud providers continue to use their configured `laravel/ai` default model. Ollama uses `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` when set, or the SDK's Ollama default when omitted.
 
 ## Baselines
 

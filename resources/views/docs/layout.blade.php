@@ -90,7 +90,7 @@
                 </a>
 
                 <span class="hidden md:block text-subtle font-mono text-xs">/ DOCS</span>
-                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.2</span>
+                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.3</span>
             </div>
 
             {{-- Right: theme toggle + GitHub --}}

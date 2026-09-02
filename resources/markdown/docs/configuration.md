@@ -55,6 +55,10 @@ return [
     'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
 
     'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
+
+    'ai_ollama_model' => env('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL'),
+
+    'ai_ollama_timeout' => env('LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT', 120),
 ];
 ```
 
@@ -271,21 +275,47 @@ The provider is contacted only after a user requests a fix. Lens sends the issue
 | `gemini` | Google Gemini | `GEMINI_API_KEY` |
 | `openai` | OpenAI | `OPENAI_API_KEY` |
 | `anthropic` | Anthropic | `ANTHROPIC_API_KEY` |
+| `ollama` | Local or self-hosted Ollama | None for localhost |
 
 ```text
 LENS_FOR_LARAVEL_AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```
 
+### `ai_ollama_model`
+
+**Type:** `string|null` | **Default:** Laravel AI SDK's Ollama default | **Env:** `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`
+
+Selects the exact Ollama model tag passed to `laravel/ai` when `ai_provider` is `ollama`. It is ignored for Gemini, OpenAI, and Anthropic, which continue to use their configured SDK-default models.
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=ollama
+LENS_FOR_LARAVEL_AI_OLLAMA_MODEL=qwen2.5-coder:7b
+```
+
+The model must already appear in `ollama list`. Ollama's default endpoint is `http://127.0.0.1:11434`. Current `laravel/ai` releases use `OLLAMA_URL` for an override; 0.3.x uses `OLLAMA_BASE_URL`.
+
+### `ai_ollama_timeout`
+
+**Type:** `int` | **Default:** `120` | **Env:** `LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT`
+
+Controls the Laravel AI request timeout in seconds only when the selected provider is Ollama. Cloud providers retain the SDK's normal timeout behavior.
+
+```text
+LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT=180
+```
+
 ## Version 3 Upgrade
 
-v3.2 is the current development line. It adds structural source mapping for named Blade/Livewire routes and nested Blade, React, and Vue markup without adding configuration keys or migrations. The v3.1 editable AI proposals, Fix All A/AA queues, and fresh re-scans remain available.
+v3.3 is the current development line. Its only new feature is local AI Fix model support through Ollama. It adds `ai_ollama_model` and `ai_ollama_timeout` but no migration. The v3.2 structural source mapping and earlier v3 behavior remain available.
 
 If you published the config before v3.0.0, add these keys manually:
 
 ```php
 'wcag_version' => env('LENS_FOR_LARAVEL_WCAG_VERSION', '2.0'),
 'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
+'ai_ollama_model' => env('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL'),
+'ai_ollama_timeout' => env('LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT', 120),
 ```
 
 WCAG 2.0 remains the default so existing dashboard, CLI, baseline, and CI workflows retain their previous scan scope.

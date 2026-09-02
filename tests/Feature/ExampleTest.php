@@ -73,20 +73,23 @@ test('website footer credits the author and Webcrafts', function () {
         ->assertSee('https://webcrafts.pl/', false);
 });
 
-test('the website identifies v3.2 as the current development line', function () {
+test('the website identifies v3.3 as the current development line', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('v3.2');
+        ->assertSee('v3.3')
+        ->assertSee('Local AI Fix models through Ollama');
 
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
-        ->assertSee('What&#039;s New in v3.2', false)
+        ->assertSee('What&#039;s New in v3.3', false)
+        ->assertSee('only new feature is local AI Fix model support through Ollama')
         ->assertSee('Version 3 Upgrades');
 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('Version 3 Upgrades')
-        ->assertSee('v3.2 is the current development line')
+        ->assertSee('v3.3 is the current development line')
+        ->assertSee('The only new feature in v3.3 is local AI Fix model support through Ollama')
         ->assertSee('v3.0 Foundation')
         ->assertSee('URL-aware history comparisons');
 });
@@ -124,11 +127,35 @@ test('the v3 documentation describes the reliable AI Fix contract', function () 
         ->assertSee('12000 tokens')
         ->assertSee('1024-token budget')
         ->assertSee('one controlled retry')
-        ->assertSee('does not expose or force a model')
+        ->assertSee('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL')
         ->assertSee('Only the first reviewed occurrence is replaced')
         ->assertSee('AI Fix applied — pending re-scan')
         ->assertSee('keeps the issue in violation counts')
         ->assertSee('does not claim that axe-core has confirmed the fix');
+});
+
+test('the v3.3 documentation explains local Ollama setup and verification', function () {
+    $this->get(route('docs.show', ['page' => 'ai-fix-engine']))
+        ->assertOk()
+        ->assertSee('Local Models with Ollama in v3.3')
+        ->assertSee('ollama pull qwen2.5-coder:7b')
+        ->assertSee('OLLAMA_URL=http://127.0.0.1:11434')
+        ->assertSee('OLLAMA_BASE_URL')
+        ->assertSee('curl http://127.0.0.1:11434/api/tags')
+        ->assertSee('provider ollama');
+
+    $this->get(route('docs.show', ['page' => 'configuration']))
+        ->assertOk()
+        ->assertSee('ai_ollama_model')
+        ->assertSee('ai_ollama_timeout')
+        ->assertSee('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL')
+        ->assertSee('LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT')
+        ->assertSee('Local or self-hosted Ollama');
+
+    $this->get(route('docs.show', ['page' => 'installation']))
+        ->assertOk()
+        ->assertSee('composer require laravel/ai --dev')
+        ->assertSee('No API key is needed for the default local Ollama server');
 });
 
 test('the v3.1 documentation describes editable progressive AI fixes and fresh rescans', function () {
@@ -165,7 +192,7 @@ test('the current documentation keeps compatibility and defaults aligned with th
         ->assertOk()
         ->assertSee('<td>8.2+</td>', false)
         ->assertSee('<td>10, 11, 12, 13</td>', false)
-        ->assertSee('laravel/ai:^0.3.2');
+        ->assertSee('0.3.2 or newer');
 
     $scanningModes = file_get_contents(resource_path('markdown/docs/scanning-modes.md'));
 

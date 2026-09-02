@@ -1,6 +1,6 @@
 # AI Fix Engine
 
-The AI Fix Engine uses Gemini, OpenAI, or Anthropic to generate minimal accessibility fixes for located Blade, React, and Vue source files.
+The AI Fix Engine uses a local Ollama model, Gemini, OpenAI, or Anthropic to generate minimal accessibility fixes for located Blade, React, and Vue source files.
 
 ## Availability
 
@@ -8,13 +8,13 @@ AI Fix is an optional integration. It requires:
 
 - PHP 8.3 or newer
 - Laravel 12 or newer
-- `laravel/ai:^0.3.2` installed in the host application
+- `laravel/ai` 0.3.2 or newer installed in the host application
 - `LENS_FOR_LARAVEL_AI_ENABLED` not set to `false`
 
 Install the optional SDK with:
 
 ```bash
-composer require laravel/ai:^0.3.2 --dev
+composer require laravel/ai --dev
 ```
 
 The core Lens package supports PHP 8.2+ and Laravel 10–13. On older supported runtimes or without the SDK, only AI Fix is unavailable. Scans, crawling, source mapping, history, PDF reports, previews, interactive states, baselines, and CLI audits continue to work.
@@ -36,14 +36,14 @@ It will not write outside those paths.
 
 ## Data Sent to the Provider
 
-When you request a fix, Lens sends the following data to the configured Gemini, OpenAI, or Anthropic provider:
+When you request a fix, Lens sends the following data to the configured provider:
 
 - the accessibility issue description
 - axe/WCAG tags
 - the failing rendered DOM snippet
 - the smallest relevant source element or component around the located line
 
-Lens does not send the entire repository. The selected context can still contain application data, template content, or secrets, so review the source before requesting a fix and follow the chosen provider's data-handling policy.
+Lens does not send the entire repository. With Ollama at its default localhost endpoint, the selected context stays on the machine running Laravel. Cloud providers and remote Ollama endpoints receive the context over the network. The selected fragment can still contain application data, template content, or secrets, so review it before requesting a fix.
 
 ## How It Works
 
@@ -106,7 +106,7 @@ The v3 agent remains deliberately conservative:
 - a token-limit finish reason or malformed structured response triggers one controlled retry
 - after that retry, Lens stops without changing a file and shows a safe, understandable error
 
-Lens selects only the provider. It does not expose or force a model; `laravel/ai` resolves the default model configured for Gemini, OpenAI, or Anthropic. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
+For Gemini, OpenAI, and Anthropic, Lens selects only the provider and `laravel/ai` resolves its configured default model. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if it is empty, the SDK's Ollama default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
 
 ## Framework-Aware Prompts
 
@@ -144,6 +144,48 @@ Or:
 LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your-key
 ```
+
+## Local Models with Ollama in v3.3
+
+Install [Ollama](https://ollama.com/download) from its official distribution, start it, and pull a code-capable model. For example:
+
+```bash
+ollama pull qwen2.5-coder:7b
+ollama list
+```
+
+Configure Lens in the Laravel application's `.env`:
+
+```text
+LENS_FOR_LARAVEL_AI_ENABLED=true
+LENS_FOR_LARAVEL_AI_PROVIDER=ollama
+LENS_FOR_LARAVEL_AI_OLLAMA_MODEL=qwen2.5-coder:7b
+LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT=120
+OLLAMA_URL=http://127.0.0.1:11434
+```
+
+The URL line can be omitted for Ollama's default localhost endpoint. If the host application uses `laravel/ai` 0.3.x, its configuration names the URL override `OLLAMA_BASE_URL`; current versions use `OLLAMA_URL`. After changing `.env`, clear cached configuration:
+
+```bash
+php artisan optimize:clear
+```
+
+Verify the daemon independently before opening Lens:
+
+```bash
+curl http://127.0.0.1:11434/api/tags
+```
+
+Then test the complete workflow:
+
+1. Add a deliberately inaccessible element such as `<img src="logo.png">` to a rendered Blade, React, or Vue page.
+2. Open the Lens dashboard and scan that page.
+3. Confirm the issue has a source location, then click **AI FIX**.
+4. Review the generated diff and confirm `storage/logs/laravel.log` records provider `ollama` and the selected model tag without logging source code.
+5. Apply the reviewed proposal and confirm the issue remains marked **AI Fix applied — pending re-scan**.
+6. Re-scan and confirm axe-core no longer reports the issue.
+
+If generation fails, first confirm the model tag exactly matches `ollama list`, the Ollama process is reachable from the PHP process, and Laravel configuration is not cached with older values. Increase `LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT` for a slower machine or larger model. Local models vary in structured-output and code quality; a larger code model can improve results at the cost of memory and response time.
 
 ## Applying a Fix
 
