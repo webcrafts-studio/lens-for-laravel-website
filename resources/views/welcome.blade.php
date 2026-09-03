@@ -373,10 +373,6 @@
                     <span class="text-terminal-muted"> - run Ollama on your machine, your code never leaves localhost.</span>
                 </div>
                 <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
-                    - v3.4: Authenticated scans · OpenRouter · xAI · DeepSeek · Mistral<br>
-                    - v3.3: Local AI Fix models through Ollama<br>
-                    - v3.2: Named Blade routes · Nested markup · Selector context<br>
-                    - v3.1: In-modal editor · Fix All A/AA · Live queue<br>
                     - Up to 3 suggestions generate concurrently · Per-item retry<br>
                     - Fresh re-scans · Stable issue actions · Better repeated-node mapping<br>
                     - Optional: PHP 8.3+ · Laravel 12+ · laravel/ai
