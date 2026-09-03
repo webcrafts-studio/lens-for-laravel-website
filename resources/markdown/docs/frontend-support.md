@@ -2,7 +2,7 @@
 
 Lens supports Laravel applications using Blade, Livewire, React, Vue, Inertia, or mixed frontends.
 
-All source locators and scans support the core PHP 8.2+/Laravel 10–13 matrix. References to AI Fix on this page require PHP 8.3+, Laravel 12+, and the optional `laravel/ai` package.
+All source locators and scans support the core PHP 8.2+/Laravel 10-13 matrix. References to AI Fix on this page require PHP 8.3+, Laravel 12+, and the optional `laravel/ai` package.
 
 ## Blade
 

@@ -51,7 +51,7 @@ Enable it first:
 LENS_FOR_LARAVEL_AUTH_ENABLED=true
 ```
 
-The dashboard shows a user ID field when enabled, and crawling, state scans, and element previews accept the same user. Only the numeric id travels from the client — Lens logs in server-side and passes a short-lived session cookie to Chromium. The previous auth state is restored after the scan, and nothing credential-like is stored in history. A persistent session driver (`file`, `database`, or `redis`) is required.
+The dashboard shows a user ID field when enabled, and crawling, state scans, and element previews accept the same user. Only the numeric id travels from the client - Lens logs in server-side and passes a short-lived session cookie to Chromium. The previous auth state is restored after the scan, and nothing credential-like is stored in history. A persistent session driver (`file`, `database`, or `redis`) is required.
 
 ## Whole Website Crawl
 

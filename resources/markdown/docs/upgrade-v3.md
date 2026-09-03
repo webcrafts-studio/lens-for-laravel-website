@@ -4,14 +4,17 @@ Lens v3.4 is the current development line. This page keeps the v3.0 foundation a
 
 ## What's New in v3.4
 
-The only new feature in v3.4 is authenticated scans for pages behind login:
+v3.4 adds authenticated scans for pages behind login plus four additional AI Fix providers (OpenRouter, xAI, DeepSeek, Mistral):
 
-- enable with `LENS_FOR_LARAVEL_AUTH_ENABLED=true` (default `false`, no migration required)
+- enable authenticated scans with `LENS_FOR_LARAVEL_AUTH_ENABLED=true` (default `false`, no migration required)
 - scan as an existing user with `php artisan lens:audit <url> --as-user=1` or the dashboard user ID field
 - crawling, interactive state scans, and element previews accept the same server-resolved user
 - only the numeric user id travels from the client; login happens server-side and session cookies are never stored
 - optionally restrict impersonation with `LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS=1,2`
 - requires a persistent session driver (`file`, `database`, or `redis`)
+- `openrouter`, `xai`, `deepseek`, and `mistral` are accepted by `LENS_FOR_LARAVEL_AI_PROVIDER`
+- the new providers keep the implicit SDK-default model behavior of Gemini, OpenAI, and Anthropic; only Ollama uses an explicit model tag
+- configure credentials with `OPENROUTER_API_KEY`, `XAI_API_KEY`, `DEEPSEEK_API_KEY`, or `MISTRAL_API_KEY`
 
 If the Lens config was published before v3.4, add:
 
@@ -84,7 +87,7 @@ If package views were previously published, compare them with the v3.1 dashboard
 - URL-aware history comparisons that keep the same rule and selector on different pages separate
 - reusable interactive-state scripts in the CLI through `--states=path`
 - consistent `ignore_https_errors` behavior across scans, HTTP/browser crawling, and previews
-- core compatibility across PHP 8.2+ and Laravel 10–13
+- core compatibility across PHP 8.2+ and Laravel 10-13
 - AI Fix restricted to PHP 8.3+, Laravel 12+, and the optional `laravel/ai` SDK
 - clear dashboard messaging when only AI Fix is unavailable
 - dedicated accessibility-fix agent with a 12000-token ceiling, deterministic temperature, and bounded Gemini thinking

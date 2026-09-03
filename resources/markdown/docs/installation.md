@@ -36,7 +36,7 @@ composer require webcrafts-studio/lens-for-laravel --dev
 
 Lens is a developer tool and should normally be installed as a dev dependency.
 
-The command above installs every core scanning feature on PHP 8.2+ and Laravel 10–13. It intentionally does not install an AI SDK.
+The command above installs every core scanning feature on PHP 8.2+ and Laravel 10-13. It intentionally does not install an AI SDK.
 
 ## Optional AI Fix Installation
 

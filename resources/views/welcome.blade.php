@@ -338,7 +338,7 @@
                 <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
                 <p class="mt-4 text-terminal-muted font-mono text-base leading-relaxed">
-                    Your chosen AI (local Ollama, Gemini, OpenAI, or Anthropic) reads a focused element or component and generates a
+                    Your chosen AI (local Ollama, Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, or Mistral) reads a focused element or component and generates a
                     minimal Blade, React, or Vue replacement. Review or edit each diff before applying, or prepare all
                     located Level A or AA fixes in a progressive review queue.
                 </p>

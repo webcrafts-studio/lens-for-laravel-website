@@ -129,7 +129,7 @@ test('the v3 documentation describes the reliable AI Fix contract', function () 
         ->assertSee('one controlled retry')
         ->assertSee('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL')
         ->assertSee('Only the first reviewed occurrence is replaced')
-        ->assertSee('AI Fix applied — pending re-scan')
+        ->assertSee('AI Fix applied - pending re-scan')
         ->assertSee('keeps the issue in violation counts')
         ->assertSee('does not claim that axe-core has confirmed the fix');
 });

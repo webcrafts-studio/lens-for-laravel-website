@@ -118,7 +118,7 @@ AI Fix actions are shown only when the host application uses PHP 8.3+, Laravel 1
 4. The dashboard displays a diff preview.
 5. Accept the suggestion as generated or click **EDIT** to change it in the modal. The editor provides line numbers, Tab and Shift+Tab indentation, a live diff, reset-to-AI, and Ctrl/Cmd+Enter apply.
 6. Click **ACCEPT & APPLY** to write the reviewed replacement to disk, or reject it without changing a file.
-7. The issue card is immediately marked **AI Fix applied — pending re-scan**.
+7. The issue card is immediately marked **AI Fix applied - pending re-scan**.
 
 ## Fix All A and AA in v3.1
 
@@ -139,7 +139,7 @@ Only WCAG A and AA have Fix All actions. Issues without a supported source locat
 
 Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured provider. With Ollama on its default localhost endpoint, that context stays on the application host. Cloud providers and remote Ollama endpoints receive it over the network. Lens does not send the entire repository.
 
-Gemini, OpenAI, and Anthropic use their provider-default model from `laravel/ai`. In v3.3, an Ollama model is selected with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`, or falls back to the SDK's Ollama default. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
+Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral use their provider-default model from `laravel/ai`. In v3.3, an Ollama model is selected with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`, or falls back to the SDK's Ollama default. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
 
 The pending marker is intentionally not the same as a verified fix. The issue remains in totals and filters because those numbers describe the last axe-core scan. Closing the modal keeps the marker visible. Running a new scan replaces the old state with fresh results.
 

@@ -51,7 +51,7 @@ The v3.0 foundation includes:
 - **URL-aware history comparisons** that distinguish identical selectors on different pages
 - **Interactive-state scripts in the CLI** through `--states=path`
 - **Consistent local HTTPS handling** for scans, crawler requests, browser-rendered discovery, and previews
-- **Broader core compatibility** across PHP 8.2+ and Laravel 10–13
+- **Broader core compatibility** across PHP 8.2+ and Laravel 10-13
 - **Optional, compatibility-gated AI Fix** on PHP 8.3+, Laravel 12+, and the separately installed `laravel/ai` SDK
 - **Reliable minimal AI replacements** using semantic source context, bounded Gemini thinking, and one controlled structured-output retry
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
@@ -66,7 +66,7 @@ The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/
 - **JavaScript rendering** through Browsershot and Chromium
 - **Blade, React, Vue, Livewire, and Inertia support**
 - **Source locator** for Blade templates and frontend files under `resources/js`
-- **Optional AI Fix Engine** using a local Ollama model, Gemini, OpenAI, or Anthropic on PHP 8.3+ and Laravel 12+
+- **Optional AI Fix Engine** using Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, Mistral, or a local Ollama model on PHP 8.3+ and Laravel 12+
 - **Four scan modes**: single URL, multiple URLs, whole-site crawl, and interactive states
 - **Optional SPA crawling** for React/Vue/Inertia link discovery
 - **Dashboard UI** with filtering, element preview, PDF export, editable AI fixes, progressive Fix All A/AA queues, history, and a state recorder
@@ -94,7 +94,7 @@ Your Laravel App
       |
       +--> AiFixer (optional)
                 |
-                +--> Ollama / Gemini / OpenAI / Anthropic -> fixedCode + explanation
+                +--> Ollama / Gemini / OpenAI / Anthropic / OpenRouter / xAI / DeepSeek / Mistral -> fixedCode + explanation
 ```
 
 ## Supported WCAG Levels

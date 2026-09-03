@@ -1,6 +1,6 @@
 # AI Fix Engine
 
-The AI Fix Engine uses a local Ollama model, Gemini, OpenAI, or Anthropic to generate minimal accessibility fixes for located Blade, React, and Vue source files.
+The AI Fix Engine uses Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, Mistral, or a local Ollama model to generate minimal accessibility fixes for located Blade, React, and Vue source files.
 
 ## Availability
 
@@ -17,7 +17,7 @@ Install the optional SDK with:
 composer require laravel/ai --dev
 ```
 
-The core Lens package supports PHP 8.2+ and Laravel 10–13. On older supported runtimes or without the SDK, only AI Fix is unavailable. Scans, crawling, source mapping, history, PDF reports, previews, interactive states, baselines, and CLI audits continue to work.
+The core Lens package supports PHP 8.2+ and Laravel 10-13. On older supported runtimes or without the SDK, only AI Fix is unavailable. Scans, crawling, source mapping, history, PDF reports, previews, interactive states, baselines, and CLI audits continue to work.
 
 ## Supported Files
 
@@ -57,7 +57,7 @@ When you click **AI FIX**, Lens:
 6. receives a minimal replacement and explanation
 7. shows a diff preview and an optional in-modal editor in the dashboard
 8. applies the generated or edited replacement only after you accept it
-9. immediately marks the current issue as **AI Fix applied — pending re-scan**
+9. immediately marks the current issue as **AI Fix applied - pending re-scan**
 10. keeps the issue in violation counts until a new axe-core scan verifies the result
 
 ## Reviewing and Editing in v3.1
@@ -106,7 +106,7 @@ The v3 agent remains deliberately conservative:
 - a token-limit finish reason or malformed structured response triggers one controlled retry
 - after that retry, Lens stops without changing a file and shows a safe, understandable error
 
-For Gemini, OpenAI, and Anthropic, Lens selects only the provider and `laravel/ai` resolves its configured default model. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if it is empty, the SDK's Ollama default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
+For Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, Lens selects only the provider and `laravel/ai` resolves its configured default model. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if it is empty, the SDK's Ollama default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
 
 ## Framework-Aware Prompts
 
@@ -145,6 +145,38 @@ LENS_FOR_LARAVEL_AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your-key
 ```
 
+Or:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=openrouter
+OPENROUTER_API_KEY=your-key
+```
+
+Or:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=xai
+XAI_API_KEY=your-key
+```
+
+Or:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=deepseek
+DEEPSEEK_API_KEY=your-key
+```
+
+Or:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=mistral
+MISTRAL_API_KEY=your-key
+```
+
+## More Cloud Providers in v3.4
+
+Lens v3.4 adds OpenRouter, xAI, DeepSeek, and Mistral. They behave like the existing cloud providers: Lens passes only the provider name, `laravel/ai` resolves its configured default model, and the same bounded context, one-retry, review, and logging rules apply. OpenRouter is a proxy to hundreds of models behind one key, xAI serves Grok models, DeepSeek serves its chat coder, and Mistral is a European provider. Each needs only its API key in the host application (`OPENROUTER_API_KEY`, `XAI_API_KEY`, `DEEPSEEK_API_KEY`, `MISTRAL_API_KEY`).
+
 ## Local Models with Ollama in v3.3
 
 Install [Ollama](https://ollama.com/download) from its official distribution, start it, and pull a code-capable model. For example:
@@ -182,7 +214,7 @@ Then test the complete workflow:
 2. Open the Lens dashboard and scan that page.
 3. Confirm the issue has a source location, then click **AI FIX**.
 4. Review the generated diff and confirm `storage/logs/laravel.log` records provider `ollama` and the selected model tag without logging source code.
-5. Apply the reviewed proposal and confirm the issue remains marked **AI Fix applied — pending re-scan**.
+5. Apply the reviewed proposal and confirm the issue remains marked **AI Fix applied - pending re-scan**.
 6. Re-scan and confirm axe-core no longer reports the issue.
 
 If generation fails, first confirm the model tag exactly matches `ollama list`, the Ollama process is reachable from the PHP process, and Laravel configuration is not cached with older values. Increase `LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT` for a slower machine or larger model. Local models vary in structured-output and code quality; a larger code model can improve results at the cost of memory and response time.

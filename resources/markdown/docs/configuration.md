@@ -86,7 +86,7 @@ Supported values are `2.0`, `2.1`, and `2.2`. The dashboard can override this pe
 
 **Type:** `bool` | **Default:** `false` | **Env:** `LENS_FOR_LARAVEL_AUTH_ENABLED`
 
-Enables authenticated scans for pages behind login. The dashboard shows a user ID field, and the CLI accepts `--as-user`. Only the numeric user id travels from the client — Lens logs in server-side through `auth_guard` and passes a short-lived session cookie to Chromium. Raw cookies, tokens, and passwords are never accepted, logged, or stored in history.
+Enables authenticated scans for pages behind login. The dashboard shows a user ID field, and the CLI accepts `--as-user`. Only the numeric user id travels from the client - Lens logs in server-side through `auth_guard` and passes a short-lived session cookie to Chromium. Raw cookies, tokens, and passwords are never accepted, logged, or stored in history.
 
 ```text
 LENS_FOR_LARAVEL_AUTH_ENABLED=true
@@ -313,6 +313,10 @@ The provider is contacted only after a user requests a fix. Lens sends the issue
 | `gemini` | Google Gemini | `GEMINI_API_KEY` |
 | `openai` | OpenAI | `OPENAI_API_KEY` |
 | `anthropic` | Anthropic | `ANTHROPIC_API_KEY` |
+| `openrouter` | OpenRouter (proxy to hundreds of models) | `OPENROUTER_API_KEY` |
+| `xai` | xAI Grok | `XAI_API_KEY` |
+| `deepseek` | DeepSeek | `DEEPSEEK_API_KEY` |
+| `mistral` | Mistral | `MISTRAL_API_KEY` |
 | `ollama` | Local or self-hosted Ollama | None for localhost |
 
 ```text
@@ -324,7 +328,7 @@ OPENAI_API_KEY=sk-...
 
 **Type:** `string|null` | **Default:** Laravel AI SDK's Ollama default | **Env:** `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`
 
-Selects the exact Ollama model tag passed to `laravel/ai` when `ai_provider` is `ollama`. It is ignored for Gemini, OpenAI, and Anthropic, which continue to use their configured SDK-default models.
+Selects the exact Ollama model tag passed to `laravel/ai` when `ai_provider` is `ollama`. It is ignored for Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, which continue to use their configured SDK-default models.
 
 ```text
 LENS_FOR_LARAVEL_AI_PROVIDER=ollama
