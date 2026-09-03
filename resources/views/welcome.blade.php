@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lens for Laravel — WCAG Accessibility Auditor</title>
+    <title>Lens for Laravel - WCAG Accessibility Auditor</title>
     <meta name="description"
-        content="Local-first WCAG accessibility auditor for Laravel. Maps violations to Blade, Livewire, React, and Vue source files, scans interactive states, and supports CI baselines.">
+        content="Local-first WCAG accessibility auditor for Laravel. Maps violations to Blade, Livewire, React, and Vue source files, scans interactive states and pages behind login, and supports CI baselines.">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" data-theme-favicon>
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
@@ -129,7 +129,7 @@
                 <span class="shrink-0 whitespace-nowrap text-content font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="shrink-0 whitespace-nowrap text-accent font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.3</span>
+                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.4</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -198,7 +198,7 @@
             <p
                 class="mt-10 text-muted font-mono text-base max-w-xl mx-auto leading-relaxed">
                 Local-first WCAG auditor for Blade, Livewire, React, Vue, and Inertia. Maps dynamic and nested DOM
-                violations to source files, scans interactive UI states, and supports CI baselines.
+                violations to source files, scans interactive UI states and pages behind login, and supports CI baselines.
             </p>
         </div>
 
@@ -240,7 +240,7 @@
 
         </section>
     {{-- ====================================================== --}}
-    {{-- STATS — "Lens by Numbers"                              --}}
+    {{-- STATS - "Lens by Numbers"                              --}}
     {{-- ====================================================== --}}
     <section class="bg-panel border-y-2 md:border-y-4 border-content">
         <div
@@ -275,9 +275,7 @@
             </div>
 
             <div class="p-8">
-                <div class="font-black font-mono text-content leading-tight text-base">
-                    GEMINI<br>OPENAI<br>ANTHROPIC
-                </div>
+                <div class="text-5xl font-black font-mono text-content">8</div>
                 <div class="text-xs font-mono tracking-widest text-muted mt-2 uppercase">AI
                     Providers</div>
             </div>
@@ -330,10 +328,17 @@
                         <span
                             class="text-muted group-hover:text-page text-xs">click/type/wait</span>
                     </div>
+                    <div
+                        class="group border-2 border-control px-4 py-3 font-mono text-xs flex items-center justify-between hover:bg-content hover:text-page transition-colors cursor-default">
+                        <span
+                            class="font-bold text-content group-hover:text-page">AUTHENTICATED</span>
+                        <span
+                            class="text-muted group-hover:text-page text-xs">--as-user=ID</span>
+                    </div>
                 </div>
             </div>
 
-            {{-- Feature 02: AI Fix Engine — intentionally always dark for contrast --}}
+            {{-- Feature 02: AI Fix Engine - intentionally always dark for contrast --}}
             <div class="p-10 bg-black text-white">
                 <div class="text-terminal-red text-xs font-bold font-mono tracking-[0.3em] mb-6 uppercase">02 / AI ENGINE</div>
                 <h3 class="font-mono font-black text-3xl text-white leading-tight">AI_FIX<br>Engine</h3>
@@ -353,7 +358,7 @@
                         &lt;/a&gt;
                     </div>
                     <div class="border-t border-b border-terminal-border px-4 py-2 bg-terminal-panel">
-                        <span class="text-green-300 text-xs font-bold font-mono uppercase tracking-wider">AFTER — AI
+                        <span class="text-green-300 text-xs font-bold font-mono uppercase tracking-wider">AFTER - AI
                             FIX</span>
                     </div>
                     <div class="px-4 py-3 text-xs font-mono text-green-300 leading-relaxed">
@@ -364,6 +369,7 @@
                     </div>
                 </div>
                 <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
+                    - v3.4: Authenticated scans · OpenRouter · xAI · DeepSeek · Mistral<br>
                     - v3.3: Local AI Fix models through Ollama<br>
                     - v3.2: Named Blade routes · Nested markup · Selector context<br>
                     - v3.1: In-modal editor · Fix All A/AA · Live queue<br>
@@ -395,7 +401,7 @@
                             class="text-terminal-subtle"># Fail on regressions</span></div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    @foreach (['--wcag=2.2', '--states=path', '--a', '--aa', '--all', '--crawl', '--threshold=N', '--baseline', '--fail-on-new'] as $flag)
+                    @foreach (['--wcag=2.2', '--states=path', '--as-user=ID', '--a', '--aa', '--all', '--crawl', '--threshold=N', '--baseline', '--fail-on-new'] as $flag)
                         <span
                             class="border border-control px-2 py-1 font-mono text-xs text-muted">{{ $flag }}</span>
                     @endforeach
@@ -406,7 +412,7 @@
     </section>
 
     {{-- ====================================================== --}}
-    {{-- CLI SHOWCASE — always dark (terminal window)           --}}
+    {{-- CLI SHOWCASE - always dark (terminal window)           --}}
     {{-- ====================================================== --}}
     <section id="cli" class="bg-terminal-surface py-24 border-b border-terminal-divider">
         <div class="max-w-5xl mx-auto px-6">
@@ -424,7 +430,7 @@
                         <div class="w-3 h-3 rounded-full bg-green-300"></div>
                     </div>
                     <span class="text-terminal-muted font-mono text-xs ml-2 truncate">
-                        zsh — php artisan lens:audit https://webcrafts.test --aa
+                        zsh - php artisan lens:audit https://webcrafts.test --aa
                     </span>
                 </div>
 
@@ -519,7 +525,7 @@
                     <div class="text-terminal-divider" aria-hidden="true">──────────────────────────────────────────────────────────────────────
                     </div>
                     <div class="text-terminal-red text-xs pt-1">
-                        ✗ Quality gate FAILED — 3 violations exceed threshold of 0 &nbsp;(exit code: 1)
+                        ✗ Quality gate FAILED - 3 violations exceed threshold of 0 &nbsp;(exit code: 1)
                     </div>
                 </div>
             </div>
@@ -527,7 +533,7 @@
     </section>
 
     {{-- ====================================================== --}}
-    {{-- DASHBOARD PREVIEW — always dark (shows dark app UI)    --}}
+    {{-- DASHBOARD PREVIEW - always dark (shows dark app UI)    --}}
     {{-- ====================================================== --}}
     <section class="bg-terminal-surface py-24 border-b border-terminal-divider">
         <div class="max-w-5xl mx-auto px-6">
@@ -667,7 +673,7 @@
     </section>
 
     {{-- ====================================================== --}}
-    {{-- CTA — always red in both themes                        --}}
+    {{-- CTA - always red in both themes                        --}}
     {{-- ====================================================== --}}
     <section class="bg-accent-solid py-28 border-b-4 border-black">
         <div class="max-w-4xl mx-auto px-6 text-center">
@@ -710,7 +716,7 @@
     </main>
 
     {{-- ====================================================== --}}
-    {{-- FOOTER — always dark in both themes                    --}}
+    {{-- FOOTER - always dark in both themes                    --}}
     {{-- ====================================================== --}}
     <footer class="bg-terminal-surface border-t border-terminal-divider py-16">
         <div class="max-w-7xl mx-auto px-6">
@@ -750,7 +756,7 @@
                         Created by
                         <a href="https://lipinskijakub.pl/" target="_blank" rel="noopener noreferrer"
                             class="text-terminal hover:text-terminal-red transition-colors">Jakub Lipiński</a>
-                        <span aria-hidden="true">—</span>
+                        <span aria-hidden="true">-</span>
                         <a href="https://webcrafts.pl/" target="_blank" rel="noopener noreferrer"
                             class="text-terminal hover:text-terminal-red transition-colors">Webcrafts.pl</a>
                     </div>

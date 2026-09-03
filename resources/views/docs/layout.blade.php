@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $pageTitle ?? 'Docs' }} — Lens for Laravel</title>
-    <meta name="description" content="Lens for Laravel documentation — WCAG accessibility auditor for Laravel.">
+    <title>{{ $pageTitle ?? 'Docs' }} - Lens for Laravel</title>
+    <meta name="description" content="Lens for Laravel documentation - WCAG accessibility auditor for Laravel.">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" data-theme-favicon>
 
     {{-- Anti-FOUC: apply saved theme before first paint --}}
@@ -90,7 +90,7 @@
                 </a>
 
                 <span class="hidden md:block text-subtle font-mono text-xs">/ DOCS</span>
-                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.3</span>
+                <span class="hidden md:block border border-control px-1.5 py-0.5 font-mono text-xs uppercase tracking-widest text-accent">v3.4</span>
             </div>
 
             {{-- Right: theme toggle + GitHub --}}
