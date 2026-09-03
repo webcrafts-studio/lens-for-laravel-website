@@ -1,6 +1,25 @@
 # Version 3 Upgrades
 
-Lens v3.3 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.4 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4 additions together so the main documentation does not need a duplicated version tree.
+
+## What's New in v3.4
+
+The only new feature in v3.4 is authenticated scans for pages behind login:
+
+- enable with `LENS_FOR_LARAVEL_AUTH_ENABLED=true` (default `false`, no migration required)
+- scan as an existing user with `php artisan lens:audit <url> --as-user=1` or the dashboard user ID field
+- crawling, interactive state scans, and element previews accept the same server-resolved user
+- only the numeric user id travels from the client; login happens server-side and session cookies are never stored
+- optionally restrict impersonation with `LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS=1,2`
+- requires a persistent session driver (`file`, `database`, or `redis`)
+
+If the Lens config was published before v3.4, add:
+
+```php
+'auth_enabled' => env('LENS_FOR_LARAVEL_AUTH_ENABLED', false),
+'auth_guard' => env('LENS_FOR_LARAVEL_AUTH_GUARD', 'web'),
+'auth_allowed_user_ids' => /* comma-separated LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS, e.g. '1,2' */ [],
+```
 
 ## What's New in v3.3
 

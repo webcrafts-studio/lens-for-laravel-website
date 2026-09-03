@@ -94,6 +94,16 @@ wait: 300
 
 The diagnostic table includes the state label. Baseline fingerprints preserve it, so the same selector in two different states remains two separate issues.
 
+### `--as-user=ID`
+
+Scan pages behind login as an existing user of the host application. Requires `LENS_FOR_LARAVEL_AUTH_ENABLED=true`.
+
+```bash
+php artisan lens:audit https://your-app.test/dashboard --as-user=1
+```
+
+The user is resolved server-side through the configured guard, so only the numeric id is passed on the command line. Works with single URL, `--crawl`, and `--states` scans. Use `LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS=1,2` to restrict which users may be impersonated. A persistent session driver (`file`, `database`, or `redis`) is required.
+
 ### `--threshold=N`
 
 Fail with exit code `1` when the violation count exceeds the threshold.

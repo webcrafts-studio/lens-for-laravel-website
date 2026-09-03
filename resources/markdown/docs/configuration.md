@@ -52,6 +52,12 @@ return [
 
     'ignore_https_errors' => env('LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS', false),
 
+    'auth_enabled' => env('LENS_FOR_LARAVEL_AUTH_ENABLED', false),
+
+    'auth_guard' => env('LENS_FOR_LARAVEL_AUTH_GUARD', 'web'),
+
+    'auth_allowed_user_ids' => /* comma-separated LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS, e.g. '1,2' */ [],
+
     'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
 
     'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
@@ -75,6 +81,38 @@ LENS_FOR_LARAVEL_WCAG_VERSION=2.0
 ```
 
 Supported values are `2.0`, `2.1`, and `2.2`. The dashboard can override this per scan, and the CLI can override it with `--wcag=2.2`. WCAG 2.0 remains the default for backward compatibility.
+
+### `auth_enabled`
+
+**Type:** `bool` | **Default:** `false` | **Env:** `LENS_FOR_LARAVEL_AUTH_ENABLED`
+
+Enables authenticated scans for pages behind login. The dashboard shows a user ID field, and the CLI accepts `--as-user`. Only the numeric user id travels from the client — Lens logs in server-side through `auth_guard` and passes a short-lived session cookie to Chromium. Raw cookies, tokens, and passwords are never accepted, logged, or stored in history.
+
+```text
+LENS_FOR_LARAVEL_AUTH_ENABLED=true
+```
+
+### `auth_guard`
+
+**Type:** `string` | **Default:** `web` | **Env:** `LENS_FOR_LARAVEL_AUTH_GUARD`
+
+The session guard used to resolve the scan user.
+
+```text
+LENS_FOR_LARAVEL_AUTH_GUARD=web
+```
+
+### `auth_allowed_user_ids`
+
+**Type:** `array<int>` | **Default:** `[]` (any existing user) | **Env:** `LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS`
+
+Restricts impersonation to a comma-separated list of user ids. Leave empty for local development, set explicitly on shared environments.
+
+```text
+LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS=1,2
+```
+
+Authenticated scans require a persistent session driver (`file`, `database`, or `redis`). The `array` driver cannot share sessions with the scanner browser.
 
 ### `route_prefix`
 

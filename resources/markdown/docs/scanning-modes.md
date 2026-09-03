@@ -37,6 +37,22 @@ php artisan lens:audit \
 
 Lens scans each URL in sequence, skips failed pages, aggregates issues, and includes the source URL on every issue.
 
+## Authenticated Scans
+
+Scan pages behind login by impersonating an existing user:
+
+```bash
+php artisan lens:audit https://your-app.test/dashboard --as-user=1
+```
+
+Enable it first:
+
+```text
+LENS_FOR_LARAVEL_AUTH_ENABLED=true
+```
+
+The dashboard shows a user ID field when enabled, and crawling, state scans, and element previews accept the same user. Only the numeric id travels from the client — Lens logs in server-side and passes a short-lived session cookie to Chromium. The previous auth state is restored after the scan, and nothing credential-like is stored in history. A persistent session driver (`file`, `database`, or `redis`) is required.
+
 ## Whole Website Crawl
 
 Discover and scan internal pages:
