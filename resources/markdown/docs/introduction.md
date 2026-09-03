@@ -17,6 +17,15 @@ When axe-core detects a violation, Lens shows the failing DOM element and attemp
 
 Located issues include a file path, line number, and `sourceType`: `blade`, `react`, or `vue`.
 
+## What's New in v3.4
+
+v3.4 is the current development line. It adds authenticated scans for pages behind login plus four additional AI Fix providers (OpenRouter, xAI, DeepSeek, Mistral). The v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
+
+New in v3.4:
+
+- **Authenticated scans** for pages behind login via `--as-user` or the dashboard user ID field
+- **More AI Fix providers** with implicit SDK-default models: OpenRouter, xAI, DeepSeek, and Mistral
+
 ## What's New in v3.3
 
 v3.3 is the current development line. Its only new feature is local AI Fix model support through Ollama. The v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
@@ -57,7 +66,7 @@ The v3.0 foundation includes:
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
 - **Complete package-owned interface catalogs** in English, Polish, Spanish, French, and German, including history, comparisons, modals, PDF reports, and error feedback
 
-The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/v3.3 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
+The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/v3.3/v3.4 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
 ## Core Capabilities
 

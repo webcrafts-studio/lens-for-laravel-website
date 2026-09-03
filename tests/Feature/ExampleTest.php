@@ -73,23 +73,23 @@ test('website footer credits the author and Webcrafts', function () {
         ->assertSee('https://webcrafts.pl/', false);
 });
 
-test('the website identifies v3.3 as the current development line', function () {
+test('the website identifies v3.4 as the current development line', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('v3.3')
-        ->assertSee('Local AI Fix models through Ollama');
+        ->assertSee('v3.4')
+        ->assertSee('Local models supported');
 
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
-        ->assertSee('What&#039;s New in v3.3', false)
-        ->assertSee('only new feature is local AI Fix model support through Ollama')
+        ->assertSee('What&#039;s New in v3.4', false)
+        ->assertSee('authenticated scans for pages behind login')
         ->assertSee('Version 3 Upgrades');
 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('Version 3 Upgrades')
-        ->assertSee('v3.3 is the current development line')
-        ->assertSee('The only new feature in v3.3 is local AI Fix model support through Ollama')
+        ->assertSee('v3.4 is the current development line')
+        ->assertSee('authenticated scans for pages behind login')
         ->assertSee('v3.0 Foundation')
         ->assertSee('URL-aware history comparisons');
 });
