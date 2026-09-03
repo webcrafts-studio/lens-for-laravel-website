@@ -368,6 +368,10 @@
                         &lt;/a&gt;
                     </div>
                 </div>
+                <div class="mt-4 border border-green-300/40 bg-green-300/10 px-4 py-3 font-mono text-xs leading-relaxed">
+                    <span class="text-green-300 font-bold uppercase tracking-wider">Local models supported</span>
+                    <span class="text-terminal-muted"> - run Ollama on your machine, your code never leaves localhost.</span>
+                </div>
                 <div class="mt-4 text-terminal-muted font-mono text-xs leading-relaxed">
                     - v3.4: Authenticated scans · OpenRouter · xAI · DeepSeek · Mistral<br>
                     - v3.3: Local AI Fix models through Ollama<br>
