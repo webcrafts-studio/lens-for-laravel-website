@@ -89,7 +89,7 @@ Every queue item owns its issue, request controller, generation status, response
 
 The request starts are staggered by 250 milliseconds so concurrent provider work remains fast while avoiding simultaneous SQLite-backed rate-limiter writes in common local Laravel setups. The suggestion endpoint allows 60 requests per minute for progressive queues.
 
-In v3.5 the queue has a bulk apply action that writes every ready suggestion with one click, using each item's reviewed or edited code. Items apply sequentially so later writes see earlier ones; a fix that no longer matches its file (for example after an overlapping apply in the same file) keeps its ready state with the error shown instead of blocking the rest, and rate limiting gets one wait-and-retry. A closing summary reports how many fixes were applied and how many failed. Earlier iterations only generated the queue, so closing the modal silently discarded unapplied items and a re-scan could show the same violations again.
+In v3.5 the queue has a bulk apply action that writes every ready suggestion with one click, using each item's reviewed or edited code. Previously every ready suggestion had to be accepted individually. Items apply sequentially so later writes see earlier ones; a fix that no longer matches its file (for example after an overlapping apply in the same file) keeps its ready state with the error shown instead of blocking the rest, and rate limiting gets one wait-and-retry. A closing summary reports how many fixes were applied and how many failed.
 
 ## Source Context
 

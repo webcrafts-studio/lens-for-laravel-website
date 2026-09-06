@@ -23,7 +23,7 @@ v3.5 is the current development line. It adds an optional explicit AI model over
 
 - **Explicit model selection** with `LENS_FOR_LARAVEL_AI_MODEL` for any provider, used at your own responsibility; empty keeps the SDK default
 - **Visible model choice** in the dashboard scanner card: default AI SDK model or manually configured model name
-- **Real Fix All bulk apply** that writes every ready suggestion with one action, using each item's reviewed or edited code; earlier iterations only generated the queue and closing the modal silently discarded unapplied items
+- **Fix All bulk apply** that writes every ready suggestion with one action, using each item's reviewed or edited code; previously each ready suggestion had to be accepted individually
 - **Provider-default temperature** because models without temperature support (for example `gpt-5.6-luna`) failed with a provider error when temperature was pinned to `0`
 
 ## What's New in v3.4

@@ -168,7 +168,7 @@ test('the v3.5 documentation describes the explicit model override and dashboard
         ->assertSee('subtle note with the configured provider')
         ->assertSee('no longer pins temperature')
         ->assertSee('bulk apply action')
-        ->assertSee('silently discarded unapplied items');
+        ->assertSee('accepted individually');
 
     $this->get(route('docs.show', ['page' => 'dashboard']))
         ->assertOk()
@@ -190,7 +190,7 @@ test('the v3.5 documentation describes the explicit model override and dashboard
         ->assertOk()
         ->assertSee('What&#039;s New in v3.5', false)
         ->assertSee('Explicit model selection')
-        ->assertSee('Real Fix All bulk apply')
+        ->assertSee('Fix All bulk apply')
         ->assertSee('Provider-default temperature');
 });
 
