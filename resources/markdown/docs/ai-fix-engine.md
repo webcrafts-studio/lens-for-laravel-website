@@ -100,7 +100,7 @@ The selected fragment is capped at 6000 bytes. If a complete component exceeds t
 The v3 agent remains deliberately conservative:
 
 - maximum output is 12000 tokens
-- temperature is `0` for more repeatable fixes
+- temperature stays at the provider default so models without temperature support keep working
 - Gemini thinking is limited to a 1024-token budget so reasoning cannot consume the output allowance
 - the response schema contains only the minimal replacement and a short explanation
 - a token-limit finish reason or malformed structured response triggers one controlled retry

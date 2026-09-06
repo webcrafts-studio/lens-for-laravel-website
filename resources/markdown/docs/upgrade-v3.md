@@ -10,6 +10,7 @@ v3.5 adds an optional explicit AI model override plus a dashboard note about the
 - leave it empty to keep the implicit SDK-default behavior; no migration is required
 - for Ollama the override takes precedence and `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` stays as a fallback
 - the dashboard scanner card reports whether AI Fix uses the default AI SDK model or a manually configured model name; the note stays hidden while AI Fix is unavailable
+- the accessibility agent no longer pins temperature to `0`, so models without temperature support (for example `gpt-5.6-luna`) stop failing with a provider error; generation uses the provider default temperature
 
 If the Lens config was published before v3.5, add:
 

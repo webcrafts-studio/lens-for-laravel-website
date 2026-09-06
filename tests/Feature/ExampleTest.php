@@ -165,7 +165,8 @@ test('the v3.5 documentation describes the explicit model override and dashboard
         ->assertSee('Explicit Model Override in v3.5')
         ->assertSee('LENS_FOR_LARAVEL_AI_MODEL=gpt-5.6-luna')
         ->assertSee('at your own responsibility')
-        ->assertSee('subtle note with the configured provider');
+        ->assertSee('subtle note with the configured provider')
+        ->assertSee('no longer pins temperature');
 
     $this->get(route('docs.show', ['page' => 'dashboard']))
         ->assertOk()
