@@ -158,6 +158,26 @@ test('the v3.3 documentation explains local Ollama setup and verification', func
         ->assertSee('No API key is needed for the default local Ollama server');
 });
 
+test('the v3.5 documentation describes the explicit model override and dashboard model note', function () {
+    $this->get(route('docs.show', ['page' => 'ai-fix-engine']))
+        ->assertOk()
+        ->assertSee('Explicit Model Override in v3.5')
+        ->assertSee('LENS_FOR_LARAVEL_AI_MODEL=gpt-5.6-luna')
+        ->assertSee('at your own responsibility')
+        ->assertSee('subtle note with the configured provider');
+
+    $this->get(route('docs.show', ['page' => 'dashboard']))
+        ->assertOk()
+        ->assertSee('subtle note with the configured provider')
+        ->assertSee('LENS_FOR_LARAVEL_AI_MODEL');
+
+    $this->get(route('docs.show', ['page' => 'configuration']))
+        ->assertOk()
+        ->assertSee('ai_model')
+        ->assertSee('LENS_FOR_LARAVEL_AI_MODEL=gpt-5.6-luna')
+        ->assertSee('takes precedence');
+});
+
 test('the v3.1 documentation describes editable progressive AI fixes and fresh rescans', function () {
     $this->get(route('docs.show', ['page' => 'dashboard']))
         ->assertOk()

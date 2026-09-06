@@ -62,6 +62,8 @@ return [
 
     'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
 
+    'ai_model' => env('LENS_FOR_LARAVEL_AI_MODEL'),
+
     'ai_ollama_model' => env('LENS_FOR_LARAVEL_AI_OLLAMA_MODEL'),
 
     'ai_ollama_timeout' => env('LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT', 120),
@@ -324,11 +326,25 @@ LENS_FOR_LARAVEL_AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 ```
 
+### `ai_model`
+
+**Type:** `string|null` | **Default:** `null` (SDK default) | **Env:** `LENS_FOR_LARAVEL_AI_MODEL`
+
+Sets an explicit model passed to `laravel/ai` for the selected provider, used at your own responsibility. When empty, every provider keeps its implicit SDK-default behavior.
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=openai
+LENS_FOR_LARAVEL_AI_MODEL=gpt-5.6-luna
+OPENAI_API_KEY=sk-...
+```
+
+For Ollama this setting takes precedence and `ai_ollama_model` stays as a fallback when the override is empty. Lens passes the value through unchanged, so an unknown or retired model id fails at the provider with the usual safe generation error.
+
 ### `ai_ollama_model`
 
 **Type:** `string|null` | **Default:** Laravel AI SDK's Ollama default | **Env:** `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`
 
-Selects the exact Ollama model tag passed to `laravel/ai` when `ai_provider` is `ollama`. It is ignored for Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, which continue to use their configured SDK-default models.
+Selects the exact Ollama model tag passed to `laravel/ai` when `ai_provider` is `ollama` and `ai_model` is empty. It is ignored when `ai_model` sets an explicit model, and cloud providers without an `ai_model` override continue to use their configured SDK-default models.
 
 ```text
 LENS_FOR_LARAVEL_AI_PROVIDER=ollama

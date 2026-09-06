@@ -106,7 +106,7 @@ The v3 agent remains deliberately conservative:
 - a token-limit finish reason or malformed structured response triggers one controlled retry
 - after that retry, Lens stops without changing a file and shows a safe, understandable error
 
-For Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, Lens selects only the provider and `laravel/ai` resolves its configured default model. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if it is empty, the SDK's Ollama default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
+For Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, Lens selects only the provider and `laravel/ai` resolves its configured default model, unless the optional v3.5 `LENS_FOR_LARAVEL_AI_MODEL` override is set. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if both model settings are empty, the SDK default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
 
 ## Framework-Aware Prompts
 
@@ -172,6 +172,20 @@ Or:
 LENS_FOR_LARAVEL_AI_PROVIDER=mistral
 MISTRAL_API_KEY=your-key
 ```
+
+## Explicit Model Override in v3.5
+
+By default nothing needs to be configured: Lens passes only the provider name and `laravel/ai` resolves its default model, which keeps every installation working without tracking model renames. When you want control over the exact model, set an explicit override at your own responsibility:
+
+```text
+LENS_FOR_LARAVEL_AI_PROVIDER=openai
+LENS_FOR_LARAVEL_AI_MODEL=gpt-5.6-luna
+OPENAI_API_KEY=your-key
+```
+
+The override applies to every provider, including Ollama. For Ollama it takes precedence and `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` stays as a fallback when the override is empty. An empty override keeps the previous implicit behavior, so existing configurations require no migration. Lens passes the value through to `laravel/ai` unchanged and never validates it against a hard-coded model list, so an unknown or retired model id fails at the provider with the usual safe generation error and no file is changed.
+
+In v3.5 the dashboard scanner card also shows a subtle note with the configured provider and the active model choice: either the default AI SDK model or the manually configured model name. The note reports configuration only, stays hidden while AI Fix is unavailable, and never exposes keys or source code.
 
 ## More Cloud Providers in v3.4
 

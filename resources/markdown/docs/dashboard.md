@@ -112,6 +112,8 @@ Click the preview icon to capture a screenshot with the failing element highligh
 
 AI Fix actions are shown only when the host application uses PHP 8.3+, Laravel 12+, has the optional `laravel/ai` package installed, and has not disabled AI Fix in configuration. On older supported applications, the dashboard shows an availability notice while every scanning feature remains usable.
 
+In v3.5 the scanner card carries a subtle note with the configured provider and the active model choice: the default AI SDK model or a manually configured model name. The note stays hidden while AI Fix is unavailable.
+
 1. Click **AI FIX** on a located issue.
 2. Lens extracts the smallest relevant element or component around the issue.
 3. The configured AI provider returns a minimal replacement and an explanation.
@@ -139,7 +141,7 @@ Only WCAG A and AA have Fix All actions. Issues without a supported source locat
 
 Requesting a fix sends the issue details, failing DOM snippet, WCAG tags, and a limited source-code context to the configured provider. With Ollama on its default localhost endpoint, that context stays on the application host. Cloud providers and remote Ollama endpoints receive it over the network. Lens does not send the entire repository.
 
-Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral use their provider-default model from `laravel/ai`. In v3.3, an Ollama model is selected with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`, or falls back to the SDK's Ollama default. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
+Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral use their provider-default model from `laravel/ai` unless the v3.5 `LENS_FOR_LARAVEL_AI_MODEL` override sets an explicit model. In v3.3, an Ollama model is selected with `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL`, or falls back to the SDK's Ollama default. Truncated or malformed structured output is retried once. If the second attempt also fails, the modal explains that no file was changed instead of exposing the provider's raw JSON error.
 
 The pending marker is intentionally not the same as a verified fix. The issue remains in totals and filters because those numbers describe the last axe-core scan. Closing the modal keeps the marker visible. Running a new scan replaces the old state with fresh results.
 
