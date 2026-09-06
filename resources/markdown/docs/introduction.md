@@ -19,10 +19,12 @@ Located issues include a file path, line number, and `sourceType`: `blade`, `rea
 
 ## What's New in v3.5
 
-v3.5 is the current development line. It adds an optional explicit AI model override and dashboard info about the active AI Fix model. The v3.4 authenticated scans and additional providers, v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
+v3.5 is the current development line. It adds an optional explicit AI model override, dashboard info about the active AI Fix model, a real Fix All bulk apply, and a temperature fix for models without temperature support. The v3.4 authenticated scans and additional providers, v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
 
 - **Explicit model selection** with `LENS_FOR_LARAVEL_AI_MODEL` for any provider, used at your own responsibility; empty keeps the SDK default
 - **Visible model choice** in the dashboard scanner card: default AI SDK model or manually configured model name
+- **Real Fix All bulk apply** that writes every ready suggestion with one action, using each item's reviewed or edited code; earlier iterations only generated the queue and closing the modal silently discarded unapplied items
+- **Provider-default temperature** because models without temperature support (for example `gpt-5.6-luna`) failed with a provider error when temperature was pinned to `0`
 
 ## What's New in v3.4
 

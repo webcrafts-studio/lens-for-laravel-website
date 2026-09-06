@@ -189,7 +189,9 @@ test('the v3.5 documentation describes the explicit model override and dashboard
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
         ->assertSee('What&#039;s New in v3.5', false)
-        ->assertSee('Explicit model selection');
+        ->assertSee('Explicit model selection')
+        ->assertSee('Real Fix All bulk apply')
+        ->assertSee('Provider-default temperature');
 });
 
 test('the v3.1 documentation describes editable progressive AI fixes and fresh rescans', function () {
