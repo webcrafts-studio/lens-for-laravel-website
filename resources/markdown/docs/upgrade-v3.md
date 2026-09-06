@@ -1,6 +1,21 @@
 # Version 3 Upgrades
 
-Lens v3.4 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.4 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4/v3.5 additions together so the main documentation does not need a duplicated version tree.
+
+## What's New in v3.5
+
+v3.5 adds an optional explicit AI model override plus a dashboard note about the active AI Fix model:
+
+- set `LENS_FOR_LARAVEL_AI_MODEL` to pin one explicit model for any provider at your own responsibility (for example `gpt-5.6-luna` for OpenAI)
+- leave it empty to keep the implicit SDK-default behavior; no migration is required
+- for Ollama the override takes precedence and `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` stays as a fallback
+- the dashboard scanner card reports whether AI Fix uses the default AI SDK model or a manually configured model name; the note stays hidden while AI Fix is unavailable
+
+If the Lens config was published before v3.5, add:
+
+```php
+'ai_model' => env('LENS_FOR_LARAVEL_AI_MODEL'),
+```
 
 ## What's New in v3.4
 
