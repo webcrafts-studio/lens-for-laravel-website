@@ -129,7 +129,7 @@
                 <span class="shrink-0 whitespace-nowrap text-content font-black text-lg tracking-[0.15em] uppercase">LENS FOR</span>
                 <span class="shrink-0 whitespace-nowrap text-accent font-black text-lg tracking-[0.15em] uppercase">LARAVEL</span>
                 <span
-                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.4</span>
+                    class="ml-2 hidden sm:inline text-subtle text-xs font-mono border border-control px-1.5 py-0.5 leading-none">v3.5</span>
             </div>
 
             <div class="flex items-center gap-3">

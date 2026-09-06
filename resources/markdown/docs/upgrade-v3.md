@@ -1,6 +1,6 @@
 # Version 3 Upgrades
 
-Lens v3.4 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4/v3.5 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.5 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4/v3.5 additions together so the main documentation does not need a duplicated version tree.
 
 ## What's New in v3.5
 

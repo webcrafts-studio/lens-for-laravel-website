@@ -365,7 +365,7 @@ LENS_FOR_LARAVEL_AI_OLLAMA_TIMEOUT=180
 
 ## Version 3 Upgrade
 
-v3.3 is the current development line. Its only new feature is local AI Fix model support through Ollama. It adds `ai_ollama_model` and `ai_ollama_timeout` but no migration. The v3.2 structural source mapping and earlier v3 behavior remain available.
+v3.3 added local AI Fix model support through Ollama. It adds `ai_ollama_model` and `ai_ollama_timeout` but no migration. The v3.2 structural source mapping and earlier v3 behavior remain available.
 
 If you published the config before v3.0.0, add these keys manually:
 

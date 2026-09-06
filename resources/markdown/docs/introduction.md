@@ -19,14 +19,14 @@ Located issues include a file path, line number, and `sourceType`: `blade`, `rea
 
 ## What's New in v3.5
 
-v3.5 adds an optional explicit AI model override and dashboard info about the active AI Fix model:
+v3.5 is the current development line. It adds an optional explicit AI model override and dashboard info about the active AI Fix model. The v3.4 authenticated scans and additional providers, v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
 
 - **Explicit model selection** with `LENS_FOR_LARAVEL_AI_MODEL` for any provider, used at your own responsibility; empty keeps the SDK default
 - **Visible model choice** in the dashboard scanner card: default AI SDK model or manually configured model name
 
 ## What's New in v3.4
 
-v3.4 is the current development line. It adds authenticated scans for pages behind login plus four additional AI Fix providers (OpenRouter, xAI, DeepSeek, Mistral). The v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
+v3.4 added authenticated scans for pages behind login plus four additional AI Fix providers (OpenRouter, xAI, DeepSeek, Mistral). The v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
 
 New in v3.4:
 
@@ -35,7 +35,7 @@ New in v3.4:
 
 ## What's New in v3.3
 
-v3.3 is the current development line. Its only new feature is local AI Fix model support through Ollama. The v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
+v3.3 added local AI Fix model support through Ollama. The v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
 
 New in v3.3:
 
