@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'github' => [
+        'repository' => env('GITHUB_REPOSITORY', 'webcrafts-studio/lens-for-laravel'),
+        'token' => env('GITHUB_TOKEN'),
+    ],
+
 ];

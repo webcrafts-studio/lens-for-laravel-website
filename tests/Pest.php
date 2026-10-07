@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -14,6 +16,18 @@
 pest()->extend(Tests\TestCase::class)
  // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
+
+beforeEach(function (): void {
+    config()->set('services.github.repository', 'webcrafts-studio/lens-for-laravel');
+    config()->set('services.github.token', null);
+    Http::preventStrayRequests();
+
+    Http::fake([
+        'https://api.github.com/repos/webcrafts-studio/lens-for-laravel' => Http::response([
+            'stargazers_count' => 84000,
+        ]),
+    ]);
+})->in('Feature');
 
 /*
 |--------------------------------------------------------------------------

@@ -146,10 +146,7 @@
                     <span class="hidden dark:inline" aria-hidden="true">☀</span>
                 </button>
 
-                <a href="https://github.com/webcrafts-studio/lens-for-laravel"
-                    class="hidden sm:block text-content font-mono text-xs border-2 border-control hover:border-content px-3 md:px-4 py-2 hover:bg-content hover:text-page transition-colors uppercase tracking-widest">
-                    GitHub →
-                </a>
+                <x-github-stars-link :stars="$githubStars" class="hidden sm:inline-flex" />
             </div>
         </div>
     </nav>

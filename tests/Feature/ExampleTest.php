@@ -1,5 +1,11 @@
 <?php
 
+use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+
 test('the application returns a successful response', function () {
     $this->get('/')
         ->assertOk()
@@ -7,6 +13,98 @@ test('the application returns a successful response', function () {
         ->assertSee('Languages')
         ->assertSee('neither axe-core nor Lens proves full WCAG')
         ->assertDontSee('20-30%');
+});
+
+test('the header displays the live GitHub star count', function () {
+    Cache::forget('github-stars:'.config('services.github.repository'));
+    Http::fake([
+        'https://api.github.com/repos/webcrafts-studio/lens-for-laravel' => Http::response([
+            'stargazers_count' => 84000,
+        ]),
+    ]);
+
+    $response = $this->get('/');
+
+    $response->assertOk()
+        ->assertSee('href="https://github.com/webcrafts-studio/lens-for-laravel"', false)
+        ->assertSee('84K', false)
+        ->assertSee('aria-label="View Lens for Laravel on GitHub — 84K stars"', false);
+
+    $this->get(route('docs.show', ['page' => 'introduction']))
+        ->assertOk()
+        ->assertSee('84K', false);
+
+    Http::assertSent(function (Request $request): bool {
+        return $request->url() === 'https://api.github.com/repos/webcrafts-studio/lens-for-laravel'
+            && $request->hasHeader('X-GitHub-Api-Version', '2022-11-28');
+    });
+    Http::assertSentCount(1);
+});
+
+test('GitHub star counts preserve significant zeroes when abbreviated', function (?int $stars, string $formattedStars): void {
+    $html = Blade::render('<x-github-stars-link :stars="$stars" />', ['stars' => $stars]);
+
+    expect($html)->toContain('>'.$formattedStars.'</span>');
+})->with([
+    [null, '—'],
+    [0, '0'],
+    [999, '999'],
+    [1000, '1K'],
+    [1500, '1.5K'],
+    [10000, '10K'],
+    [20000, '20K'],
+    [84000, '84K'],
+    [100000, '100K'],
+    [1000000, '1M'],
+    [10500000, '10.5M'],
+]);
+
+test('GitHub failures display an accessible fallback and are cached briefly', function (string $failure): void {
+    Http::swap(new Factory);
+    Http::preventStrayRequests();
+    $response = match ($failure) {
+        'connection' => Http::failedConnection(),
+        'status' => Http::response([], 503),
+        'invalid' => Http::response(['stargazers_count' => 'unknown']),
+        'negative' => Http::response(['stargazers_count' => -1]),
+    };
+    Http::fake(['https://api.github.com/repos/webcrafts-studio/lens-for-laravel' => $response]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('aria-label="View Lens for Laravel on GitHub"', false)
+        ->assertSee('>—</span>', false);
+
+    $this->get(route('docs.show', ['page' => 'introduction']))->assertOk();
+    Http::assertSentCount(1);
+
+    $this->travel(6)->minutes();
+    $this->get('/')->assertOk();
+    Http::assertSentCount(2);
+})->with(['connection', 'status', 'invalid', 'negative']);
+
+test('GitHub counts expire after six hours and requests use the configured repository and token', function (): void {
+    config()->set('services.github.repository', 'example/repository');
+    config()->set('services.github.token', 'test-token');
+    Http::fake([
+        'https://api.github.com/repos/example/repository' => Http::sequence()
+            ->push(['stargazers_count' => 10000])
+            ->push(['stargazers_count' => 20000]),
+    ]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('href="https://github.com/example/repository"', false)
+        ->assertSee('>10K</span>', false);
+
+    $this->travel(5)->hours();
+    $this->get('/')->assertOk()->assertSee('>10K</span>', false);
+    Http::assertSentCount(1);
+
+    $this->travel(2)->hours();
+    $this->get('/')->assertOk()->assertSee('>20K</span>', false);
+    Http::assertSentCount(2);
+    Http::assertSent(fn (Request $request): bool => $request->hasHeader('Authorization', 'Bearer test-token'));
 });
 
 test('the website and documentation use the Lens favicon', function () {
