@@ -41,7 +41,7 @@ jobs:
           script: |
             set -e
 
-            cd /home/webcrafts/web/lens.webcrafts.pl/public_html
+            cd /home/jakub/web/lens.lipinskijakub.pl/public_html
 
             trap 'php artisan up || true' EXIT
 
