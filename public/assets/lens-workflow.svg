@@ -1,25 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" viewBox="0 0 760 660" fill="none"><title>From interface to source with Lens</title><desc>An isometric interface, a red Lens module, and a source code panel connected by a highlighted element.</desc><defs>
-<linearGradient id="surface" x1="0" y1="0" x2="0" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#f0f0f2"/></linearGradient>
-<linearGradient id="red" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#d5362b"/><stop offset="1" stop-color="#b1241c"/></linearGradient>
-<filter id="shadow" x="-40%" y="-40%" width="180%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
-<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#d4d4d8" stroke-width=".65"/></pattern>
-<radialGradient id="fade"><stop offset=".25" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="mask"><ellipse cx="380" cy="420" rx="360" ry="235" fill="url(#fade)"/></mask>
-<g id="symbol"><circle cx="32" cy="32" r="24" fill="none" stroke="#fff" stroke-width="3.5"/><g transform="translate(7.04 7.04) scale(.78)"><circle cx="32" cy="16" r="4.25" fill="#fff"/>
-    <g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 25Q32 34 48 25M32 29.5V38m-7 11 7-11 7 11"/></g></g></g></defs>
-<g mask="url(#mask)"><g transform="matrix(.866 .5 -.866 .5 380 365)"><rect x="-450" y="-450" width="900" height="900" fill="url(#grid)"/></g></g>
-<path d="m64 430 290-165 355 200-293 171Z" fill="#09090b" opacity=".12" filter="url(#shadow)"/>
-<g stroke="#a1a1aa" stroke-width="1.2" stroke-linejoin="round"><path d="m58 420 350 202v12L58 432Z" fill="#e4e4e7"/><path d="m408 622 295-170v12L408 634Z" fill="#f4f4f5"/><path d="m353 250 350 202-295 170L58 420Z" fill="#fafafa"/></g>
-<path d="m78 420 330 190 274-158" stroke="#fff" stroke-width="2"/>
-<g transform="matrix(.866 -.5 0 1 102 209)" stroke-linejoin="round">
-<rect x="7" y="7" width="210" height="220" fill="#d4d4d8" stroke="#a1a1aa"/><rect width="210" height="220" fill="url(#surface)" stroke="#71717a" stroke-width="1.4"/><path d="M0 27h210" stroke="#a1a1aa"/><g fill="#a1a1aa"><circle cx="14" cy="14" r="3"/><circle cx="26" cy="14" r="3"/><circle cx="38" cy="14" r="3"/></g>
-<rect x="16" y="45" width="178" height="45" fill="#e4e4e7"/><rect x="16" y="102" width="72" height="90" fill="#f4f4f5" stroke="#d4d4d8"/><path d="M102 109h77m-77 14h66m-66 14h77m-77 14h55" stroke="#a1a1aa" stroke-width="4"/>
-<rect x="99" y="165" width="82" height="27" fill="#ffebe8" stroke="#c52b21" stroke-width="1.7"/><path d="M111 179h58" stroke="#c52b21" stroke-width="4"/></g>
-<g stroke-linejoin="round"><path d="m344 310 110 64v128l-110-64Z" fill="#9f2119" stroke="#9f2119"/><path d="m454 374 110-64v128l-110 64Z" fill="url(#red)" stroke="#9f2119"/><path d="m344 310 110-64 110 64-110 64Z" fill="#e64437" stroke="#c52b21"/>
-<g transform="matrix(.866 .5 -.866 .5 454 266)"><use href="#symbol" width="64" height="64" transform="translate(11 11) scale(1.4)"/></g>
-<g transform="matrix(.866 -.5 0 1 473 363)"><use href="#symbol" transform="scale(.9)"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="680" viewBox="0 0 1280 680" fill="none">
+<title>From an accessibility finding to a verified fix</title>
+<desc>An isometric Laravel workspace. A red scanner identifies an unnamed button in a browser, Lens traces it to Navigation.vue, and a code panel shows a proposed label. A review tray gathers fixes from three files, followed by a fresh scan.</desc>
+<defs>
+    <linearGradient id="floor" x1="270" y1="170" x2="1000" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#f0f0f2"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="300" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#fafafa"/></linearGradient>
+    <linearGradient id="engine" x1="640" y1="300" x2="745" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#db3b2f"/><stop offset="1" stop-color="#b2251d"/></linearGradient>
+    <linearGradient id="engine-top" x1="600" y1="240" x2="680" y2="335" gradientUnits="userSpaceOnUse"><stop stop-color="#ec5549"/><stop offset="1" stop-color="#cf3025"/></linearGradient>
+    <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" stroke="#a1a1aa" stroke-opacity=".23" stroke-width=".7"/></pattern>
+    <radialGradient id="grid-fade"><stop offset=".25" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <mask id="grid-mask"><ellipse cx="640" cy="360" rx="630" ry="310" fill="url(#grid-fade)"/></mask>
+    <filter id="soft-shadow" x="-30%" y="-50%" width="160%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="card-shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#18181b" flood-opacity=".1"/></filter>
+    <g id="lens-symbol"><circle cx="32" cy="32" r="24" stroke="#fff" stroke-width="3.5"/><g transform="translate(7.04 7.04) scale(.78)"><circle cx="32" cy="16" r="4.25" fill="#fff"/><path d="M16 25Q32 34 48 25M32 29.5V38m-7 11 7-11 7 11" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+    <g id="check"><path d="m0 5 4 4L12 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</defs>
+<g mask="url(#grid-mask)"><g transform="matrix(.866 .5 -.866 .5 640 340)"><rect x="-740" y="-740" width="1480" height="1480" fill="url(#grid)"/></g></g>
+<path d="m100 410 515-260 560 280-520 246Z" fill="#18181b" opacity=".12" filter="url(#soft-shadow)"/>
+<g stroke="#b7b7bf" stroke-width="1.1" stroke-linejoin="round">
+    <path d="m95 394 550 276v-17L95 377Z" fill="#dfdfe4"/>
+    <path d="m645 653 540-270v17L645 670Z" fill="#e9e9ed"/>
+    <path d="m95 377 540-270 550 276-540 270Z" fill="url(#floor)"/>
 </g>
-<g transform="matrix(.866 .5 -.866 .5 307 417)"><path d="M0 0h83v70H0Z" fill="#fff" stroke="#a1a1aa"/><path d="M13 18h56m-56 13h43M13 49h56" stroke="#71717a" stroke-width="3"/><rect x="8" y="39" width="67" height="20" fill="#ffebe8" stroke="#c52b21"/><path d="M15 49h49" stroke="#c52b21" stroke-width="3"/></g>
-<g transform="matrix(.866 -.5 0 1 562 391)"><rect x="5" y="5" width="140" height="133" fill="#d4d4d8" stroke="#a1a1aa"/><rect width="140" height="133" fill="url(#surface)" stroke="#71717a"/><path d="M0 26h140" stroke="#a1a1aa"/><path d="M15 14h64" stroke="#52525b" stroke-width="4"/><path d="M15 48h97m-97 14h74" stroke="#a1a1aa" stroke-width="4"/><rect x="10" y="77" width="120" height="42" fill="#ffebe8"/><path d="M19 89h83m-83 13h99" stroke="#c52b21" stroke-width="3"/></g>
-<g stroke="#c52b21" stroke-width="2"><path d="m256 435 43 25m183 35 68-39"/><circle cx="256" cy="435" r="4" fill="#fff"/><circle cx="550" cy="456" r="4" fill="#fff"/></g>
-<g font-family="Helvetica Neue, Arial, sans-serif" fill="#52525b" font-size="11" letter-spacing="1.2"><text x="94" y="94">01 / YOUR INTERFACE</text><text x="363" y="169">02 / LENS</text><text x="566" y="300">03 / YOUR CODE</text></g><path d="M177 105v39m233 37v42m218 87v25" stroke="#a1a1aa"/>
+<path d="m118 377 527 264 516-258" stroke="#fff" stroke-width="2"/>
+<g stroke="#c9c9d0" stroke-width="1" stroke-dasharray="4 5"><path d="m155 374 490 245 480-240"/><path d="m263 431 466-234"/></g>
+<g fill="none" stroke-linejoin="round">
+    <path d="m362 359 160 80 80-40" stroke="#e1b8b2" stroke-width="10"/>
+    <path d="m362 359 160 80 80-40" stroke="#c52b21" stroke-width="2"/>
+    <path d="m713 406 94 47 179-90" stroke="#e1b8b2" stroke-width="10"/>
+    <path d="m713 406 94 47 179-90" stroke="#c52b21" stroke-width="2"/>
+    <path d="m638 455 0 71" stroke="#c52b21" stroke-width="2" stroke-dasharray="4 5"/>
+</g>
+<g fill="#fff" stroke="#c52b21" stroke-width="1.5"><ellipse cx="522" cy="439" rx="7" ry="4"/><ellipse cx="807" cy="453" rx="7" ry="4"/></g>
+<g transform="matrix(.95 .27 0 1 133 92)">
+    <rect x="7" y="7" width="345" height="290" rx="5" fill="#d6d6dc" stroke="#a1a1aa"/>
+    <rect width="345" height="290" rx="5" fill="url(#screen)" stroke="#9b9ba5" stroke-width="1.3"/>
+    <path d="M0 32h345" stroke="#d4d4d8"/>
+    <g fill="#a1a1aa"><circle cx="14" cy="16" r="3"/><circle cx="26" cy="16" r="3"/><circle cx="38" cy="16" r="3"/></g>
+    <rect x="66" y="9" width="221" height="15" rx="3" fill="#f1f1f4"/>
+    <text x="80" y="20" font-family="Arial, sans-serif" font-size="8" fill="#62626c">your-app.test/dashboard</text>
+    <path d="M68 32v258" stroke="#e4e4e7"/>
+    <rect x="13" y="49" width="40" height="7" rx="2" fill="#71717a"/>
+    <g fill="#c5c5cd"><rect x="13" y="80" width="34" height="4" rx="2"/><rect x="13" y="99" width="29" height="4" rx="2"/><rect x="13" y="118" width="38" height="4" rx="2"/><rect x="13" y="137" width="27" height="4" rx="2"/></g>
+    <rect x="9" y="167" width="49" height="20" rx="3" fill="#ffebe8"/>
+    <path d="M17 177h30" stroke="#c52b21" stroke-width="3"/>
+    <text x="85" y="59" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#27272a">Dashboard</text>
+    <path d="M85 74h135" stroke="#b6b6c0" stroke-width="3"/>
+    <rect x="85" y="93" width="110" height="51" rx="3" fill="#f4f4f5" stroke="#e4e4e7"/>
+    <rect x="207" y="93" width="120" height="51" rx="3" fill="#f4f4f5" stroke="#e4e4e7"/>
+    <text x="96" y="111" font-family="Arial, sans-serif" font-size="7" fill="#71717a">THIS WEEK</text><text x="96" y="132" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#3f3f46">128</text>
+    <path d="m220 129 15-9 14 3 15-15 15 6 14-8 19 4" stroke="#9898a4" stroke-width="1.5"/>
+    <g stroke="#e4e4e7"><path d="M85 166h241M85 191h241M85 216h241M85 241h241M85 266h241"/></g>
+    <g stroke="#b7b7c1" stroke-width="3"><path d="M96 179h64m-64 25h88m-88 25h65m-65 25h78M229 179h31m-31 25h22m-22 25h30m-30 25h19"/></g>
+    <rect x="283" y="194" width="29" height="24" rx="3" fill="#fff" stroke="#c52b21" stroke-width="1.6"/>
+    <path d="M291 201h13m-13 5h13m-13 5h13" stroke="#c52b21" stroke-width="1.5"/>
+    <path d="M276 195v-8h10m20 0h13v10m0 15v13h-13m-20 0h-10v-10" stroke="#c52b21" stroke-width="2"/>
+    <rect x="170" y="235" width="149" height="30" rx="3" fill="#ffebe8" stroke="#deb3ae"/>
+    <circle cx="183" cy="250" r="5" stroke="#c52b21"/><path d="M183 247v4m0 2v.5" stroke="#c52b21" stroke-width="1.2"/>
+    <text x="196" y="253" font-family="Arial, sans-serif" font-size="9" font-weight="600" fill="#a8241c">Button needs a name</text>
+</g>
+<g transform="matrix(.95 -.27 0 1 817 194)">
+    <rect x="7" y="7" width="327" height="278" rx="5" fill="#c7c7ce" stroke="#8e8e98"/>
+    <rect width="327" height="278" rx="5" fill="#202024" stroke="#62626d" stroke-width="1.3"/>
+    <path d="M0 33h327" stroke="#52525b"/>
+    <circle cx="16" cy="16" r="4" fill="#e56a60"/>
+    <text x="31" y="20" font-family="Arial, sans-serif" font-size="10" fill="#f4f4f5">Navigation.vue</text>
+    <text x="263" y="20" font-family="Arial, sans-serif" font-size="8" fill="#c4c4cc">AI FIX</text>
+    <rect x="0" y="34" width="327" height="24" fill="#2d2d33"/>
+    <text x="15" y="49" font-family="monospace" font-size="8" fill="#c4c4cc">resources/js/Components/Navigation.vue:42</text>
+    <g font-family="monospace" font-size="10" fill="#a1a1aa"><text x="14" y="83">40</text><text x="14" y="104">41</text><text x="14" y="125">42</text><text x="14" y="146">43</text><text x="14" y="167">44</text><text x="14" y="188">45</text><text x="14" y="209">46</text></g>
+    <g font-family="monospace" font-size="10"><text x="41" y="83" fill="#d4d4d8">&lt;nav aria-label="Main"&gt;</text><text x="41" y="104" fill="#d4d4d8">  &lt;button</text>
+    <rect x="34" y="112" width="280" height="23" rx="2" fill="#35493f"/>
+    <text x="41" y="127" fill="#d6f3df">+   aria-label="Open navigation"</text><text x="41" y="148" fill="#d4d4d8">    @click="open = !open"&gt;</text><text x="41" y="169" fill="#d4d4d8">    &lt;MenuIcon</text><text x="41" y="190" fill="#d6f3df">+     aria-hidden="true" /&gt;</text><text x="41" y="211" fill="#d4d4d8">  &lt;/button&gt;</text></g>
+    <path d="M0 228h327" stroke="#52525b"/>
+    <circle cx="18" cy="251" r="8" fill="#c52b21"/>
+    <path d="m14 251 3 3 5-6" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+    <text x="34" y="254" font-family="Arial, sans-serif" font-size="10" fill="#e4e4e7">Review the diff. Make it yours.</text>
+</g>
+<path d="m530 436 110-62 125 67-120 65Z" fill="#18181b" opacity=".16" filter="url(#soft-shadow)"/>
+<g stroke-linejoin="round" stroke-width="1.2">
+    <path d="m529 416 111 64 111-64-111-64Z" fill="#d3d3da" stroke="#a1a1aa"/>
+    <path d="m529 416 111 64v10l-111-64Z" fill="#bcbcc6" stroke="#a1a1aa"/>
+    <path d="m640 480 111-64v10l-111 64Z" fill="#e1e1e7" stroke="#a1a1aa"/>
+    <path d="m540 289 100 58v126l-100-58Z" fill="#a6231b" stroke="#9e241c"/>
+    <path d="m640 347 100-58v126l-100 58Z" fill="url(#engine)" stroke="#9e241c"/>
+    <path d="m540 289 100-58 100 58-100 58Z" fill="url(#engine-top)" stroke="#bd2c22"/>
+    <path d="m548 289 92 53 92-53" stroke="#f78d81"/>
+    <path d="M640 352v113" stroke="#ed6a5f"/>
+</g>
+<g transform="matrix(.866 .5 -.866 .5 640 242)"><use href="#lens-symbol" transform="scale(1.43)"/></g>
+<g transform="matrix(.866 -.5 0 1 658 341)"><use href="#lens-symbol" transform="scale(.85)"/></g>
+<g transform="matrix(.866 .5 0 1 557 328)"><text x="0" y="13" font-family="Arial, sans-serif" font-size="19" font-weight="600" fill="#fff">Lens</text><text x="0" y="31" font-family="Arial, sans-serif" font-size="8" fill="#ffd8d4">for Laravel</text><g stroke="#e37970" stroke-width="2"><path d="M0 55h58M0 62h58M0 69h58"/></g><circle cx="4" cy="85" r="2" fill="#fff"/></g>
+<g transform="translate(363 500) rotate(5)" filter="url(#card-shadow)">
+    <rect width="362" height="137" rx="6" fill="#fff" stroke="#b9b9c3"/>
+    <path d="M0 33h362" stroke="#e4e4e7"/>
+    <text x="15" y="21" font-family="Arial, sans-serif" font-size="10" font-weight="600" fill="#3f3f46">REVIEW QUEUE</text>
+    <rect x="272" y="10" width="76" height="16" rx="3" fill="#ffebe8"/>
+    <text x="283" y="21" font-family="Arial, sans-serif" font-size="8" fill="#a8241c">3 READY FIXES</text>
+    <g stroke="#e4e4e7"><path d="M14 68h334M14 102h334"/></g>
+    <g font-family="monospace" font-size="10" fill="#52525b"><text x="42" y="55">Navigation.vue</text><text x="42" y="89">hero.blade.php</text><text x="42" y="123">Footer.tsx</text></g>
+    <g fill="#ffebe8" stroke="#c52b21"><rect x="15" y="44" width="13" height="13" rx="2"/><rect x="15" y="78" width="13" height="13" rx="2"/><rect x="15" y="112" width="13" height="13" rx="2"/></g>
+    <g color="#c52b21"><use href="#check" transform="translate(18 47) scale(.65)"/><use href="#check" transform="translate(18 81) scale(.65)"/><use href="#check" transform="translate(18 115) scale(.65)"/></g>
+    <g font-family="Arial, sans-serif" font-size="8" fill="#71717a"><text x="292" y="55">Reviewed</text><text x="292" y="89">Reviewed</text><text x="292" y="123">Reviewed</text></g>
+</g>
+<g transform="translate(889 476)" filter="url(#card-shadow)"><rect width="237" height="60" rx="5" fill="#fff" stroke="#bdc9c2"/><circle cx="28" cy="30" r="14" fill="#eff8f2" stroke="#7b9988"/><use href="#check" transform="translate(22 25)" color="#2d6650"/><text x="54" y="26" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#2d5141">Fresh scan</text><text x="54" y="43" font-family="Arial, sans-serif" font-size="10" fill="#52525b">Verify the result. Keep improving.</text></g>
+<g font-family="monospace" font-size="11" letter-spacing="1" fill="#62626c"><text x="111" y="48">01 / SCAN YOUR APP</text><text x="547" y="131">02 / FIND THE SOURCE</text><text x="886" y="47">03 / REVIEW THE FIX</text></g>
+<g stroke="#a1a1aa" stroke-width="1"><path d="M160 60v24m464 60v54m370-140v61"/></g>
+<g fill="#c52b21"><circle cx="160" cy="84" r="2.5"/><circle cx="624" cy="198" r="2.5"/><circle cx="994" cy="119" r="2.5"/></g>
 </svg>

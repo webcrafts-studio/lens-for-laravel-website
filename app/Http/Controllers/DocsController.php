@@ -27,6 +27,12 @@ class DocsController extends Controller
             'html_input' => 'allow',
             'allow_unsafe_links' => false,
         ]);
+        $html = Str::replace('<th>', '<th scope="col">', $html);
+        $html = Str::replace(
+            '<a href="https://github.com/',
+            '<a target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-description" href="https://github.com/',
+            $html,
+        );
 
         [$html, $toc] = $this->processHeadings($html);
         [$prev, $next] = $this->documentation->previousNext($page);

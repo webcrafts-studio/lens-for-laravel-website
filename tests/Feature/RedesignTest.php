@@ -52,8 +52,50 @@ it('ships the chosen branding in the matching export sizes', function () {
     }
 
     $art = simplexml_load_file(public_path('assets/lens-workflow.svg'));
-    expect((string) $art['viewBox'])->toBe('0 0 760 660');
+    expect((string) $art['viewBox'])->toBe('0 0 1280 680');
 });
+
+it('connects each workflow tab to a labelled panel with one initial selection', function () {
+    $response = $this->get('/')->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $tabs = $xpath->query('//*[@role="tab"]');
+
+    expect($tabs->length)->toBe(3);
+    expect($xpath->query('//*[@role="tab" and @aria-selected="true" and @tabindex="0"]')->length)->toBe(1);
+
+    foreach ($tabs as $tab) {
+        $panel = $document->getElementById($tab->getAttribute('aria-controls'));
+        expect($panel)->not->toBeNull();
+        expect($panel->getAttribute('role'))->toBe('tabpanel');
+        expect($panel->getAttribute('aria-labelledby'))->toBe($tab->getAttribute('id'));
+        expect($panel->hasAttribute('hidden'))->toBe($tab->getAttribute('aria-selected') !== 'true');
+    }
+
+    $response->assertSee('Actual interface / example project')
+        ->assertSee('Apply ready suggestions in one bulk action.')
+        ->assertSee('assets/screenshots/source-light.webp')
+        ->assertSee('assets/screenshots/ai-review-dark.webp')
+        ->assertDontSee('Your interface. Your code. A clearer view.');
+});
+
+it('shares the family navigation and search dialog on landing and documentation pages', function (string $url) {
+    $response = $this->get($url)->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $menu = $xpath->query('//header//details[@data-mobile-navigation]')->item(0);
+    $trigger = $xpath->query('//header//*[@aria-haspopup="dialog"]')->item(0);
+
+    expect($menu)->not->toBeNull();
+    expect($document->getElementById('mobile-site-navigation'))->not->toBeNull();
+    expect($trigger->getAttribute('aria-controls'))->toBe('docs-search');
+    expect($document->getElementById('docs-search')->tagName)->toBe('dialog');
+    expect($xpath->query('//header//*[@data-theme-toggle]')->length)->toBe(1);
+    expect($xpath->query('//footer//*[@data-theme-toggle]')->length)->toBe(0);
+    expect($xpath->query('//header//a[contains(@class,"github-link")]')->length)->toBe(1);
+})->with(['/', '/docs/ai-fix-engine']);
 
 it('keeps reading and control colors accessible on actual panel surfaces', function (string $selector) {
     $colors = accessibilityThemeVariables($selector);

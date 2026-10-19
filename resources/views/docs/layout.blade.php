@@ -8,6 +8,7 @@
         <details class="docs-chapters" data-chapters open>
             <summary>Documentation <span aria-hidden="true">+</span></summary>
             <nav id="docs-nav" aria-label="Documentation">
+                <button type="button" class="docs-search-trigger" data-search-open aria-haspopup="dialog" aria-controls="docs-search" aria-keyshortcuts="Meta+K Control+K"><x-icon name="search"/><span>Find in the docs</span><kbd aria-hidden="true">⌘ K</kbd></button>
                 @foreach ($navigation as $section => $items)
                     <div class="nav-section"><h2>{{ str($section)->lower()->title() }}</h2>
                         @foreach ($items as $item)
@@ -20,7 +21,7 @@
     </aside>
     <div class="docs-content">
         <main id="main-content" tabindex="-1">
-            <div class="docs-breadcrumb"><a href="{{ route('docs') }}">Docs</a><span aria-hidden="true">/</span><span>{{ $pageTitle }}</span></div>
+            <nav class="docs-breadcrumb" aria-label="Breadcrumb"><a href="{{ route('home') }}">Lens</a><span aria-hidden="true">/</span><a href="{{ route('docs') }}">Documentation</a><span aria-hidden="true">/</span><span aria-current="page">{{ $pageTitle }}</span></nav>
             @if(count($toc))
                 <details class="mobile-toc"><summary>On this page <span aria-hidden="true">+</span></summary><nav aria-label="On this page, mobile">@foreach($toc as $heading)<a href="#{{ $heading['id'] }}">{{ $heading['title'] }}</a>@endforeach</nav></details>
             @endif

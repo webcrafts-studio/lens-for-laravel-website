@@ -23,16 +23,25 @@ test('the header displays the live GitHub star count', function () {
         ]),
     ]);
 
-    $response = $this->get('/');
+    foreach (['/', route('docs.show', ['page' => 'introduction'])] as $url) {
+        $response = $this->get($url)->assertOk();
+        $document = new DOMDocument;
+        @$document->loadHTML($response->getContent());
+        $xpath = new DOMXPath($document);
+        $githubLinks = $xpath->query('//header//a[contains(concat(" ", normalize-space(@class), " "), " github-link ")]');
 
-    $response->assertOk()
-        ->assertSee('href="https://github.com/webcrafts-studio/lens-for-laravel"', false)
-        ->assertSee('84K', false)
-        ->assertSee('aria-label="View Lens for Laravel on GitHub - 84K stars"', false);
+        expect($githubLinks->length)->toBe(1);
 
-    $this->get(route('docs.show', ['page' => 'introduction']))
-        ->assertOk()
-        ->assertSee('84K', false);
+        $githubLink = $githubLinks->item(0);
+
+        expect($githubLink->getAttribute('href'))->toBe('https://github.com/webcrafts-studio/lens-for-laravel')
+            ->and($githubLink->getAttribute('aria-label'))->toBe('View Lens for Laravel on GitHub - 84K stars')
+            ->and($githubLink->getAttribute('title'))->toBe('84K stars on GitHub');
+
+        $starCountsWithIcon = $xpath->query('./span[@class="github-stars"]/svg[@aria-hidden="true"]/following-sibling::*[1][self::span[@class="star-count"] and normalize-space()="84K"]', $githubLink);
+
+        expect($starCountsWithIcon->length)->toBe(1);
+    }
 
     Http::assertSent(function (Request $request): bool {
         return $request->url() === 'https://api.github.com/repos/webcrafts-studio/lens-for-laravel'
@@ -154,15 +163,42 @@ test('support link appears in the website and documentation footers', function (
         ->assertSee('https://buycoffee.to/jakub-lipinski', false);
 });
 
-test('website footer credits the author and Webcrafts', function () {
-    $this->get('/')
+test('website and documentation footers credit only Jakub Lipiński', function (string $url) {
+    $this->get($url)
         ->assertOk()
         ->assertSee('Created by')
         ->assertSee('Jakub Lipiński')
         ->assertSee('https://lipinskijakub.pl/', false)
-        ->assertSee('Webcrafts.pl')
-        ->assertSee('https://webcrafts.pl/', false);
-});
+        ->assertSee('Manual testing remains required.')
+        ->assertDontSee('Back to top')
+        ->assertDontSee('data-back-top', false)
+        ->assertDontSee('Webcrafts.pl')
+        ->assertDontSee('https://webcrafts.pl/', false);
+})->with(['/', '/docs/introduction']);
+
+test('GitHub and author links open safely in a new tab without changing documentation navigation', function (string $url) {
+    $response = $this->get($url)->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $links = $xpath->query('//a[starts-with(@href,"https://github.com/") or @href="https://lipinskijakub.pl/"]');
+
+    expect($links->length)->toBeGreaterThanOrEqual(4);
+
+    foreach ($links as $link) {
+        expect($link->getAttribute('target'))->toBe('_blank');
+        expect(explode(' ', $link->getAttribute('rel')))->toContain('noopener', 'noreferrer');
+        expect($document->getElementById($link->getAttribute('aria-describedby'))->textContent)->toBe('Opens in a new tab.');
+    }
+
+    foreach ($xpath->query('//a[starts-with(@href,"'.route('docs').'")]') as $link) {
+        expect($link->hasAttribute('target'))->toBeFalse();
+    }
+
+    if ($url === '/docs/introduction') {
+        expect($xpath->query('//article//a[@href="https://github.com/dequelabs/axe-core" and @target="_blank"]')->length)->toBe(1);
+    }
+})->with(['/', '/docs/introduction', '/docs/ai-fix-engine']);
 
 test('the website identifies v3.5 as the current development line', function () {
     $this->get('/')
