@@ -54,8 +54,9 @@ jobs:
             echo "=== Enable maintenance mode ==="
             php artisan down || true
 
-            echo "=== Pull latest code ==="
-            git pull origin main
+            echo "=== Synchronize checkout ==="
+            git fetch --force origin main
+            git reset --hard FETCH_HEAD
 
             echo "=== Install PHP dependencies ==="
             composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
@@ -65,7 +66,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 22
 
-            npm ci || npm install
+            npm ci
             npm run build
 
             echo "=== Laravel optimization ==="
@@ -73,6 +74,10 @@ jobs:
             php artisan migrate --force --no-interaction
             php artisan optimize
             php artisan queue:restart || true
+
+            echo "=== Verify clean tracked files ==="
+            git diff --exit-code HEAD --
+            git status --short --untracked-files=no
 
             echo "=== Disable maintenance mode ==="
             php artisan up
