@@ -111,13 +111,13 @@ test('the website and documentation use the Lens favicon', function () {
     expect(public_path('favicon.svg'))->toBeFile()
         ->and(file_get_contents(public_path('favicon.svg')))->toContain('<svg')
         ->toContain('<path')
-        ->toContain('M22.25 12.5h8v31.375h15.5v7H22.25Z')
+        ->toContain('stroke-width="3.5"')
         ->toContain('#c52b21')
-        ->not->toContain('<circle')
+        ->toContain('<circle')
         ->and(public_path('favicon.ico'))->toBeFile()
         ->and(filesize(public_path('favicon.ico')))->toBeGreaterThan(0)
         ->and(public_path('favicon-dark.svg'))->toBeFile()
-        ->and(file_get_contents(public_path('favicon-dark.svg')))->toContain('#ff8a8a');
+        ->and(file_get_contents(public_path('favicon-dark.svg')))->toContain('#c52b21');
 
     $this->get('/')
         ->assertOk()

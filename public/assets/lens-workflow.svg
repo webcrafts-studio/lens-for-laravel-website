@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" viewBox="0 0 760 660" fill="none"><title>From interface to source with Lens</title><desc>An isometric interface, a red Lens module, and a source code panel connected by a highlighted element.</desc><defs>
+<linearGradient id="surface" x1="0" y1="0" x2="0" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#f0f0f2"/></linearGradient>
+<linearGradient id="red" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#d5362b"/><stop offset="1" stop-color="#b1241c"/></linearGradient>
+<filter id="shadow" x="-40%" y="-40%" width="180%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#d4d4d8" stroke-width=".65"/></pattern>
+<radialGradient id="fade"><stop offset=".25" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="mask"><ellipse cx="380" cy="420" rx="360" ry="235" fill="url(#fade)"/></mask>
+<g id="symbol"><circle cx="32" cy="32" r="24" fill="none" stroke="#fff" stroke-width="3.5"/><g transform="translate(7.04 7.04) scale(.78)"><circle cx="32" cy="16" r="4.25" fill="#fff"/>
+    <g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 25Q32 34 48 25M32 29.5V38m-7 11 7-11 7 11"/></g></g></g></defs>
+<g mask="url(#mask)"><g transform="matrix(.866 .5 -.866 .5 380 365)"><rect x="-450" y="-450" width="900" height="900" fill="url(#grid)"/></g></g>
+<path d="m64 430 290-165 355 200-293 171Z" fill="#09090b" opacity=".12" filter="url(#shadow)"/>
+<g stroke="#a1a1aa" stroke-width="1.2" stroke-linejoin="round"><path d="m58 420 350 202v12L58 432Z" fill="#e4e4e7"/><path d="m408 622 295-170v12L408 634Z" fill="#f4f4f5"/><path d="m353 250 350 202-295 170L58 420Z" fill="#fafafa"/></g>
+<path d="m78 420 330 190 274-158" stroke="#fff" stroke-width="2"/>
+<g transform="matrix(.866 -.5 0 1 102 209)" stroke-linejoin="round">
+<rect x="7" y="7" width="210" height="220" fill="#d4d4d8" stroke="#a1a1aa"/><rect width="210" height="220" fill="url(#surface)" stroke="#71717a" stroke-width="1.4"/><path d="M0 27h210" stroke="#a1a1aa"/><g fill="#a1a1aa"><circle cx="14" cy="14" r="3"/><circle cx="26" cy="14" r="3"/><circle cx="38" cy="14" r="3"/></g>
+<rect x="16" y="45" width="178" height="45" fill="#e4e4e7"/><rect x="16" y="102" width="72" height="90" fill="#f4f4f5" stroke="#d4d4d8"/><path d="M102 109h77m-77 14h66m-66 14h77m-77 14h55" stroke="#a1a1aa" stroke-width="4"/>
+<rect x="99" y="165" width="82" height="27" fill="#ffebe8" stroke="#c52b21" stroke-width="1.7"/><path d="M111 179h58" stroke="#c52b21" stroke-width="4"/></g>
+<g stroke-linejoin="round"><path d="m344 310 110 64v128l-110-64Z" fill="#9f2119" stroke="#9f2119"/><path d="m454 374 110-64v128l-110 64Z" fill="url(#red)" stroke="#9f2119"/><path d="m344 310 110-64 110 64-110 64Z" fill="#e64437" stroke="#c52b21"/>
+<g transform="matrix(.866 .5 -.866 .5 454 266)"><use href="#symbol" width="64" height="64" transform="translate(11 11) scale(1.4)"/></g>
+<g transform="matrix(.866 -.5 0 1 473 363)"><use href="#symbol" transform="scale(.9)"/></g>
+</g>
+<g transform="matrix(.866 .5 -.866 .5 307 417)"><path d="M0 0h83v70H0Z" fill="#fff" stroke="#a1a1aa"/><path d="M13 18h56m-56 13h43M13 49h56" stroke="#71717a" stroke-width="3"/><rect x="8" y="39" width="67" height="20" fill="#ffebe8" stroke="#c52b21"/><path d="M15 49h49" stroke="#c52b21" stroke-width="3"/></g>
+<g transform="matrix(.866 -.5 0 1 562 391)"><rect x="5" y="5" width="140" height="133" fill="#d4d4d8" stroke="#a1a1aa"/><rect width="140" height="133" fill="url(#surface)" stroke="#71717a"/><path d="M0 26h140" stroke="#a1a1aa"/><path d="M15 14h64" stroke="#52525b" stroke-width="4"/><path d="M15 48h97m-97 14h74" stroke="#a1a1aa" stroke-width="4"/><rect x="10" y="77" width="120" height="42" fill="#ffebe8"/><path d="M19 89h83m-83 13h99" stroke="#c52b21" stroke-width="3"/></g>
+<g stroke="#c52b21" stroke-width="2"><path d="m256 435 43 25m183 35 68-39"/><circle cx="256" cy="435" r="4" fill="#fff"/><circle cx="550" cy="456" r="4" fill="#fff"/></g>
+<g font-family="Helvetica Neue, Arial, sans-serif" fill="#52525b" font-size="11" letter-spacing="1.2"><text x="94" y="94">01 / YOUR INTERFACE</text><text x="363" y="169">02 / LENS</text><text x="566" y="300">03 / YOUR CODE</text></g><path d="M177 105v39m233 37v42m218 87v25" stroke="#a1a1aa"/>
+</svg>
