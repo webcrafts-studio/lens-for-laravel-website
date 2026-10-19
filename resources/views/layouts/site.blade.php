@@ -56,7 +56,7 @@
             <div class="footer-grid">
                 <div><x-brand/><p>Accessibility tools<br>for your Laravel workflow.</p><span class="micro">Open source / MIT</span></div>
                 <nav aria-label="Documentation footer"><h2>Build with Lens</h2><a href="{{ route('docs.show', 'installation') }}">Installation</a><a href="{{ route('docs.show', 'quick-start') }}">Quick start</a><a href="{{ route('docs.show', 'ai-fix-engine') }}">AI Fix Engine</a><a href="{{ route('docs.show', 'cli-reference') }}">CLI reference</a></nav>
-                <nav aria-label="Project footer"><h2>Project</h2><a href="https://github.com/webcrafts-studio/lens-for-laravel">GitHub</a><a href="https://github.com/webcrafts-studio/lens-for-laravel/issues">Report an issue</a><a href="https://buycoffee.to/jakub-lipinski">Support my work</a></nav>
+                <nav aria-label="Project footer"><h2>Project</h2><a href="https://github.com/webcrafts-studio/lens-for-laravel">GitHub</a><a href="https://github.com/webcrafts-studio/lens-for-laravel/issues">Report an issue</a><a href="https://buycoffee.to/jakub-lipinski">Support my work</a><a href="{{ route('home') }}#community">In the community</a></nav>
             </div>
             <div class="footer-bottom"><p>Created by <a href="https://lipinskijakub.pl/">Jakub Lipiński</a> / <a href="https://webcrafts.pl/">Webcrafts.pl</a></p><a href="#top" data-back-top>Back to top ↑</a></div>
             <p class="audit-note">axe-core automates many high-confidence checks, but neither axe-core nor Lens proves full WCAG conformance. Manual testing remains required.</p>
