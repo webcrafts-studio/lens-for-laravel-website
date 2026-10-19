@@ -1,62 +1,5 @@
 <?php
 
-function accessibilityThemeVariables(string $selector): array
-{
-    $css = (string) file_get_contents(resource_path('css/app.css'));
-    $pattern = '/'.preg_quote($selector, '/').'\s*\{(?<declarations>.*?)\n\}/s';
-
-    preg_match($pattern, $css, $matches);
-    preg_match_all(
-        '/(?<name>--lens-[a-z-]+):\s*(?<value>#[0-9a-f]{6});/i',
-        $matches['declarations'] ?? '',
-        $variables,
-    );
-
-    return array_combine($variables['name'], $variables['value']);
-}
-
-function accessibilityContrastRatio(string $foreground, string $background): float
-{
-    $luminance = function (string $color): float {
-        $channels = array_map(
-            fn (string $channel): int => hexdec($channel),
-            str_split(ltrim($color, '#'), 2),
-        );
-
-        $linear = array_map(
-            function (int $channel): float {
-                $value = $channel / 255;
-
-                return $value <= 0.04045
-                    ? $value / 12.92
-                    : (($value + 0.055) / 1.055) ** 2.4;
-            },
-            $channels,
-        );
-
-        return (0.2126 * $linear[0]) + (0.7152 * $linear[1]) + (0.0722 * $linear[2]);
-    };
-
-    $foregroundLuminance = $luminance($foreground);
-    $backgroundLuminance = $luminance($background);
-
-    return (max($foregroundLuminance, $backgroundLuminance) + 0.05)
-        / (min($foregroundLuminance, $backgroundLuminance) + 0.05);
-}
-
-function accessibilityCssColorVariable(string $name): string
-{
-    $css = (string) file_get_contents(resource_path('css/app.css'));
-
-    preg_match(
-        '/'.preg_quote($name, '/').':\s*(?<value>#[0-9a-f]{6});/i',
-        $css,
-        $matches,
-    );
-
-    return $matches['value'];
-}
-
 test('light and dark reading tokens meet their contrast targets', function (string $selector) {
     $colors = accessibilityThemeVariables($selector);
 
@@ -119,22 +62,19 @@ test('marketing page exposes accessible navigation and avoids legacy low contras
         ->assertDontSee('#e53e3e', false);
 });
 
-test('documentation typography stays compact and tables preserve their native layout', function () {
+test('documentation typography stays readable and tables preserve their native layout', function () {
     $css = (string) file_get_contents(resource_path('css/app.css'));
 
-    expect($css)
-        ->toContain('font-size: 0.9375rem')
-        ->toContain('font-size: 0.75rem')
-        ->toContain('.docs-table-wrapper')
-        ->toContain('display: table')
-        ->toContain('table-layout: fixed')
-        ->toContain('max-width: 100%')
-        ->toContain('display: inline-block')
-        ->toContain('box-sizing: border-box')
+    expect($css)->toContain('.docs-prose')->toContain('font-size: 1rem')
+        ->toContain('.docs-table-wrapper')->toContain('display: table')
         ->toContain('overflow-wrap: anywhere')
-        ->toContain('width: 43%')
-        ->toContain('width: 16%')
-        ->not->toMatch('/\\.docs-table-wrapper\\s*\\{[^}]*overflow-x:\\s*auto/s');
+        ->not->toContain('width: 43%')->not->toContain('width: 16%');
+
+    $response = $this->get(route('docs.show', 'configuration'))->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    expect($document->getElementsByTagName('table')->length)->toBeGreaterThan(0)
+        ->and($document->getElementsByTagName('th')->length)->toBeGreaterThan(0);
 });
 
 test('local Lens package dashboard is available through package discovery', function () {
@@ -149,7 +89,8 @@ test('documentation pages share accessible controls and readable theme utilities
 
     $response->assertSuccessful()
         ->assertSee('href="#main-content"', false)
-        ->assertSee('aria-controls="sidebar"', false)
+        ->assertSee('data-chapters', false)
+        ->assertSee('<summary>Documentation', false)
         ->assertSee('aria-expanded="false"', false)
         ->assertSee('aria-modal="true"', false)
         ->assertSee('data-theme-toggle', false)
@@ -158,9 +99,8 @@ test('documentation pages share accessible controls and readable theme utilities
         ->assertDontSee('text-black/30', false)
         ->assertDontSee('text-[9px]', false)
         ->assertDontSee('#e53e3e', false)
-        ->assertSee("wrapper.className = 'docs-table-wrapper'", false)
-        ->assertSee("document.createElement('wbr')", false)
-        ->assertSee('text-[13px] leading-5', false);
+        ->assertSee('id="docs-search-index"', false)
+        ->assertSee('id="copy-status"', false);
 })->with([
     'introduction',
     'installation',

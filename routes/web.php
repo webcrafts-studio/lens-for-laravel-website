@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/docs', [DocsController::class, 'redirect'])->name('docs');
 Route::get('/docs/{page}', [DocsController::class, 'show'])->name('docs.show')

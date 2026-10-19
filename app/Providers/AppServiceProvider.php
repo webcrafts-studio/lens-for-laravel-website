@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Documentation;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['welcome', 'docs.layout'], function (ViewInstance $view): void {
+        View::composer('layouts.site', function (ViewInstance $view): void {
             $repository = (string) config('services.github.repository');
             $token = config('services.github.token');
 
@@ -56,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
             );
 
             $view->with('githubStars', $stars === false ? null : $stars);
+            $view->with('searchIndex', app(Documentation::class)->searchIndex());
         });
     }
 }

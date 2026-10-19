@@ -59,3 +59,60 @@ function something()
 {
     // ..
 }
+
+function accessibilityThemeVariables(string $selector): array
+{
+    $css = (string) file_get_contents(resource_path('css/app.css'));
+    $pattern = '/'.preg_quote($selector, '/').'\s*\{(?<declarations>.*?)\n\}/s';
+
+    preg_match($pattern, $css, $matches);
+    preg_match_all(
+        '/(?<name>--lens-[a-z-]+):\s*(?<value>#[0-9a-f]{6});/i',
+        $matches['declarations'] ?? '',
+        $variables,
+    );
+
+    return array_combine($variables['name'], $variables['value']);
+}
+
+function accessibilityContrastRatio(string $foreground, string $background): float
+{
+    $luminance = function (string $color): float {
+        $channels = array_map(
+            fn (string $channel): int => hexdec($channel),
+            str_split(ltrim($color, '#'), 2),
+        );
+
+        $linear = array_map(
+            function (int $channel): float {
+                $value = $channel / 255;
+
+                return $value <= 0.04045
+                    ? $value / 12.92
+                    : (($value + 0.055) / 1.055) ** 2.4;
+            },
+            $channels,
+        );
+
+        return (0.2126 * $linear[0]) + (0.7152 * $linear[1]) + (0.0722 * $linear[2]);
+    };
+
+    $foregroundLuminance = $luminance($foreground);
+    $backgroundLuminance = $luminance($background);
+
+    return (max($foregroundLuminance, $backgroundLuminance) + 0.05)
+        / (min($foregroundLuminance, $backgroundLuminance) + 0.05);
+}
+
+function accessibilityCssColorVariable(string $name): string
+{
+    $css = (string) file_get_contents(resource_path('css/app.css'));
+
+    preg_match(
+        '/'.preg_quote($name, '/').':\s*(?<value>#[0-9a-f]{6});/i',
+        $css,
+        $matches,
+    );
+
+    return $matches['value'];
+}

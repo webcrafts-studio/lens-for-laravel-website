@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 test('the application returns a successful response', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('UI')
-        ->assertSee('Languages')
+        ->assertSee('Find accessibility issues.')
+        ->assertSee('Eight supported providers')
         ->assertSee('neither axe-core nor Lens proves full WCAG')
         ->assertDontSee('20-30%');
 });
@@ -28,7 +28,7 @@ test('the header displays the live GitHub star count', function () {
     $response->assertOk()
         ->assertSee('href="https://github.com/webcrafts-studio/lens-for-laravel"', false)
         ->assertSee('84K', false)
-        ->assertSee('aria-label="View Lens for Laravel on GitHub — 84K stars"', false);
+        ->assertSee('aria-label="View Lens for Laravel on GitHub - 84K stars"', false);
 
     $this->get(route('docs.show', ['page' => 'introduction']))
         ->assertOk()
@@ -46,7 +46,7 @@ test('GitHub star counts preserve significant zeroes when abbreviated', function
 
     expect($html)->toContain('>'.$formattedStars.'</span>');
 })->with([
-    [null, '—'],
+    [null, '-'],
     [0, '0'],
     [999, '999'],
     [1000, '1K'],
@@ -73,7 +73,7 @@ test('GitHub failures display an accessible fallback and are cached briefly', fu
     $this->get('/')
         ->assertOk()
         ->assertSee('aria-label="View Lens for Laravel on GitHub"', false)
-        ->assertSee('>—</span>', false);
+        ->assertSee('>-</span>', false);
 
     $this->get(route('docs.show', ['page' => 'introduction']))->assertOk();
     Http::assertSentCount(1);
@@ -108,30 +108,23 @@ test('GitHub counts expire after six hours and requests use the configured repos
 });
 
 test('the website and documentation use the Lens favicon', function () {
-    expect(public_path('favicon.svg'))->toBeFile()
-        ->and(file_get_contents(public_path('favicon.svg')))->toContain('<svg')
-        ->toContain('<path')
-        ->toContain('stroke-width="3.5"')
-        ->toContain('#c52b21')
-        ->toContain('<circle')
-        ->and(public_path('favicon.ico'))->toBeFile()
-        ->and(filesize(public_path('favicon.ico')))->toBeGreaterThan(0)
-        ->and(public_path('favicon-dark.svg'))->toBeFile()
-        ->and(file_get_contents(public_path('favicon-dark.svg')))->toContain('#c52b21');
+    foreach (['favicon.svg', 'favicon-dark.svg', 'assets/lens-mark.svg'] as $file) {
+        $svg = simplexml_load_file(public_path($file));
+        expect((string) $svg['viewBox'])->toBe('0 0 64 64')
+            ->and((string) $svg->rect['fill'])->toBe('#c52b21')
+            ->and((string) $svg->circle['stroke-width'])->toBe('3.5');
+    }
 
-    $this->get('/')
-        ->assertOk()
-        ->assertSee('data-theme-favicon')
-        ->assertSee('favicon-dark.svg')
-        ->assertSee('updateFavicon')
-        ->assertDontSee('favicon.ico');
+    expect(public_path('favicon.ico'))->toBeFile()
+        ->and(filesize(public_path('favicon.ico')))->toBeGreaterThan(0);
 
-    $this->get(route('docs.show', ['page' => 'introduction']))
-        ->assertOk()
-        ->assertSee('data-theme-favicon')
-        ->assertSee('favicon-dark.svg')
-        ->assertSee('updateFavicon')
-        ->assertDontSee('favicon.ico');
+    foreach (['/', route('docs.show', 'introduction')] as $url) {
+        $this->get($url)->assertSuccessful()
+            ->assertSee('favicon.svg')
+            ->assertSee('apple-touch-icon.png')
+            ->assertSee('assets/lens-mark.svg')
+            ->assertSee('social-card.png');
+    }
 });
 
 test('Composer metadata identifies the Lens documentation website', function () {
