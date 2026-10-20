@@ -81,9 +81,96 @@ async function checkReflow(page, context) {
     result.clipped.forEach(element => record(context, `vertically clipped text in ${element}`));
 }
 
+async function checkCommunityCoverage(page, viewport, theme) {
+    await page.$$eval('#community img', images => Promise.all(images.map(async image => {
+        image.loading = 'eager';
+        await image.decode();
+    })));
+    const coverage = await page.evaluate(() => {
+        const rectangle = element => {
+            const { x, y, width, height, right, bottom } = element.getBoundingClientRect();
+            return { x, y, width, height, right, bottom };
+        };
+        const newsBadge = document.querySelector('.coverage-visual-news .coverage-edition');
+        return {
+            cards: [...document.querySelectorAll('#community article')].map(card => ({
+                ...rectangle(card),
+                href: card.querySelector('a').href,
+                title: card.querySelector('h3').textContent.trim(),
+                overflow: card.scrollWidth > card.clientWidth + 1,
+                logos: [...card.querySelectorAll('img')].map(image => ({
+                    loaded: image.complete && image.naturalWidth > 0,
+                    ...rectangle(image),
+                    surface: rectangle(image.closest('.coverage-visual')),
+                })),
+            })),
+            section: rectangle(document.getElementById('community')),
+            newsBadge: newsBadge.getClientRects().length > 0 ? {
+                badge: rectangle(newsBadge),
+                brand: rectangle(document.querySelector('.coverage-news-brand')),
+            } : null,
+            scrollY,
+            viewport: innerWidth,
+        };
+    });
+    assert.deepEqual(coverage.cards.map(card => new URL(card.href).href), [
+        'https://laravel-news.com/lens-for-laravel-brings-wcag-auditing-to-your-local-dev-workflow',
+        'https://podcast.laravel-news.com/255',
+        'https://x.com/PovilasKorop/status/2099000377999831096',
+        'https://www.linkedin.com/posts/povilas-korop-laravel-developer_new-laravel-package-webcrafts-studiolens-for-laravel-activity-7505589580398522368-2PoF',
+        'https://www.angelcruz.dev/post/lens-laravel-accesibilidad-axe-ai-fix',
+        'https://www.programmez.com/actualites/lens-laravel-v3-outil-pour-verifier-la-conformite-wcag-2x-39792',
+    ], 'The six publication cards must retain the requested reading order.');
+
+    if (coverage.newsBadge) {
+        const { badge, brand } = coverage.newsBadge;
+        const horizontalOverlap = Math.min(badge.right, brand.right) - Math.max(badge.x, brand.x);
+        const verticalOverlap = Math.min(badge.bottom, brand.bottom) - Math.max(badge.y, brand.y);
+        assert.ok(horizontalOverlap <= 1 || verticalOverlap <= 1, 'The editorial badge must not cover Laravel News branding.');
+    }
+
+    for (const [index, card] of coverage.cards.entries()) {
+        assert.ok(card.x >= -1 && card.right <= coverage.viewport + 1, `${card.title} must fit the viewport.`);
+        assert.equal(card.overflow, false, `${card.title} must not overflow its card.`);
+        assert.ok(card.logos.length > 0, `${card.title} needs recognizable local branding.`);
+        for (const logo of card.logos) {
+            assert.equal(logo.loaded, true, `${card.title} logo must decode.`);
+            assert.ok(logo.width > 0 && logo.height > 0);
+            assert.ok(logo.x >= logo.surface.x - 1 && logo.right <= logo.surface.right + 1
+                && logo.y >= logo.surface.y - 1 && logo.bottom <= logo.surface.bottom + 1, `${card.title} logo must remain inside its visual panel.`);
+        }
+        if (index > 0) {
+            const previous = coverage.cards[index - 1];
+            assert.ok(card.y > previous.y + 1 || (Math.abs(card.y - previous.y) < 1 && card.x > previous.x), 'Visual order must match DOM and keyboard reading order.');
+        }
+        for (const previous of coverage.cards.slice(0, index)) {
+            const horizontalOverlap = Math.min(card.right, previous.right) - Math.max(card.x, previous.x);
+            const verticalOverlap = Math.min(card.bottom, previous.bottom) - Math.max(card.y, previous.y);
+            assert.ok(horizontalOverlap <= 1 || verticalOverlap <= 1, 'Community cards must not overlap.');
+        }
+    }
+    if (viewport.width >= 1200) {
+        assert.ok(Math.abs(coverage.cards[0].y - coverage.cards[1].y) < 1, 'Laravel News and its podcast should share the featured row.');
+        assert.ok(coverage.cards.slice(2).every(card => Math.abs(card.y - coverage.cards[2].y) < 1), 'The remaining references should form one clean supporting row.');
+    }
+    if (process.env.LENS_COVERAGE_SCREENSHOT_DIR) {
+        await page.screenshot({
+            path: `${process.env.LENS_COVERAGE_SCREENSHOT_DIR}/lens-community-${theme}-${viewport.width}.png`,
+            clip: {
+                x: Math.round(coverage.section.x),
+                y: Math.round(coverage.section.y + coverage.scrollY),
+                width: Math.floor(coverage.section.width),
+                height: Math.ceil(coverage.section.height),
+            },
+            captureBeyondViewport: true,
+        });
+    }
+}
+
 async function checkCompactLayout(page, viewport, theme) {
     const context = `/ ${theme} ${viewport.width}px compact layout`;
     const desktop = viewport.width >= 1000;
+    await checkCommunityCoverage(page, viewport, theme);
     const decoration = await page.evaluate(() => ({
         localIcons: document.querySelectorAll('.model-choice > div:first-child svg, .model-choice .outcome-icon').length,
         cards: [...document.querySelectorAll('.journey-visual')].map(element => ({
@@ -278,7 +365,7 @@ async function checkCompactLayout(page, viewport, theme) {
         heroPreview: Math.round(initial.heroPreview.height), workflow: Math.round(initial.workflow.height),
         fix: Math.round(initial.fix.height),
     });
-    const pageLimit = desktop ? 7000 : viewport.width >= 390 ? 10500 : 11500;
+    const pageLimit = desktop ? 7000 : viewport.width >= 390 ? 11250 : 12000;
     const heroLimit = desktop ? 720 : viewport.width >= 390 ? 1100 : 1200;
     if (initial.total > pageLimit) { record(context, `page height ${Math.round(initial.total)}px exceeds ${pageLimit}px`); }
     if (initial.hero.height > heroLimit) { record(context, `hero height ${Math.round(initial.hero.height)}px exceeds ${heroLimit}px`); }
