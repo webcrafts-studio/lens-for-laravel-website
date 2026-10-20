@@ -114,6 +114,66 @@ async function checkCompactLayout(page, viewport, theme) {
         image.loading = 'eager';
         await image.decode();
     })));
+    const reportAssets = await page.$$eval('.hero-illustration image', images => Promise.all(images.map(async image => {
+        const decoded = new Image();
+        decoded.src = image.href.baseVal;
+        await decoded.decode();
+        return {
+            className: image.getAttribute('class'),
+            source: new URL(image.href.baseVal, location.href).pathname,
+            visible: getComputedStyle(image).display !== 'none',
+            width: decoded.naturalWidth,
+            height: decoded.naturalHeight,
+        };
+    })));
+    assert.equal(reportAssets.length, 2, 'The illustration must use the two original report captures.');
+    assert.deepEqual(reportAssets.filter(image => image.visible).map(image => image.className), [`hero-report-${theme}`]);
+    for (const [index, reportTheme] of themes.entries()) {
+        assert.equal(reportAssets[index].source, `/assets/screenshots/dashboard-${reportTheme}.webp`);
+        assert.ok(reportAssets[index].width >= 1400 && reportAssets[index].height > 0, 'The original report asset must decode.');
+    }
+    const iconGeometry = await page.evaluate(() => {
+        const illustration = document.querySelector('.hero-illustration');
+        const center = bounds => new DOMPoint(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        const rootMatrix = illustration.getCTM().inverse();
+        const faces = ['code', 'text'].map(name => {
+            const surface = illustration.querySelector(`[data-hero-face-surface="${name}"]`);
+            const use = illustration.querySelector(`[data-hero-face="${name}"] use`);
+            const surfaceCenter = center(surface.getBBox()).matrixTransform(rootMatrix.multiply(surface.getCTM()));
+            const iconCenter = center(use.getBBox()).matrixTransform(rootMatrix.multiply(use.getCTM()));
+
+            return { name, dx: iconCenter.x - surfaceCenter.x, dy: iconCenter.y - surfaceCenter.y };
+        });
+        const tile = illustration.querySelector('[data-hero-tile-surface="ai"]');
+        const frame = tile.querySelector('rect').getBBox();
+        const use = tile.querySelector('use[href="#hero-ai-icon"]');
+        const matrix = tile.getCTM().inverse().multiply(use.getCTM());
+        const iconCenter = new DOMPoint(12, 12).matrixTransform(matrix);
+        const frameCenter = center(frame);
+        const outside = [];
+        illustration.querySelectorAll('#hero-ai-icon > *').forEach(shape => {
+            const length = shape.getTotalLength();
+            const stroke = parseFloat(getComputedStyle(shape).strokeWidth) / 2;
+            const paddingX = stroke * Math.hypot(matrix.a, matrix.c);
+            const paddingY = stroke * Math.hypot(matrix.b, matrix.d);
+
+            for (let sample = 0; sample <= 128; sample += 1) {
+                const point = shape.getPointAtLength(length * sample / 128).matrixTransform(matrix);
+                if (point.x - paddingX < frame.x - .1 || point.x + paddingX > frame.x + frame.width + .1
+                    || point.y - paddingY < frame.y - .1 || point.y + paddingY > frame.y + frame.height + .1) {
+                    outside.push({ x: point.x, y: point.y });
+                    break;
+                }
+            }
+        });
+
+        return { faces, ai: { dx: iconCenter.x - frameCenter.x, dy: iconCenter.y - frameCenter.y, outside } };
+    });
+    for (const face of iconGeometry.faces) {
+        assert.ok(Math.abs(face.dx) < .01 && Math.abs(face.dy) < .01, `The ${face.name} icon must be centered on its actual cube face: ${JSON.stringify(face)}`);
+    }
+    assert.ok(Math.abs(iconGeometry.ai.dx) < .01 && Math.abs(iconGeometry.ai.dy) < .01, 'The AI icon viewport must be centered in its flat tile.');
+    assert.deepEqual(iconGeometry.ai.outside, [], 'All AI icon strokes must fit inside the flat tile frame.');
     const measure = () => page.evaluate(() => {
         const rectangle = selector => {
             const element = document.querySelector(selector);
@@ -134,22 +194,15 @@ async function checkCompactLayout(page, viewport, theme) {
                 };
             });
         const heroArtwork = document.querySelector('.hero-art');
-        const heroVersion = [...heroArtwork.querySelectorAll('.preview-version')]
-            .find(element => element.getBoundingClientRect().height > 0);
-        const heroFrame = heroVersion.querySelector('.preview-viewport');
-        const heroImage = heroFrame.querySelector('img');
-        const artworkStyles = [heroArtwork, heroFrame, heroImage]
+        const heroIllustration = heroArtwork.querySelector('.hero-illustration');
+        const heroFigure = heroArtwork.querySelector('[data-hero-illustration]');
+        const heroCaption = document.getElementById(heroFigure.getAttribute('aria-labelledby'));
+        const artworkStyles = [heroArtwork, heroIllustration]
             .map(element => ({
-                element: element.className || element.tagName.toLowerCase(),
+                element: element.getAttribute('class') || element.tagName.toLowerCase(),
                 transform: getComputedStyle(element).transform,
                 perspective: getComputedStyle(element).perspective,
             }));
-        const artworkLayers = ['::before', '::after'].map(pseudo => ({
-            pseudo,
-            content: getComputedStyle(heroArtwork, pseudo).content,
-            transform: getComputedStyle(heroArtwork, pseudo).transform,
-            perspective: getComputedStyle(heroArtwork, pseudo).perspective,
-        }));
         return {
             total: document.documentElement.scrollHeight,
             smallText: [...document.querySelectorAll('body *')]
@@ -163,9 +216,18 @@ async function checkCompactLayout(page, viewport, theme) {
             heroContent: ['.hero h1', '.hero-lead', '.hero .button-row', '.hero-install'].map(rectangle),
             heroTextAlignment: ['.hero h1', '.hero-lead'].map(selector => getComputedStyle(document.querySelector(selector)).textAlign),
             heroActionAlignment: getComputedStyle(document.querySelector('.hero .button-row')).justifyContent,
-            heroImageHeight: heroImage.getBoundingClientRect().height,
+            heroIllustrationHeight: heroIllustration.getBoundingClientRect().height,
+            heroSemantics: {
+                role: heroFigure.getAttribute('role'),
+                description: heroCaption?.textContent.trim(),
+                captionTag: heroCaption?.tagName.toLowerCase(),
+                hidden: heroIllustration.getAttribute('aria-hidden'),
+                focusable: heroIllustration.getAttribute('focusable'),
+                interactive: heroFigure.querySelectorAll('a, button, [tabindex], script, foreignObject').length,
+                textCallouts: heroIllustration.querySelectorAll('text').length,
+                animation: getComputedStyle(heroIllustration).animationName,
+            },
             artworkStyles,
-            artworkLayers,
             workflow: rectangle('[data-workflow]'),
             workflowPanel: rectangle('.workflow-panel:not([hidden])'),
             workflowCopy: rectangle('.workflow-panel:not([hidden]) .workflow-explanation'),
@@ -178,6 +240,38 @@ async function checkCompactLayout(page, viewport, theme) {
     });
 
     const initial = await measure();
+    assert.equal(initial.heroSemantics.role, 'img', 'The illustration must expose one accessible image equivalent.');
+    assert.equal(initial.heroSemantics.captionTag, 'figcaption');
+    assert.ok(initial.heroSemantics.description?.includes('diagnostic report'), 'The illustration needs an accessible equivalent.');
+    assert.equal(initial.heroSemantics.hidden, 'true');
+    assert.equal(initial.heroSemantics.focusable, 'false');
+    assert.equal(initial.heroSemantics.interactive, 0, 'The decorative illustration must add no keyboard stops or fake controls.');
+    assert.equal(initial.heroSemantics.textCallouts, 0, 'The illustration must have no text callouts.');
+    assert.equal(initial.heroSemantics.animation, 'none', 'The illustration should remain still.');
+    if (process.env.LENS_HERO_SCREENSHOT_DIR) {
+        try {
+            if (desktop) {
+                await page.setViewport({ width: viewport.width, height: 1500 });
+                await pauseForLayout(page);
+            }
+            await page.screenshot({
+                path: `${process.env.LENS_HERO_SCREENSHOT_DIR}/lens-hero-${theme}-${viewport.width}.png`,
+                clip: { x: 0, y: 0, width: viewport.width, height: Math.ceil(initial.hero.bottom + 24) },
+                captureBeyondViewport: true,
+            });
+            if (desktop) {
+                await page.setViewport({ width: viewport.width, height: 1500, deviceScaleFactor: 2 });
+                await pauseForLayout(page);
+                const scene = await page.$('[data-hero-illustration]');
+                await scene.screenshot({ path: `${process.env.LENS_HERO_SCREENSHOT_DIR}/lens-hero-icons-${theme}.png` });
+            }
+        } finally {
+            if (desktop) {
+                await page.setViewport({ width: viewport.width, height: viewport.height });
+                await pauseForLayout(page);
+            }
+        }
+    }
     initial.smallText.forEach(text => record(context, `text must be larger than 10px: ${text}`));
     summary.layouts.push({
         width: viewport.width, theme, page: Math.round(initial.total), hero: Math.round(initial.hero.height),
@@ -188,7 +282,7 @@ async function checkCompactLayout(page, viewport, theme) {
     const heroLimit = desktop ? 720 : viewport.width >= 390 ? 1100 : 1200;
     if (initial.total > pageLimit) { record(context, `page height ${Math.round(initial.total)}px exceeds ${pageLimit}px`); }
     if (initial.hero.height > heroLimit) { record(context, `hero height ${Math.round(initial.hero.height)}px exceeds ${heroLimit}px`); }
-    if (initial.heroPreview.height > (desktop ? 490 : 300)) {
+    if (initial.heroPreview.height > (desktop ? 550 : 400)) {
         record(context, `hero artwork is too tall: ${Math.round(initial.heroPreview.height)}px`);
     }
     if (!desktop) {
@@ -209,17 +303,12 @@ async function checkCompactLayout(page, viewport, theme) {
             record(context, 'mobile hero heading, lead and actions must use centered alignment');
         }
     }
-    if (desktop && (initial.heroPreview.width > 592 + 1 || initial.heroImageHeight > 400 + 1)) {
-        record(context, 'hero must keep a compact preview (at most 592px wide and a 400px screenshot)');
+    if (desktop && (initial.heroPreview.width > 592 + 1 || initial.heroIllustrationHeight > 490 + 1)) {
+        record(context, 'hero must keep a compact illustration (at most 592px wide and 490px tall)');
     }
     for (const element of initial.artworkStyles) {
         if (element.transform !== 'none' || element.perspective !== 'none') {
-            record(context, `hero ${element.element} must display without tilt or perspective`);
-        }
-    }
-    for (const layer of initial.artworkLayers) {
-        if (!['none', 'normal'].includes(layer.content) || layer.transform !== 'none' || layer.perspective !== 'none') {
-            record(context, `hero ${layer.pseudo} must not add a fake backplate`);
+            record(context, `hero ${element.element} must use the illustration's own isometric geometry without CSS distortion`);
         }
     }
     if (desktop) {
@@ -360,6 +449,129 @@ async function focusWithKeyboard(page, selector, limit = 120) {
     throw new Error(`Could not reach ${selector} using Tab`);
 }
 
+async function checkScreenshotPreview(page, context, selector, hero = null) {
+    await focusWithKeyboard(page, selector);
+    const preview = await page.evaluate(() => {
+        const link = document.activeElement;
+        const image = link.querySelector('img');
+        return {
+            source: image?.currentSrc || link.href,
+            triggerHref: link.href,
+            alternative: image?.alt || link.dataset.previewAlt,
+            title: link.dataset.previewTitle,
+            description: link.dataset.previewDescription,
+            width: Number(link.dataset.previewWidth),
+            height: Number(link.dataset.previewHeight),
+            target: link.getBoundingClientRect().height,
+            hasImageAncestor: Boolean(link.closest('[role="img"]')),
+        };
+    });
+    assert.ok(preview.alternative?.length > 0 && preview.alternative.length <= 100);
+    if (hero) {
+        assert.ok(preview.target >= 44, 'The hero screenshot link must have a generous pointer target.');
+        assert.equal(preview.hasImageAncestor, false, 'The screenshot link must remain outside the decorative image role.');
+        assert.equal(new URL(preview.source).pathname, `/assets/screenshots/dashboard-${hero.theme}.webp`);
+        assert.ok(preview.alternative.includes(`${hero.theme} theme`));
+    }
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('#product-preview-dialog').open);
+    await expectFocused(page, '#product-preview-dialog [aria-label="Close screenshot"]', 'The screenshot viewer must initially focus its close button.');
+    await page.waitForFunction(() => {
+        const image = document.querySelector('[data-preview-image]');
+        return image.complete && image.naturalWidth > 0;
+    });
+    assert.equal(await page.$eval('[data-preview-image]', image => image.src), preview.source);
+    assert.equal(await page.$eval('[data-preview-image]', image => image.alt), preview.alternative);
+    assert.equal(await page.$eval('#product-preview-dialog', dialog => document.getElementById(dialog.getAttribute('aria-labelledby')).textContent), preview.title);
+    assert.equal(await page.$eval('#product-preview-dialog', dialog => document.getElementById(dialog.getAttribute('aria-describedby')).textContent), preview.description);
+    assert.equal(await page.$eval('[data-preview-file]', link => link.href), preview.source);
+    if (hero) {
+        const dimensions = await page.$eval('[data-preview-image]', image => ({ width: image.width, height: image.height, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight }));
+        assert.equal(dimensions.naturalWidth, preview.width);
+        assert.equal(dimensions.naturalHeight, preview.height);
+        assert.equal(await page.$eval('[data-preview-size="fit"]', button => button.getAttribute('aria-pressed')), 'true');
+    }
+    const label = hero ? 'hero screenshot' : 'workflow screenshot';
+    await audit(page, `${context} ${label} open`, '#product-preview-dialog');
+    await checkReflow(page, `${context} ${label} open`);
+    if (hero && process.env.LENS_HERO_SCREENSHOT_DIR) {
+        await page.screenshot({ path: `${process.env.LENS_HERO_SCREENSHOT_DIR}/lens-hero-enlarged-${hero.theme}-${hero.viewport.width}.png` });
+    }
+    await page.keyboard.down('Shift');
+    await page.keyboard.press('Tab');
+    await page.keyboard.up('Shift');
+    await expectFocused(page, '.preview-dialog-scroll', 'Shift+Tab from the close button must wrap to the last focusable viewer region.');
+    await page.keyboard.press('Tab');
+    // Native Chromium dialogs can expose the browser-chrome boundary as BODY before wrapping.
+    const forwardFocus = await page.evaluate(() => ({
+        neutralBoundary: document.activeElement === document.body || document.activeElement === document.documentElement,
+        insideViewer: Boolean(document.activeElement.closest('#product-preview-dialog')),
+        active: document.activeElement.outerHTML.slice(0, 160),
+    }));
+    assert.ok(forwardFocus.insideViewer || forwardFocus.neutralBoundary, `Tab must not focus the background page while the viewer is open: ${forwardFocus.active}`);
+    if (forwardFocus.neutralBoundary) {
+        await page.keyboard.press('Tab');
+    }
+    await expectFocused(page, '#product-preview-dialog [aria-label="Close screenshot"]', 'Tab must return to the close button after any browser-chrome stop.');
+    await focusWithKeyboard(page, '[data-preview-size="original"]');
+    await page.keyboard.press('Enter');
+    assert.equal(await page.$eval('[data-preview-size="original"]', button => button.getAttribute('aria-pressed')), 'true');
+    await focusWithKeyboard(page, '.preview-dialog-scroll');
+    const overflow = await page.$eval('.preview-dialog-scroll', region => ({
+        horizontal: region.scrollWidth > region.clientWidth,
+        vertical: region.scrollHeight > region.clientHeight,
+    }));
+    if (hero) {
+        assert.ok(overflow.horizontal && overflow.vertical, 'The full diagnostic report must expose both scroll axes at original size.');
+    }
+    if (overflow.horizontal) {
+        await page.keyboard.press('ArrowRight');
+        await page.waitForFunction(() => document.querySelector('.preview-dialog-scroll').scrollLeft > 0);
+    }
+    if (overflow.vertical) {
+        await page.keyboard.press('ArrowDown');
+        await page.waitForFunction(() => document.querySelector('.preview-dialog-scroll').scrollTop > 0);
+    }
+    await checkReflow(page, `${context} ${label} original size`);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.$eval('#product-preview-dialog', dialog => dialog.open), false);
+    await expectFocused(page, selector, 'Closing screenshot must restore the exact preview link focus.');
+    assert.equal(await page.evaluate(() => document.activeElement.href), preview.triggerHref);
+}
+
+async function checkHeroWithoutJavaScript() {
+    const page = await browser.newPage();
+    try {
+        await page.setJavaScriptEnabled(false);
+        await page.setViewport(viewports[0]);
+        const response = await page.goto(new URL('/', baseUrl).href, { waitUntil: 'networkidle0' });
+        assert.equal(response.status(), 200);
+        const link = await page.$('.hero-preview-link.preview-version-light');
+        assert.ok(link, 'The hero must retain a direct screenshot fallback without JavaScript.');
+        const target = await link.evaluate(element => ({
+            href: element.href,
+            visible: element.getBoundingClientRect().height > 0,
+            text: element.textContent.trim(),
+        }));
+        assert.ok(target.visible);
+        assert.equal(target.text, 'Enlarge screenshot');
+        assert.equal(new URL(target.href).pathname, '/assets/screenshots/dashboard-light.webp');
+        await focusWithKeyboard(page, '.hero-preview-link.preview-version-light');
+        const [imageResponse] = await Promise.all([
+            page.waitForNavigation({ waitUntil: 'load' }),
+            page.keyboard.press('Enter'),
+        ]);
+        assert.equal(imageResponse.status(), 200);
+        assert.equal(page.url(), target.href);
+        assert.ok(imageResponse.headers()['content-type'].startsWith('image/webp'));
+        summary.keyboard += 1;
+    } catch (error) {
+        record('/ no JavaScript hero fallback', error.message);
+    } finally {
+        await page.close();
+    }
+}
+
 async function checkKeyboard(path, viewport, theme) {
     const context = `${path} ${theme} ${viewport.name} keyboard`;
     const { page, errors } = await openPage(path, viewport, theme);
@@ -462,33 +674,8 @@ async function checkKeyboard(path, viewport, theme) {
             await page.waitForFunction(() => document.querySelector('.copy-feedback-message')?.textContent.includes('Could not copy'));
             await checkReflow(page, `${context} visible copy failure`);
         } else if (await page.$('[data-product-preview]')) {
-            await focusWithKeyboard(page, '.hero-art [data-product-preview]');
-            const source = await page.evaluate(() => document.activeElement.querySelector('img').currentSrc || document.activeElement.href);
-            const previewText = await page.evaluate(() => ({
-                title: document.activeElement.dataset.previewTitle,
-                description: document.activeElement.dataset.previewDescription,
-                alternative: document.activeElement.querySelector('img').alt,
-            }));
-            await page.keyboard.press('Enter');
-            await page.waitForFunction(() => document.querySelector('#product-preview-dialog').open);
-            assert.equal(await page.$eval('[data-preview-image]', image => image.src), source);
-            assert.equal(await page.$eval('[data-preview-image]', image => image.alt), previewText.alternative);
-            assert.ok(previewText.alternative.length > 0 && previewText.alternative.length <= 100);
-            assert.equal(await page.$eval('#product-preview-dialog', dialog => document.getElementById(dialog.getAttribute('aria-labelledby')).textContent), previewText.title);
-            assert.equal(await page.$eval('#product-preview-dialog', dialog => document.getElementById(dialog.getAttribute('aria-describedby')).textContent), previewText.description);
-            assert.equal(await page.$eval('[data-preview-file]', link => link.href), source);
-            await page.waitForFunction(() => document.querySelector('[data-preview-image]').complete);
-            await audit(page, `${context} screenshot open`, '#product-preview-dialog');
-            await checkReflow(page, `${context} screenshot open`);
-            await focusWithKeyboard(page, '[data-preview-size="original"]');
-            await page.keyboard.press('Enter');
-            assert.equal(await page.$eval('[data-preview-size="original"]', button => button.getAttribute('aria-pressed')), 'true');
-            await focusWithKeyboard(page, '.preview-dialog-scroll');
-            await page.keyboard.press('ArrowRight');
-            await checkReflow(page, `${context} screenshot original size`);
-            await page.keyboard.press('Escape');
-            assert.equal(await page.$eval('#product-preview-dialog', dialog => dialog.open), false);
-            await expectFocused(page, '[data-product-preview]', 'Closing screenshot must restore the preview link focus.');
+            await checkScreenshotPreview(page, context, `.hero-preview-link.preview-version-${theme}`, { theme, viewport });
+            await checkScreenshotPreview(page, context, '.workflow-panel:not([hidden]) [data-product-preview]');
             await focusWithKeyboard(page, '[data-workflow] [role="tab"][aria-selected="true"]');
             for (let step = 0; step < 3; step += 1) {
                 await page.keyboard.press('ArrowRight');
@@ -556,6 +743,7 @@ try {
         }
     }));
     if (paths.includes('/')) {
+        await checkHeroWithoutJavaScript();
         for (const theme of themes) {
             const viewport = { name: 'mobile', width: 390, height: 800 };
             const { page } = await openPage('/', viewport, theme);

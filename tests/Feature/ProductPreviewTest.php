@@ -35,7 +35,7 @@ it('uses actual product captures in both themes wherever the product interface i
     $xpath = new DOMXPath($document);
     $previews = $xpath->query('//figure[contains(concat(" ",normalize-space(@class)," ")," product-preview ")]');
 
-    expect($previews->length)->toBe(5);
+    expect($previews->length)->toBe(4);
     $mobileSources = $xpath->query('//figure[contains(@class,"hero-art")]//source[@media="(max-width: 640px)"]');
     expect($mobileSources->length)->toBe(0);
 

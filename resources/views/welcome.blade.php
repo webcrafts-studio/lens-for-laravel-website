@@ -10,7 +10,7 @@
             <div class="hero-install"><x-install-command/></div>
             <p class="compatibility">Free and open source. Runs in your project. AI is optional.</p>
         </div>
-        <x-product-preview class="hero-art" appearance="hero" image="dashboard" title="Your audit, inside Lens" description="The actual Diagnostic Report: 3 violations, with 2 at level A and 1 at AA. The image-alt finding links to its Blade source. Fix All A and Fix All AA start a review queue." :priority="true"/>
+        <x-hero-illustration/>
     </section>
     <div class="framework-strip" role="group" aria-label="Supported frontends"><span class="micro">Works with the stack you already use</span><ul role="list">@foreach (['blade' => 'Blade', 'livewire' => 'Livewire', 'react' => 'React', 'vue' => 'Vue', 'inertia' => 'Inertia'] as $technology => $label)<li><x-technology-logo :name="$technology"/>{{ $label }}</li>@endforeach</ul></div>
 

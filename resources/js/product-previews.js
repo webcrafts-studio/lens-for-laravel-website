@@ -21,10 +21,10 @@ if (previewDialog) {
             event.preventDefault();
             previewTrigger = link;
             const thumbnail = link.querySelector('img');
-            previewImage.src = thumbnail.currentSrc || link.href;
-            previewImage.alt = thumbnail.alt;
-            previewImage.width = thumbnail.naturalWidth;
-            previewImage.height = thumbnail.naturalHeight;
+            previewImage.src = thumbnail?.currentSrc || link.href;
+            previewImage.alt = thumbnail?.alt || link.dataset.previewAlt || link.dataset.previewTitle;
+            previewImage.width = thumbnail?.naturalWidth || Number(link.dataset.previewWidth);
+            previewImage.height = thumbnail?.naturalHeight || Number(link.dataset.previewHeight);
             previewTitle.textContent = link.dataset.previewTitle;
             previewDescription.textContent = link.dataset.previewDescription;
             previewFile.href = previewImage.src;
