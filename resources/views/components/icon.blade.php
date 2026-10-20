@@ -1,14 +1,8 @@
 @props(['name'])
 <svg {{ $attributes->class(['icon']) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    @switch($name)
-        @case('search') <circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/> @break
-        @case('arrow') <path d="M4 12h16m-6-6 6 6-6 6"/> @break
-        @case('copy') <rect x="8" y="8" width="12" height="12" rx="1"/><path d="M15 8V4H4v11h4"/> @break
-        @case('code') <path d="m8 5-6 7 6 7m8-14 6 7-6 7m-3-15-2 16"/> @break
-        @case('scan') <path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M2 12h20"/> @break
-        @case('mouse-pointer-2')
+    @if(in_array($name, ['mouse-pointer-2', 'arrow-up-right']))
             <!--
-                MousePointer2 — Lucide (https://lucide.dev/icons/mouse-pointer-2)
+                MousePointer2 and ArrowUpRight — Lucide (https://lucide.dev)
                 ISC License
                 Copyright (c) 2026 Lucide Icons and Contributors
 
@@ -23,6 +17,15 @@
                 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
                 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
             -->
+    @endif
+    @switch($name)
+        @case('search') <circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/> @break
+        @case('arrow') <path d="M4 12h16m-6-6 6 6-6 6"/> @break
+        @case('arrow-up-right') <path stroke-width="2" d="M7 7h10v10M7 17 17 7"/> @break
+        @case('copy') <rect x="8" y="8" width="12" height="12" rx="1"/><path d="M15 8V4H4v11h4"/> @break
+        @case('code') <path d="m8 5-6 7 6 7m8-14 6 7-6 7m-3-15-2 16"/> @break
+        @case('scan') <path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M2 12h20"/> @break
+        @case('mouse-pointer-2')
             <path stroke-width="2" d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>
             @break
         @case('lock') <rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/> @break

@@ -83,6 +83,32 @@ async function checkReflow(page, context) {
 async function checkCompactLayout(page, viewport, theme) {
     const context = `/ ${theme} ${viewport.width}px compact layout`;
     const desktop = viewport.width >= 1000;
+    const decoration = await page.evaluate(() => ({
+        localIcons: document.querySelectorAll('.model-choice > div:first-child svg, .model-choice .outcome-icon').length,
+        cards: [...document.querySelectorAll('.journey-visual')].map(element => ({
+            background: getComputedStyle(element).backgroundImage,
+            size: getComputedStyle(element).backgroundSize,
+            before: getComputedStyle(element, '::before').content,
+            after: getComputedStyle(element, '::after').content,
+        })),
+        arrows: [...document.querySelectorAll('a svg:has(path[d="M7 7h10v10M7 17 17 7"])')]
+            .filter(element => element.getClientRects().length > 0)
+            .map(element => ({ width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height })),
+    }));
+    assert.equal(decoration.localIcons, 0, 'Local model support should have no decorative icon.');
+    assert.equal(decoration.cards.length, 3);
+    for (const card of decoration.cards) {
+        assert.equal((card.background.match(/linear-gradient/g) || []).length, 2, 'Each feature icon should sit on a two-axis grid.');
+        assert.ok(!card.background.includes('radial-gradient'), 'Feature cards should have no radial glow.');
+        assert.ok(card.size.split(', ').every(size => size === '24px 24px'));
+        assert.equal(card.before, 'none', 'Feature cards should have no decorative rings.');
+        assert.equal(card.after, 'none');
+    }
+    assert.ok(decoration.arrows.length >= 2);
+    for (const arrow of decoration.arrows) {
+        assert.ok(arrow.width >= 14 && arrow.height >= 14, 'SVG arrows should keep a readable size at every viewport.');
+        assert.equal(arrow.width, arrow.height, 'SVG arrows should remain square.');
+    }
     await page.$$eval('.product-preview img', images => Promise.all(images.map(async image => {
         image.loading = 'eager';
         await image.decode();

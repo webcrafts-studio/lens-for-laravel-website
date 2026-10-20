@@ -1,5 +1,16 @@
 <?php
 
+it('keeps header controls compact while retaining touch target sizes', function (): void {
+    $css = (string) file_get_contents(resource_path('css/app.css'));
+    preg_match_all('/\.header-actions\s*\{[^}]*?gap:\s*(\d+)px/s', $css, $gaps);
+
+    expect((int) $gaps[1][0])->toBeLessThanOrEqual(16)
+        ->toBeGreaterThan((int) $gaps[1][1]);
+    expect((int) end($gaps[1]))->toBeLessThanOrEqual(4);
+    expect($css)->toMatch('/\.icon-button\s*\{[^}]*min-height:\s*2\.75rem/')
+        ->toMatch('/\.github-link,\s*\.search-trigger\s*\{[^}]*min-width:\s*44px;\s*min-height:\s*44px/');
+});
+
 it('links both navigation menus to the labelled CI and references sections from any page', function (string $url) {
     $response = $this->get($url)->assertSuccessful();
     $document = new DOMDocument;

@@ -6,7 +6,7 @@
     <div class="preview-dialog-toolbar" role="group" aria-label="Screenshot size">
         <button type="button" data-preview-size="fit" aria-pressed="true">Fit to window</button>
         <button type="button" data-preview-size="original" aria-pressed="false">Original size</button>
-        <a data-preview-file href="{{ asset('assets/screenshots/dashboard-light.webp') }}">Open image file <span aria-hidden="true">↗</span></a>
+        <a data-preview-file href="{{ asset('assets/screenshots/dashboard-light.webp') }}">Open image file <x-icon name="arrow-up-right"/></a>
     </div>
     <div class="preview-dialog-scroll" tabindex="0" role="region" aria-label="Screenshot. Use arrow keys to scroll at original size.">
         <img class="preview-dialog-image" data-preview-image alt="" width="1200" height="800">

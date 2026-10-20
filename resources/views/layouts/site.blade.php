@@ -54,7 +54,7 @@
                 <x-github-stars-link :stars="$githubStars" class="header-github"/>
             </div>
         </header>
-        <div class="product-bar" role="region" aria-label="Product information"><span>Accessibility, closer to your code.</span><a href="{{ route('docs.show', 'upgrade-v3') }}">v3.5 <span aria-hidden="true">↗</span></a></div>
+        <div class="product-bar" role="region" aria-label="Product information"><span>Accessibility, closer to your code.</span><a href="{{ route('docs.show', 'upgrade-v3') }}">v3.5 <x-icon name="arrow-up-right"/></a></div>
         @yield('body')
         <footer class="site-footer">
             <div class="footer-grid">

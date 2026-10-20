@@ -1,5 +1,33 @@
 <?php
 
+it('presents local model support without a decorative icon', function (): void {
+    $response = $this->get('/')->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $copy = $xpath->query('//div[contains(@class,"model-choice")]/div[1]')->item(0);
+
+    expect(trim($xpath->query('./h3', $copy)->item(0)->textContent))->toBe('Local models supported');
+    expect($xpath->query('.//svg | .//span', $copy)->length)->toBe(0);
+    expect(trim($xpath->query('./p', $copy)->item(0)->textContent))->toContain('Use Ollama');
+});
+
+it('uses decorative SVG arrows instead of platform dependent text glyphs', function (string $url): void {
+    $response = $this->get($url)->assertSuccessful()->assertDontSee('↗');
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $arrows = $xpath->query('//svg[path[@d="M7 7h10v10M7 17 17 7"]]');
+
+    expect($arrows->length)->toBe($url === '/' ? 13 : 1);
+
+    foreach ($arrows as $arrow) {
+        expect($arrow->getAttribute('aria-hidden'))->toBe('true');
+        expect($arrow->getAttribute('viewbox'))->toBe('0 0 24 24');
+        expect($xpath->query('ancestor::a', $arrow)->length)->toBe(1);
+    }
+})->with(['/', '/docs/installation']);
+
 it('uses actual product captures in both themes wherever the product interface is shown', function () {
     $response = $this->get('/')->assertSuccessful();
     $document = new DOMDocument;
