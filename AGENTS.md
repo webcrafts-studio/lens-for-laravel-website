@@ -9,7 +9,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.5.0
+- php - 8.4.25
 - laravel/framework (LARAVEL) - v12
 - laravel/prompts (PROMPTS) - v0
 - laravel/boost (BOOST) - v2
@@ -23,10 +23,11 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 ## Skills Activation
 
-This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain-don't wait until you're stuck.
+This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
-- `pest-testing` - Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking; or when the user mentions test, spec, TDD, expects, assertion, coverage, or needs to verify functionality works.
-- `tailwindcss-development` - Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders; or when the user mentions CSS, styling, classes, Tailwind, restyle, hero section, cards, buttons, or any visual/UI changes.
+- `pest-testing` — Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking; or when the user mentions test, spec, TDD, expects, assertion, coverage, or needs to verify functionality works.
+- `tailwindcss-development` — Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders; or when the user mentions CSS, styling, classes, Tailwind, restyle, hero section, cards, buttons, or any visual/UI changes.
+- `consent-for-laravel-development` — Configure and use Consent for Laravel in Laravel applications. Activate when working with this package&#039;s consent interface, tracking presets, guarded events, custom scripts, Livewire navigation, consent withdrawal, translations, or decision auditing.
 
 ## Conventions
 
@@ -250,5 +251,20 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Always use existing Tailwind conventions; check project patterns before adding new ones.
 - IMPORTANT: Always use `search-docs` tool for version-specific Tailwind CSS documentation and updated code examples. Never rely on training data.
 - IMPORTANT: Activate `tailwindcss-development` every time you're working with a Tailwind CSS or styling-related task.
+
+=== jakub-lipinski/consent-for-laravel rules ===
+
+## Consent for Laravel
+
+This application uses `jakub-lipinski/consent-for-laravel` for consent preferences, guarded scripts, tracking presets, and optional decision auditing.
+
+- Activate `consent-for-laravel-development` when configuring this package, changing its interface, integrating trackers or Livewire, measuring events, or working with consent decisions.
+- Inspect `config/consent.php`, the shared Blade layout, and existing tracker installations before making changes. Preserve the application's selected integrations and customizations.
+- Built-in presets register their own services and SDKs. Custom providers need a service definition and `@consent` script blocks.
+- Keep script markup inert and independent of request cookies so cached HTML works for every visitor. Use guarded `Consent` helpers for measurements.
+- Optional categories are denied without a current valid decision. Keep Google Basic unless the task calls for explicit Advanced behavior; other presets remain strictly gated.
+- Preserve withdrawal and protected session/CSRF cookies. An active built-in preset requires reload after withdrawal.
+- Livewire uses the existing Blade/browser API. Preserve stable script IDs and one UI/notice container; set the app locale before rendering. Read the skill's Livewire reference for navigation, component language changes, persist and CSP.
+- The preference cookie is not authorization or database evidence. Enable database auditing only when the application needs it; the package does not certify legal compliance.
 
 </laravel-boost-guidelines>
