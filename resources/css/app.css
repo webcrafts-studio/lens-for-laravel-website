@@ -461,6 +461,17 @@ summary::-webkit-details-marker { display: none; }
 .docs-prose p { margin-bottom: 1.25rem; }
 .docs-prose a { color: var(--lens-accent); text-decoration: underline; }
 .docs-prose a:hover { text-decoration-thickness: 2px; }
+.privacy-page { max-width: 54rem; margin-inline: auto; }
+.privacy-page .docs-breadcrumb a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.privacy-page .docs-breadcrumb { align-items: center; }
+.privacy-page .eyebrow { margin-bottom: .75rem; }
+.privacy-contents { margin-block: 2rem; padding: 1.25rem; border: 1px solid var(--lens-control); background: var(--lens-panel); }
+.privacy-contents h2 { margin-top: 0; font-size: 1.25rem; }
+.privacy-contents ol { margin-bottom: 0; }
+.privacy-contents a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-block: .5rem; }
+.privacy-page .button { border-color: var(--lens-control); background: var(--lens-panel); color: var(--lens-content); }
+.privacy-page .button:hover { text-decoration: underline; text-underline-offset: .25em; }
+.privacy-page h2[tabindex="-1"]:focus { outline: 3px solid var(--lens-focus); outline-offset: 4px; }
 .docs-prose ul, .docs-prose ol { padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
 .docs-prose ul { list-style: disc; }
 .docs-prose ol { list-style: decimal; }

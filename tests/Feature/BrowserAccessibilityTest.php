@@ -18,6 +18,7 @@ test('the rendered site passes accessibility, reflow and keyboard regressions', 
     expect($process->isSuccessful())->toBeTrue($process->getOutput().$process->getErrorOutput());
 })->with([
     'homepage' => [['/']],
+    'privacy policy' => [['/privacy-policy']],
     'documentation' => [array_map(
         fn (array $page): string => '/docs/'.$page['slug'],
         array_merge(...array_values((new Documentation)->navigation)),

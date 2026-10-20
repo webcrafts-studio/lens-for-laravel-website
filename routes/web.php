@@ -7,6 +7,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::view('/privacy-policy', 'privacy')->name('privacy');
+
 Route::get('/docs', [DocsController::class, 'redirect'])->name('docs');
 Route::get('/docs/{page}', [DocsController::class, 'show'])->name('docs.show')
     ->where('page', '[a-z0-9\-]+');

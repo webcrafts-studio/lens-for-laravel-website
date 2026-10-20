@@ -32,6 +32,7 @@ async function openPage(path, viewport, theme) {
     await page.evaluateOnNewDocument(value => localStorage.setItem('lens-theme', value), theme);
     const response = await page.goto(new URL(path, baseUrl).href, { waitUntil: 'networkidle0' });
     assert.equal(response.status(), 200, `${path} must load successfully`);
+    await page.addStyleTag({ content: '#herd-ai-host { display: none !important; }' });
     await page.evaluate(() => document.fonts.ready);
     assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
     await page.addScriptTag({ content: axeSource });
@@ -262,6 +263,23 @@ async function checkPage(path, viewport, theme) {
     try {
         await audit(page, context);
         await checkReflow(page, context);
+        if (path === '/') {
+            const opener = await page.$('[data-consent-banner]:not([hidden]) [data-consent-action="open"]')
+                || await page.$('[data-consent-launcher]:not([hidden])');
+            assert.ok(opener, 'Consent preferences must be available.');
+            await opener.click();
+            await page.waitForSelector('[data-consent-dialog][open]');
+            await page.$$eval('[data-consent-dialog] details', details => details.forEach(detail => { detail.open = true; }));
+            await audit(page, `${context} consent preferences`, '[data-consent-dialog]');
+            await checkReflow(page, `${context} consent preferences`);
+            const category = await page.$('[data-consent-dialog] .consent-switch:not(:disabled)');
+            if (category) {
+                await category.click();
+                await audit(page, `${context} consent switch toggled`, '[data-consent-dialog]');
+            }
+            await page.keyboard.press('Escape');
+            assert.equal(await page.$eval('[data-consent-dialog]', dialog => dialog.open), false);
+        }
         if (path === '/') { await checkCompactLayout(page, viewport, theme); }
         const missingTargets = await page.evaluate(() => [...document.querySelectorAll('[aria-controls]')].flatMap(element =>
             element.getAttribute('aria-controls').split(/\s+/).filter(id => !document.getElementById(id))));
@@ -409,7 +427,26 @@ async function checkKeyboard(path, viewport, theme) {
             }
         }
 
-        if (path.startsWith('/docs/')) {
+        if (path === '/privacy-policy') {
+            await focusWithKeyboard(page, '.privacy-contents a[href="#controller"]');
+            await page.keyboard.press('Enter');
+            await expectFocused(page, '#controller', 'Policy section links must move keyboard focus to their heading.');
+            const position = await page.$eval('#controller', heading => ({
+                top: heading.getBoundingClientRect().top,
+                header: document.querySelector('.site-header').getBoundingClientRect().bottom,
+            }));
+            assert.ok(position.top >= position.header, 'The sticky header must not obscure policy headings.');
+            await focusWithKeyboard(page, '.privacy-page [data-consent-open]');
+            await page.keyboard.press('Enter');
+            await page.waitForSelector('[data-consent-dialog][open]');
+            await audit(page, `${context} cookie preferences open`, '[data-consent-dialog]');
+            await checkReflow(page, `${context} cookie preferences open`);
+            await page.keyboard.press('Tab');
+            assert.equal(await page.evaluate(() => Boolean(document.activeElement.closest('[data-consent-dialog]'))), true);
+            await assertFocusVisible(page);
+            await page.keyboard.press('Escape');
+            await expectFocused(page, '.privacy-page [data-consent-open]', 'Cookie preferences must return focus to the policy button.');
+        } else if (path.startsWith('/docs/')) {
             await page.evaluate(() => {
                 Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async () => {} } });
             });
@@ -532,7 +569,7 @@ try {
             }
         }
     }
-    for (const path of ['/', '/docs/installation'].filter(path => paths.includes(path))) {
+    for (const path of ['/', '/docs/installation', '/privacy-policy'].filter(path => paths.includes(path))) {
         for (const theme of themes) {
             for (const viewport of viewports) { await checkKeyboard(path, viewport, theme); }
         }
