@@ -39,6 +39,7 @@
             <nav class="main-nav" aria-label="Main navigation">
                 <a href="{{ route('home') }}#features">Features</a>
                 <a href="{{ route('home') }}#ai-fixes">AI fixes</a>
+                <a href="{{ route('home') }}#mcp">MCP</a>
                 <a href="{{ route('home') }}#ci-cd">CI/CD</a>
                 <a href="{{ route('home') }}#community">References</a>
                 <a href="{{ route('docs') }}"
@@ -52,6 +53,7 @@
                     <nav id="mobile-site-navigation" class="mobile-nav-panel" aria-label="Mobile navigation">
                         <a href="{{ route('home') }}#features">Features</a>
                         <a href="{{ route('home') }}#ai-fixes">AI fixes</a>
+                        <a href="{{ route('home') }}#mcp">MCP</a>
                         <a href="{{ route('home') }}#ci-cd">CI/CD</a>
                         <a href="{{ route('home') }}#community">References</a>
                         <a href="{{ route('docs') }}"
@@ -72,7 +74,7 @@
             </div>
         </header>
         <div class="product-bar" role="region" aria-label="Product information"><span>Accessibility, closer to your
-                code.</span><a href="{{ route('docs.show', 'upgrade-v3') }}">v3.5 <x-icon name="arrow-up-right" /></a>
+                code.</span><a href="{{ route('docs.show', 'upgrade-v3') }}">v3.6.0 <x-icon name="arrow-up-right" /></a>
         </div>
         @yield('body')
         <footer class="site-footer">
@@ -85,7 +87,8 @@
                     <h2>Build with Lens</h2><a href="{{ route('docs.show', 'installation') }}">Installation</a><a
                         href="{{ route('docs.show', 'quick-start') }}">Quick start</a><a
                         href="{{ route('docs.show', 'ai-fix-engine') }}">AI Fix Engine</a><a
-                        href="{{ route('docs.show', 'cli-reference') }}">CLI reference</a>
+                        href="{{ route('docs.show', 'cli-reference') }}">CLI reference</a><a
+                        href="{{ route('docs.show', 'mcp') }}">Lens MCP</a>
                 </nav>
                 <nav aria-label="Project footer">
                     <h2>Project</h2><a href="https://github.com/webcrafts-studio/lens-for-laravel" target="_blank"

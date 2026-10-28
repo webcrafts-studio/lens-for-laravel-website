@@ -80,6 +80,29 @@ it('connects each workflow tab to a labelled panel with one initial selection', 
         ->assertDontSee('Your interface. Your code. A clearer view.');
 });
 
+it('presents MCP as a separate workflow using real Lens commands and tools', function (): void {
+    $response = $this->get('/')->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+    $section = $document->getElementById('mcp');
+    $versionLink = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " product-bar ")]//a')->item(0);
+
+    expect($section)->not->toBeNull()
+        ->and($section->getAttribute('aria-labelledby'))->toBe('mcp-title')
+        ->and($section->textContent)->toContain('Your coding assistant.', 'The same Lens audit.',
+            'Codex or Claude Code', 'composer require laravel/mcp --dev',
+            'php artisan lens:mcp:install --client=codex', 'lens_scan', 'lens_list_issues',
+            'lens_issue_context', 'lens_record_change', 'lens_verify', 'pending verification');
+    expect($section->textContent)->not->toContain('01 / Scan', '02 / Inspect', '03 / Fix', '04 / Verify');
+    expect($xpath->query('.//ol/li', $section)->length)->toBe(4)
+        ->and($xpath->query('.//img', $section)->length)->toBe(0)
+        ->and($xpath->query('.//a[@href="'.route('docs.show', 'mcp').'"]', $section)->length)->toBe(1)
+        ->and($xpath->query('//header//a[contains(@href,"#mcp")]')->length)->toBe(2);
+    expect(trim($versionLink->textContent))->toStartWith('v3.6.0')
+        ->and($versionLink->getAttribute('href'))->toBe(route('docs.show', 'upgrade-v3'));
+});
+
 it('shares the family navigation and search dialog on landing and documentation pages', function (string $url) {
     $response = $this->get($url)->assertSuccessful();
     $document = new DOMDocument;
