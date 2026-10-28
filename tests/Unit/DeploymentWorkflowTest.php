@@ -13,6 +13,9 @@ test('deployment clears stale caches before migrations and rebuilds them before 
     expect($workflow['on']['push']['branches'])->toContain('main');
 
     $commands = [
+        'nvm use 24',
+        'npm ci',
+        'npm run build',
         'php artisan optimize:clear',
         'php artisan migrate --force --no-interaction',
         'php artisan optimize',
