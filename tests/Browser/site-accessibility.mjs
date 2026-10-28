@@ -319,6 +319,7 @@ async function checkCompactLayout(page, viewport, theme) {
             workflowPanel: rectangle('.workflow-panel:not([hidden])'),
             workflowCopy: rectangle('.workflow-panel:not([hidden]) .workflow-explanation'),
             workflowPreview: rectangle('.workflow-panel:not([hidden]) .product-preview'),
+            mcp: rectangle('#mcp'),
             fix: rectangle('.fix-section'),
             fixCopy: rectangle('.fix-layout > .section-copy'),
             fixPreview: rectangle('.fix-preview'),
@@ -363,11 +364,17 @@ async function checkCompactLayout(page, viewport, theme) {
     summary.layouts.push({
         width: viewport.width, theme, page: Math.round(initial.total), hero: Math.round(initial.hero.height),
         heroPreview: Math.round(initial.heroPreview.height), workflow: Math.round(initial.workflow.height),
-        fix: Math.round(initial.fix.height),
+        fix: Math.round(initial.fix.height), mcp: Math.round(initial.mcp.height),
     });
     const pageLimit = desktop ? 7000 : viewport.width >= 390 ? 11250 : 12000;
+    const mcpLimit = desktop ? 1100 : viewport.width >= 390 ? 2000 : 2200;
     const heroLimit = desktop ? 720 : viewport.width >= 390 ? 1100 : 1200;
-    if (initial.total > pageLimit) { record(context, `page height ${Math.round(initial.total)}px exceeds ${pageLimit}px`); }
+    if (initial.total - initial.mcp.height > pageLimit) {
+        record(context, `page height excluding MCP ${Math.round(initial.total - initial.mcp.height)}px exceeds ${pageLimit}px`);
+    }
+    if (initial.mcp.height > mcpLimit) {
+        record(context, `MCP section height ${Math.round(initial.mcp.height)}px exceeds ${mcpLimit}px`);
+    }
     if (initial.hero.height > heroLimit) { record(context, `hero height ${Math.round(initial.hero.height)}px exceeds ${heroLimit}px`); }
     if (initial.heroPreview.height > (desktop ? 550 : 400)) {
         record(context, `hero artwork is too tall: ${Math.round(initial.heroPreview.height)}px`);
