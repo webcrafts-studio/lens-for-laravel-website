@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 test('the application returns a successful response', function () {
-    $this->get('/')
+    $response = $this->get('/')
         ->assertOk()
         ->assertSee('Find accessibility issues.')
         ->assertSee('Eight supported providers')
-        ->assertSee('neither axe-core nor Lens proves full WCAG')
         ->assertDontSee('20-30%');
+
+    $text = preg_replace('/\s+/', ' ', strip_tags($response->getContent()));
+    expect($text)->toContain('neither axe-core nor Lens proves full WCAG');
 });
 
 test('the header displays the live GitHub star count', function () {
@@ -148,7 +150,7 @@ test('Composer metadata identifies the Lens documentation website', function () 
         ->and($composer['type'])->toBe('project')
         ->and($composer['description'])->toContain('Lens for Laravel')
         ->and($composer['description'])->not->toContain('skeleton')
-        ->and($composer['homepage'])->toBe('https://lens.webcrafts.pl');
+        ->and($composer['homepage'])->toBe('https://lens.lipinskijakub.pl');
 });
 
 test('support link appears in the website and documentation footers', function () {
@@ -200,11 +202,11 @@ test('GitHub and author links open safely in a new tab without changing document
     }
 })->with(['/', '/docs/introduction', '/docs/ai-fix-engine']);
 
-test('the website identifies v3.5 as the current development line', function () {
+test('the website identifies v3.6.0 as the current release', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('v3.5')
-        ->assertDontSee('>v3.4<', false)
+        ->assertSee('v3.6.0')
+        ->assertDontSee('>v3.5<', false)
         ->assertSee('Local models supported');
 
     $this->get(route('docs.show', ['page' => 'introduction']))
@@ -216,7 +218,7 @@ test('the website identifies v3.5 as the current development line', function () 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('Version 3 Upgrades')
-        ->assertSee('v3.5 is the current development line')
+        ->assertSee('Lens v3.6.0 adds MCP integration')
         ->assertSee('authenticated scans for pages behind login')
         ->assertSee('v3.0 Foundation')
         ->assertSee('URL-aware history comparisons');
@@ -335,7 +337,7 @@ test('the v3.1 documentation describes editable progressive AI fixes and fresh r
         ->assertSee('Reviewing and Editing in v3.1')
         ->assertSee('Fix All Queues in v3.1')
         ->assertSee('staggered by 250 milliseconds')
-        ->assertSee('Suggestions are reviewed and applied one at a time');
+        ->assertSee('Suggestions require review before application.');
 
     $this->get(route('docs.show', ['page' => 'frontend-support']))
         ->assertOk()
@@ -355,7 +357,8 @@ test('the current documentation keeps compatibility and defaults aligned with th
         ->assertOk()
         ->assertSee('<td>8.2+</td>', false)
         ->assertSee('<td>10, 11, 12, 13</td>', false)
-        ->assertSee('0.3.2 or newer');
+        ->assertSee('>=0.3.2 <0.12')
+        ->assertSee('^1.0');
 
     $scanningModes = file_get_contents(resource_path('markdown/docs/scanning-modes.md'));
 
@@ -383,4 +386,73 @@ test('the v3 documentation defines complete localization coverage', function () 
     $this->get(route('docs.show', ['page' => 'upgrade-v3']))
         ->assertOk()
         ->assertSee('complete English, Polish, Spanish, French, and German catalogs');
+});
+
+test('v3.6 MCP documentation is discoverable and describes the real tool catalog', function (): void {
+    $response = $this->get('/docs/mcp')->assertSuccessful()
+        ->assertSee('Lens MCP')
+        ->assertSee('Laravel 10.49+')
+        ->assertSee('composer require laravel/mcp --dev')
+        ->assertSee('php artisan lens:mcp:install --client=codex')
+        ->assertSee('php artisan lens:mcp:install --client=claude')
+        ->assertSee('The client starts')
+        ->assertSee('automatically')
+        ->assertSee('asynchronous execution by default')
+        ->assertSee('lens:mcp:runs work')
+        ->assertSee('its own model')
+        ->assertSee('pending verification')
+        ->assertSee('partial')
+        ->assertSee('per-process override');
+
+    $markdown = file_get_contents(resource_path('markdown/docs/mcp.md'));
+    preg_match_all('/^\| `(lens_[a-z_]+)` \|/m', $markdown, $matches);
+    $documentedTools = $matches[1];
+    $actualTools = array_keys(app(\LensForLaravel\LensForLaravel\Mcp\ToolCatalog::class)->definitions());
+    sort($documentedTools);
+    sort($actualTools);
+    expect($documentedTools)->toBe($actualTools);
+
+    $index = app(\App\Documentation::class)->searchIndex();
+    expect(collect($index)->firstWhere('slug', 'mcp')['content'])->toContain('lens_scan', 'lens_verify');
+    $response->assertSee('href="'.route('docs.show', 'mcp').'"', false);
+});
+
+test('v3.6 installation and upgrade instructions keep optional setup and history explicit', function (): void {
+    $this->get('/docs/installation')->assertSuccessful()
+        ->assertSee('php artisan lens:install')
+        ->assertSee('Package discovery and Composer updates do not show this welcome automatically')
+        ->assertSee('does not install SDKs, publish files')
+        ->assertSee('Optional MCP Installation')
+        ->assertSee('Composer selects a compatible version')
+        ->assertSee('LENS_FOR_LARAVEL_AI_MODEL');
+
+    $this->get('/docs/upgrade-v3')->assertSuccessful()
+        ->assertSee('What&#039;s New in v3.6.0', false)
+        ->assertSee('nullable, unique')
+        ->assertSee('run_id')
+        ->assertSee('Existing scan rows and issue data are preserved')
+        ->assertSee('not a migration or config publisher')
+        ->assertSee('Composer honors')
+        ->assertSee('What&#039;s New in v3.5', false)
+        ->assertSee('v3.0 Foundation');
+});
+
+test('v3.6 documents every public MCP configuration default and SDK generation', function (): void {
+    $response = $this->get('/docs/configuration')->assertSuccessful();
+    foreach (array_keys(config('lens-for-laravel.mcp')) as $setting) {
+        $response->assertSee($setting);
+    }
+    $response->assertSee('LENS_FOR_LARAVEL_MCP_ALLOW_WRITES')
+        ->assertSee('per-process override')
+        ->assertSee('16777216')
+        ->assertSee('131072');
+
+    $this->get('/docs/ai-fix-engine')->assertSuccessful()
+        ->assertSee('stable')
+        ->assertSee('^1.0')
+        ->assertSee('thinking_level=low')
+        ->assertSee('1024-token budget')
+        ->assertSee('one controlled retry')
+        ->assertSee('filtered content')
+        ->assertSee('no source file is changed');
 });

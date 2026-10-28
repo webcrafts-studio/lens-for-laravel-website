@@ -7,10 +7,14 @@ Official marketing website and documentation for **[Lens for Laravel](https://gi
 This is the official website for the Lens for Laravel package. It includes:
 
 - Landing page with feature overview, CLI showcase, and dashboard preview
-- Full v3.4 documentation covering authenticated scans and new AI Fix providers (OpenRouter, xAI, DeepSeek, Mistral) alongside Laravel 10-13 compatibility, WCAG 2.0/2.1/2.2 selection, structural source mapping, interactive-state scripts, history comparisons, localization, local HTTPS, CI baselines, and optional cloud AI Fix workflows
+- Full v3.6 documentation covering Lens MCP, installation, supported Laravel AI/MCP SDK releases, and Laravel 10-13 compatibility, WCAG 2.0/2.1/2.2 selection, structural source mapping, interactive-state scripts, history comparisons, localization, local HTTPS, CI baselines, and optional cloud AI Fix workflows
 - Light/dark theme support
 
 The package supports PHP 8.2+ and Laravel 10-13 for core scanning. AI Fix is optional and requires PHP 8.3+, Laravel 12+, and `laravel/ai`.
+
+Lens MCP is optional and requires PHP 8.2+, Laravel 10.49+, and `laravel/mcp`. It uses the coding assistant's own model.
+
+The public website is [lens.lipinskijakub.pl](https://lens.lipinskijakub.pl).
 
 The package itself lives in a [separate repository](https://github.com/webcrafts-studio/lens-for-laravel).
 

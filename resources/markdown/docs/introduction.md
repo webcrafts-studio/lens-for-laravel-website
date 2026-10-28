@@ -17,9 +17,21 @@ When axe-core detects a violation, Lens shows the failing DOM element and attemp
 
 Located issues include a file path, line number, and `sourceType`: `blade`, `react`, or `vue`.
 
+## What's New in v3.6.0
+
+v3.6.0 adds Lens MCP, a first-install welcome command, and compatibility with stable 1.x releases of the official Laravel AI and MCP SDKs. The core remains compatible with PHP 8.2+ and Laravel 10-13.
+
+- **Lens MCP** connects Codex and Claude Code to real scans, issue context, shared history, previews, and fresh verification.
+- **Long scans** run in tracked workers with progress, cancellation, and CLI management.
+- **First-install welcome** through `php artisan lens:install`, with optional integration status and documentation links.
+- **Compatible SDK selection** lets Composer resolve supported 0.x or 1.x SDK versions for the host application.
+- **AI Fix reliability** uses SDK-specific Gemini options and token metadata, one controlled retry for invalid/truncated output, and safe handling of non-retryable provider failures.
+
+See [Lens MCP](/docs/mcp) for setup and the [Version 3 upgrade guide](/docs/upgrade-v3) for the new history migration and existing-installation steps.
+
 ## What's New in v3.5
 
-v3.5 is the current development line. It adds an optional explicit AI model override, dashboard info about the active AI Fix model, a real Fix All bulk apply, and a temperature fix for models without temperature support. The v3.4 authenticated scans and additional providers, v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
+v3.5 added an optional explicit AI model override, dashboard info about the active AI Fix model, a real Fix All bulk apply, and a temperature fix for models without temperature support. The v3.4 authenticated scans and additional providers, v3.3 Ollama support, v3.2 structural source mapping, v3.1 review workflows, and v3.0 compatibility foundation remain unchanged.
 
 - **Explicit model selection** with `LENS_FOR_LARAVEL_AI_MODEL` for any provider, used at your own responsibility; empty keeps the SDK default
 - **Visible model choice** in the dashboard scanner card: default AI SDK model or manually configured model name
@@ -75,7 +87,7 @@ The v3.0 foundation includes:
 - **Honest post-fix feedback** that marks applied AI changes as pending until a new axe-core scan verifies them
 - **Complete package-owned interface catalogs** in English, Polish, Spanish, French, and German, including history, comparisons, modals, PDF reports, and error feedback
 
-The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/v3.3/v3.4/v3.5 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
+The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/v3.3/v3.4/v3.5/v3.6 changes. The v2.0 and v2.1 upgrade pages remain available as historical documentation for projects upgrading from older releases.
 
 ## Core Capabilities
 
@@ -89,6 +101,7 @@ The Version 3 upgrade page covers the v3.0 foundation and incremental v3.1/v3.2/
 - **Optional SPA crawling** for React/Vue/Inertia link discovery
 - **Dashboard UI** with filtering, element preview, PDF export, editable AI fixes, progressive Fix All A/AA queues, history, and a state recorder
 - **Artisan CLI** with interactive states, level filtering, crawl mode, thresholds, baseline files, and CI integration
+- **Optional Lens MCP** for coding assistants, with tracked scans, bounded context, and re-scan verification
 
 ## How It Works
 
@@ -143,9 +156,11 @@ These versions apply to the core scanner. AI Fix additionally requires:
 |-------------------|-------------------|
 | PHP | 8.3+ |
 | Laravel | 12, 13 |
-| Laravel AI SDK | `laravel/ai` 0.3.2 or newer, installed separately |
+| Laravel AI SDK | `laravel/ai` `>=0.3.2 <0.12` or `^1.0`, installed separately |
 
 On PHP 8.2 or Laravel 10/11, Lens keeps scanning, crawling, history, PDF, preview, source mapping, interactive states, and CLI support. Only AI Fix is unavailable, and the dashboard explains the limitation.
+
+Lens MCP has its own optional compatibility range: PHP 8.2+, Laravel 10.49+, and `laravel/mcp` `>=0.5.3 <0.10` or `^1.0`. It uses the connected assistant's model and works without `laravel/ai`. Composer resolves a compatible SDK rather than forcing one legacy version.
 
 ## Disclaimer
 

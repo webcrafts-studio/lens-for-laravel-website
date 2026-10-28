@@ -25,6 +25,7 @@ class Documentation
         ],
         'FEATURES' => [
             ['title' => 'AI Fix Engine', 'slug' => 'ai-fix-engine'],
+            ['title' => 'Lens MCP', 'slug' => 'mcp'],
             ['title' => 'CLI Reference', 'slug' => 'cli-reference'],
             ['title' => 'Dashboard', 'slug' => 'dashboard'],
         ],

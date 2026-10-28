@@ -8,7 +8,7 @@ AI Fix is an optional integration. It requires:
 
 - PHP 8.3 or newer
 - Laravel 12 or newer
-- `laravel/ai` 0.3.2 or newer installed in the host application
+- a supported `laravel/ai` release (`>=0.3.2 <0.12` or stable `^1.0`) installed in the host application
 - `LENS_FOR_LARAVEL_AI_ENABLED` not set to `false`
 
 Install the optional SDK with:
@@ -18,6 +18,12 @@ composer require laravel/ai --dev
 ```
 
 The core Lens package supports PHP 8.2+ and Laravel 10-13. On older supported runtimes or without the SDK, only AI Fix is unavailable. Scans, crawling, source mapping, history, PDF reports, previews, interactive states, baselines, and CLI audits continue to work.
+
+Composer selects an SDK compatible with the application's PHP, Laravel, and other dependencies. Lens supports both the older 0.x API and the stable 1.x API; it does not force a recent Laravel application onto a legacy SDK. The application's own Composer constraints and lock file still apply.
+
+For an early SDK that resolves an incompatible dependency such as Prism 0.99.0, Lens marks AI Fix unavailable instead of breaking core features. Update the optional SDK and its dependencies to a compatible combination. The [v3.6 upgrade notes](/docs/upgrade-v3) explain dependency resolution.
+
+Lens MCP is separate: it uses the coding assistant's model and does not need this SDK or provider configuration. See [Lens MCP](/docs/mcp).
 
 ## Supported Files
 
@@ -103,12 +109,20 @@ The v3 agent remains deliberately conservative:
 
 - maximum output is 12000 tokens
 - temperature stays at the provider default so models without temperature support keep working
-- Gemini thinking is limited to a 1024-token budget so reasoning cannot consume the output allowance
+- Gemini uses a 1024-token budget on supported 0.x SDKs; stable 1.x uses the Interactions API option `thinking_level=low`
 - the response schema contains only the minimal replacement and a short explanation
 - a token-limit finish reason or malformed structured response triggers one controlled retry
 - after that retry, Lens stops without changing a file and shows a safe, understandable error
 
 For Gemini, OpenAI, Anthropic, OpenRouter, xAI, DeepSeek, and Mistral, Lens selects only the provider and `laravel/ai` resolves its configured default model, unless the optional v3.5 `LENS_FOR_LARAVEL_AI_MODEL` override is set. In v3.3, Lens passes `LENS_FOR_LARAVEL_AI_OLLAMA_MODEL` to Ollama so a locally installed tag can be selected explicitly; if both model settings are empty, the SDK default is used. Successful attempts log the actual provider, resolved model, finish reason, and token usage. Failure logs contain diagnostic categories and exception classes, not the submitted source fragment or raw provider response.
+
+## SDK Compatibility and Errors in v3.6
+
+Lens selects the Gemini provider options and usage fields expected by the installed SDK. It preserves older prompt/completion token semantics and supports 1.x input/output, cache, and reasoning metadata without requiring a model override.
+
+Invalid structured output and token-limit truncation receive one controlled retry. Authentication errors, unavailable models, provider failures, filtered content, and cancelled responses do not enter that retry loop. After a failed generation, no source file is changed and the dashboard shows a safe message. Diagnostic logging keeps the provider/model/token context without exposing keys, submitted source, or raw provider responses.
+
+For example, invalid credentials produce a provider-configuration error; a response that is still incomplete after the retry produces an incomplete-suggestion error. A missing or unsupported SDK produces an availability message and a `503` response from AI Fix endpoints while core scanning remains available.
 
 ## Framework-Aware Prompts
 
@@ -268,4 +282,4 @@ AI Fix includes several safeguards:
 - Very large components are reduced to their opening element and may still require a manual edit.
 - Dynamic abstractions can require manual edits when the located source is only the outer component.
 - Fix All queues include only A or AA issues with a located Blade, React, or Vue source file; unresolved source locations still require manual investigation.
-- Suggestions are reviewed and applied one at a time. Fix All does not automatically write every generated response.
+- Suggestions require review before application. Apply them individually or use the explicit bulk action for ready proposals; failures remain available for individual review.

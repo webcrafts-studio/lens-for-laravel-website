@@ -315,3 +315,35 @@ jobs:
         env:
           APP_ENV: testing
 ```
+
+## Installation Welcome in v3.6
+
+```bash
+php artisan lens:install
+```
+
+Shows the first-install welcome, dashboard URL, optional integration status, documentation links, and a passive GitHub star message. Repeating the command shows only the installation confirmation and dashboard address. It does not run migrations, publish configuration, install SDKs, or configure an MCP client. See [Installation](/docs/installation).
+
+## MCP Commands in v3.6
+
+```bash
+# Configure one project-scoped connection
+php artisan lens:mcp:install --client=codex
+
+# Check availability and runtime configuration
+php artisan lens:mcp:runs doctor
+
+# Queue a tracked website scan and inspect its returned run_id
+php artisan lens:mcp:scan / --crawl --wcag=2.2 --level=aa --queue
+php artisan lens:mcp:runs status <run-id>
+php artisan lens:mcp:runs work <run-id>
+php artisan lens:mcp:runs cancel <run-id>
+php artisan lens:mcp:runs list
+php artisan lens:mcp:runs prune
+```
+
+Use `--client=claude` for Claude Code. The client launches `php artisan lens:mcp --enabled` automatically when it connects. The hidden `lens:mcp:work` worker command is internal; use `lens:mcp:runs work` for manual work.
+
+`lens:mcp:scan` accepts `--urls` repeatedly for multiple targets, `--script` for inline state scripts, `--as-user` for authenticated scans, and `--level=a|aa|all`. The tracked scan commands produce JSON run summaries. For violation thresholds and baseline exit-code gates, use `lens:audit`.
+
+MCP requires the optional official `laravel/mcp` package on PHP 8.2+ and Laravel 10.49+. It does not require `laravel/ai`. See [Lens MCP](/docs/mcp) for tool arguments, asynchronous runs, limits, and write access.

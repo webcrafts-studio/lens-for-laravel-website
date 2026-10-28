@@ -1,6 +1,6 @@
 # Quick Start
 
-Get your first accessibility audit running in a few minutes.
+Get your first accessibility audit running in a few minutes. Follow [Installation](/docs/installation) first; `php artisan lens:install` shows the dashboard address and optional integrations once.
 
 ## First CLI Audit
 
@@ -48,9 +48,13 @@ Then:
 6. Preview the failing element.
 7. Open the source file from `SRC_LOC`.
 8. Optionally request an individual AI fix, then review or edit the proposal before applying it.
-9. On v3.1, use **Fix All A** or **Fix All AA** to open a progressive review queue for every located issue at that level.
+9. Use **Fix All A** or **Fix All AA** to open a progressive review queue for every located issue at that level. Review the ready proposals and apply them individually or with **Apply All Ready**.
 
-Fix All does not write every suggestion automatically. The modal opens immediately, generates up to three suggestions concurrently, and keeps an independent state for each item. You can move to any ready proposal while other items still show loaders, then edit, accept, reject, or retry each fix separately.
+Fix All does not write every suggestion automatically. The modal opens immediately, generates up to three suggestions concurrently, and keeps an independent state for each item. You can move to any ready proposal while other items still show loaders, then edit, accept, reject, or retry each fix separately. A bulk action applies all ready suggestions using their reviewed or edited code, with per-item errors reported. Applied findings remain counted until a fresh scan verifies them.
+
+## Audit with Your Coding Assistant
+
+After [connecting Codex or Claude Code](/docs/mcp), ask your assistant to audit the homepage, fix A and AA issues, and verify the changes with Lens MCP. The assistant uses real Lens tools and its own model. It can inspect findings and mapped context, record native file edits, and re-scan before reporting the result.
 
 ## Example Issue Output
 

@@ -9,7 +9,7 @@ it('shares all documentation pages with search on the homepage and documentation
     $element = $document->getElementById('docs-search-index');
     $index = json_decode($element->textContent, true, 512, JSON_THROW_ON_ERROR);
 
-    expect($index)->toHaveCount(12);
+    expect($index)->toHaveCount(13);
 
     foreach ($index as $page) {
         expect($page['content'])->not->toBeEmpty()

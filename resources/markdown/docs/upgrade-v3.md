@@ -1,6 +1,68 @@
 # Version 3 Upgrades
 
-Lens v3.5 is the current development line. This page keeps the v3.0 foundation and the incremental v3.1/v3.2/v3.3/v3.4/v3.5 additions together so the main documentation does not need a duplicated version tree.
+Lens v3.6.0 adds MCP integration, the first-install welcome, and support for compatible stable Laravel AI/MCP SDK releases. This page keeps the v3.0 foundation and incremental v3.1-v3.6 upgrade notes together.
+
+## What's New in v3.6.0
+
+- Lens MCP connects Codex and Claude Code to real scans, mapped source context, history, previews, reports, baselines, and re-scan verification.
+- Tracked workers keep long MCP scans responsive and expose status, cancellation, and queued execution through Artisan commands.
+- `php artisan lens:install` shows a first-run welcome with dashboard and optional integration links.
+- Composer can choose supported 0.x or stable 1.x versions of optional `laravel/ai` and `laravel/mcp` packages.
+- AI Fix adapts Gemini options and token metadata to the installed SDK generation. Invalid/truncated structured output receives one controlled retry; provider failures and filtered/cancelled responses are handled safely.
+
+### Update an Existing Installation
+
+```bash
+composer update webcrafts-studio/lens-for-laravel --with-dependencies
+php artisan optimize:clear
+```
+
+The core continues to support PHP 8.2+ and Laravel 10-13. Installing AI or MCP SDKs is optional. Existing scanning commands and defaults remain unchanged: WCAG 2.0, a zero CLI threshold, and a 50-page crawl limit.
+
+If you use scan history, run the application's pending migrations:
+
+```bash
+php artisan migrate
+```
+
+The v3.6 migration adds a nullable, unique `run_id` to `lens_scans`. It links MCP run snapshots to saved history and prevents duplicate saves. Existing scan rows and issue data are preserved. Scanning and the private MCP run store remain usable without database history; MCP reports a warning when history cannot be saved.
+
+Existing installations do not have to run `lens:install`. It is an optional welcome command, not a migration or config publisher, and Composer updates do not invoke it automatically. Older published configuration files receive defaults for missing MCP keys. Merge any explicit customizations you need instead of replacing your config with a forced publish.
+
+If you previously published package views, compare your overrides with the current dashboard to enable MCP change synchronization. Clear compiled views after merging changes.
+
+### Optional SDK Compatibility
+
+| Integration | Runtime | Supported SDK |
+|-------------|---------|---------------|
+| Dashboard AI Fix | PHP 8.3+, Laravel 12/13 | `laravel/ai` `>=0.3.2 <0.12` or `^1.0` |
+| Lens MCP | PHP 8.2+, Laravel 10.49+/11/12/13 | `laravel/mcp` `>=0.5.3 <0.10` or `^1.0` |
+
+Install an SDK without a hard-coded legacy version when you need that integration:
+
+```bash
+composer require laravel/ai --dev
+```
+
+```bash
+composer require laravel/mcp --dev
+```
+
+Composer honors the application's PHP version, Laravel constraints, other packages, and lock file. Lens permits these supported release lines but cannot override an application that explicitly requires only 0.x. To move an already pinned SDK to 1.x, review the host application's constraint and allow the relevant dependency updates. Core Laravel 10/11 applications do not need the AI SDK.
+
+Very early `laravel/ai` releases can resolve Prism 0.99.0, which lacks a required structured-response contract. Lens disables AI Fix for that broken combination without affecting core scanning. Update the optional SDK/dependencies to a compatible combination, including Prism 0.99.1+ when retaining that early SDK.
+
+### Connect a Coding Assistant
+
+After installing `laravel/mcp`, configure the client you use:
+
+```bash
+php artisan lens:mcp:install --client=codex
+```
+
+Use `--client=claude` for Claude Code and reconnect the client. It starts the local stdio server automatically. MCP uses the assistant's own model and does not need an AI Fix provider or `laravel/ai`.
+
+See [Lens MCP](/docs/mcp) for the tools, default write policy, native-editor workflow, long scans, and verification. The [configuration reference](/docs/configuration) documents all MCP limits.
 
 ## What's New in v3.5
 

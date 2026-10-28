@@ -233,3 +233,9 @@ Descriptions of accessibility rules come from axe-core, while some request-valid
 | `GET` | `/lens-for-laravel/history/{id}/compare/{compareId}` | Compare scans |
 
 All routes are gated by `enabled_environments` and configured middleware.
+
+## MCP Change Synchronization in v3.6
+
+When Lens MCP is available, the dashboard can synchronize source changes recorded by a coding assistant. Matching findings are marked pending verification and remain in the counts. A fresh scan replaces that state with new axe-core results.
+
+The same history and reports can be read through MCP after the history migrations are installed. See [Lens MCP](/docs/mcp) for connection setup and verification. Dashboard AI Fix and the assistant's model configuration remain independent.

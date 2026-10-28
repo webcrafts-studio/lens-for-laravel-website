@@ -58,6 +58,20 @@ return [
 
     'auth_allowed_user_ids' => /* comma-separated LENS_FOR_LARAVEL_AUTH_ALLOWED_IDS, e.g. '1,2' */ [],
 
+    'mcp' => [
+        'enabled' => env('LENS_FOR_LARAVEL_MCP_ENABLED'),
+        'allow_writes' => env('LENS_FOR_LARAVEL_MCP_ALLOW_WRITES', false),
+        'allowed_origins' => [],
+        'storage_path' => null,
+        'retention_hours' => 24,
+        'max_concurrent_runs' => 2,
+        'max_stored_runs' => 200,
+        'run_timeout' => 900,
+        'browser_timeout' => 120,
+        'max_run_bytes' => 16777216,
+        'max_output_bytes' => 131072,
+    ],
+
     'ai_enabled' => env('LENS_FOR_LARAVEL_AI_ENABLED', true),
 
     'ai_provider' => env('LENS_FOR_LARAVEL_AI_PROVIDER', 'gemini'),
@@ -289,6 +303,30 @@ LENS_FOR_LARAVEL_IGNORE_HTTPS_ERRORS=true
 ```
 
 Use this only for trusted local development environments with self-signed certificates, such as DDEV, Herd, or Laravel Valet. Keep the default `false` for production-like certificate validation. One setting controls both Laravel's HTTP client and every Chromium path used by Lens.
+
+### `mcp`
+
+Lens MCP uses the official optional `laravel/mcp` SDK and the connected assistant's model. It requires PHP 8.2+ and Laravel 10.49+. See [Lens MCP](/docs/mcp) for client setup and the full tool workflow.
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `enabled` | `null` | Use the project installation marker unless explicitly configured. Env: `LENS_FOR_LARAVEL_MCP_ENABLED`. |
+| `allow_writes` | `false` | Expose prepared patch tools and allow baseline saves. Env: `LENS_FOR_LARAVEL_MCP_ALLOW_WRITES`. |
+| `allowed_origins` | `[]` | Additional trusted origins, including scheme and port. The `APP_URL` origin is always included. |
+| `storage_path` | `null` | Use private project-scoped storage under `storage/app/lens-for-laravel`, or set a private directory. |
+| `retention_hours` | `24` | Retention period for stored run snapshots and exports. |
+| `max_concurrent_runs` | `2` | Maximum active runs in this project. |
+| `max_stored_runs` | `200` | Maximum retained run snapshots. |
+| `run_timeout` | `900` | Deadline for an entire scan, in seconds. |
+| `browser_timeout` | `120` | Timeout for one browser operation, in seconds. |
+| `max_run_bytes` | `16777216` | Maximum size of a run payload, in bytes. |
+| `max_output_bytes` | `131072` | Maximum JSON payload of one MCP tool response, in bytes. |
+
+The installer writes a checkout-specific marker. With `enabled=null`, the dashboard and ordinary run commands use that marker. Explicit `false` disables this marker-based enablement. `php artisan lens:mcp --enabled` is an explicit per-process override used by generated client configuration; disconnect or disable that client entry to stop its server. `enabled_environments` still applies.
+
+The default write policy allows the assistant to inspect Lens data and record edits made with its own file tools. Set `allow_writes=true` only when you want Lens to prepare/apply patches or save baselines through MCP. This setting does not control the assistant's native file editor.
+
+The standard `ignore_https_errors`, `crawler_render_javascript`, `scan_wait_ms`, `wcag_version`, `crawl_max_pages`, and authenticated-scan settings also apply to MCP scans. Older published config files receive defaults for missing MCP keys through the package's normal configuration merge; you do not have to replace an existing customized file.
 
 ### `ai_enabled`
 
