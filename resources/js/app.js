@@ -27,7 +27,7 @@ themeToggle?.addEventListener('click', () => {
 const mobileNavigation = document.querySelector('[data-mobile-navigation]');
 const menuTrigger = mobileNavigation?.querySelector('summary');
 const menuPanel = mobileNavigation?.querySelector('nav');
-const desktopNavigation = matchMedia('(min-width: 741px)');
+const desktopNavigation = matchMedia('(min-width: 1024px)');
 const menuBackground = [...(header?.parentElement.children || [])].filter(element => element !== header);
 const inertMenuBackground = new Set();
 const syncMenu = () => {
