@@ -129,3 +129,30 @@ it('keeps reading and control colors accessible on actual panel surfaces', funct
         expect(accessibilityContrastRatio($colors['--lens-control'], $colors[$surface]))->toBeGreaterThanOrEqual(3.0);
     }
 })->with([':root', '.dark']);
+
+it('keeps workflow and journey labels without decorative step numbers', function (): void {
+    $response = $this->get('/')->assertSuccessful();
+    $document = new DOMDocument;
+    @$document->loadHTML($response->getContent());
+    $xpath = new DOMXPath($document);
+
+    $labels = $xpath->query('//*[@role="tab"] | //article[contains(@class,"journey-card")]/p[@class="micro"]');
+    $actualLabels = [];
+
+    foreach ($labels as $label) {
+        $actualLabels[] = trim($label->textContent);
+    }
+
+    expect($actualLabels)->toBe([
+        'Locate the source',
+        'Review the change',
+        'Verify the result',
+        'Interact',
+        'Go further',
+        'Cover more',
+    ]);
+
+    foreach ($xpath->query('//main//text()[not(ancestor::script)]') as $node) {
+        expect($node->nodeValue)->not->toMatch('/\b0[1-9]\b/');
+    }
+});
